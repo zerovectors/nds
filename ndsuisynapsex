@@ -58,7 +58,7 @@ if syn_checkcaller() then
   })
 
   local credits = library:CreateWindow({text='Credits'})
-  credits:AddLabel("Credits\nInori: Dragging\nwally: UI\nsmail: Ideas")
+  credits:AddLabel("Credits\nInori: Dragging\nwally: UI\nsmail: Ideas\nLogre#2373: Anti-Afk")
 
   loadstring(game:HttpGet("https://pastebin.com/raw/xKbbAuc7"))() wait(.1)
 
@@ -928,7 +928,6 @@ if syn_checkcaller() then
     if settings.autofarm == false then
       settings.autofarm = true
           while wait() do
-            syn_mouse1click()
             game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-259.5, 181.6, 289.2)
           if settings.autofarm == false then
           break
@@ -1147,7 +1146,7 @@ if syn_checkcaller() then
     game:GetService('TeleportService'):Teleport(game.PlaceId)
   end)
 
-  changelog:AddLabel("4.6 ( CURRENT VERSION )\n + Added u dont have\n to enter a players full\n username to bang, autofarm\n or w/e them\n + Bug fix's\n4.3\n + Added Better Chams (ESP)\n+ Added Custom Toggle UI\nV3.9\n + Added headsit plr\n + Added sit")
+  changelog:AddLabel("V5 ( CURRENT VERSION )\n + Added anti-afk\nV4.6\n + Added u dont have\n to enter a players full\n username to bang, autofarm\n or w/e them\n + Bug fix's\nV4.3\n + Added Better Chams (ESP)\n+ Added Custom Toggle UI\nV3.9\n + Added headsit plr\n + Added sit")
 
   for _, plr in pairs(game.Players:GetChildren()) do
   	if plr.ClassName == "Player" then
@@ -1181,6 +1180,12 @@ if syn_checkcaller() then
   	TracerMT[Plr.Name] = nil
   end)
 
+  local vu = game:GetService("VirtualUser")
+  game:GetService("Players").LocalPlayer.Idled:connect(function()
+      vu:Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+      wait(1)
+      vu:Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+  end)
 
   UserInput.InputBegan:Connect(function(input)
     if tostring(input.KeyCode) == settings.togglekey or tostring(input.UserInputType) == settings.togglekey then
