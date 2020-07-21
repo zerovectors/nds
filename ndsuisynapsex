@@ -1,5 +1,5 @@
 if syn_checkcaller() then
-local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/zerovectors/framework/master/source", true))()
+ local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/zerovectors/framework/master/source", true))()
 local mouse = game.Players.LocalPlayer:GetMouse();
 local fd = game.Players.LocalPlayer.Character:WaitForChild("FallDamageScript")
 local char = game.Players.LocalPlayer.Character
@@ -1162,7 +1162,7 @@ miscellaneous:AddButton4("Toggle vFly Key; ' '",function()
 	end
 end)
 
-miscellaneous:AddLabel("Next/Current Disaster; ")
+miscellaneous:AddLabel("Next/Current Disaster; "..game.PlayerGui.MainGui.Hint.List.DisasterWarning.Text)
 game.PlayerGui.MainGui.Hint.List.DisasterWarning.Text.Changed:Connect(function()
 	game.CoreGui.UILibrary.Miscellaneous.Container.TextLabel.Text = "Next/Current Disaster; "..game.PlayerGui.MainGui.Hint.List.DisasterWarning.Text
 end)
@@ -1241,4 +1241,5 @@ UserInput.InputBegan:Connect(function(input)
 					end
     end
 end)
+
 end
