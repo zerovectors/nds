@@ -1164,7 +1164,7 @@ end)
 
 miscellaneous:AddLabel("Next/Current Disaster; (WAITING FOR NEXT ROUND)")
 
-game.StarterGui.MainGui.Hint.List.HintText.Text.Changed:Connect(function()
+--game.StarterGui.MainGui.Hint.List.HintText.Text.Changed:Connect(function()
 	print("aa test error?")
 --[[
 	if game.Players.LocalPlayer.PlayerGui.MainGui.Hint.List.HintText.Text = "Flash Flood! Seek high and stable ground" then
@@ -1191,7 +1191,7 @@ game.StarterGui.MainGui.Hint.List.HintText.Text.Changed:Connect(function()
 		game.CoreGui.UILibrary.Miscellaneous.Container.TextLabel.Text = "Next/Current Disaster; Volcanic Eruption"
 	end
 	]]
-end)
+--end)
 
 miscellaneous:AddButton("Rejoin", function()
   game:GetService('TeleportService'):Teleport(game.PlaceId)
