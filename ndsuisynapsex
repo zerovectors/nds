@@ -57,7 +57,7 @@ local changelog = library:CreateWindow({
 })
 
 local credits = library:CreateWindow({text='Credits'})
-credits:AddLabel("Credits\nInori: Dragging\nwally: UI\nsmail: Ideas")
+credits:AddLabel("Credits\nInori; Dragging\nvect0rs; Scripts an shit\nwally; UI\nsmail; Ideas")
 
 loadstring(game:HttpGet("https://pastebin.com/raw/xKbbAuc7"))() wait(.1)
 
