@@ -1188,7 +1188,7 @@ game.Players.LocalPlayer.PlayerGui.MainGui.Hint.List.HintText.Changed:Connect(fu
 	elseif game.Players.LocalPlayer.PlayerGui.MainGui.Hint.List.HintText.Text = "Volcanic Eruption!  Get away from the volcano" then
 		game.CoreGui.UILibrary.Miscellaneous.Container.TextLabel.Text = "Next/Current Disaster; Volcanic Eruption"
 	end]]
-end)
+end
 
 miscellaneous:AddButton("Rejoin", function()
   game:GetService('TeleportService'):Teleport(game.PlaceId)
