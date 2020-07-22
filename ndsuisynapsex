@@ -1165,7 +1165,7 @@ miscellaneous:AddLabel("Next/Current Disaster; (WAITING FOR NEXT ROUND)")
 
 game.Players.LocalPlayer.PlayerGui.MainGui.Hint.List.HintText.Text.Changed:Connect(function()
 	warn("aa test error? ah works woo!")
-	if game.Players.LocalPlayer.PlayerGui.MainGui.Hint.List.HintText.Text = "Flash Flood! Seek high and stable ground" then
+--[[	if game.Players.LocalPlayer.PlayerGui.MainGui.Hint.List.HintText.Text = "Flash Flood! Seek high and stable ground" then
 		game.CoreGui.UILibrary.Miscellaneous.Container.TextLabel.Text = "Next/Current Disaster;  Flash Flood"
 	elseif game.Players.LocalPlayer.PlayerGui.MainGui.Hint.List.HintText.Text = "Earthquake!  Get outside and stay away from tall structures" then
 		game.CoreGui.UILibrary.Miscellaneous.Container.TextLabel.Text = "Next/Current Disaster;  Earthquake"
@@ -1187,8 +1187,8 @@ game.Players.LocalPlayer.PlayerGui.MainGui.Hint.List.HintText.Text.Changed:Conne
 		game.CoreGui.UILibrary.Miscellaneous.Container.TextLabel.Text = "Next/Current Disaster; Acid Rain"
 	elseif game.Players.LocalPlayer.PlayerGui.MainGui.Hint.List.HintText.Text = "Volcanic Eruption!  Get away from the volcano" then
 		game.CoreGui.UILibrary.Miscellaneous.Container.TextLabel.Text = "Next/Current Disaster; Volcanic Eruption"
-	end
-end
+	end]]
+end)
 
 miscellaneous:AddButton("Rejoin", function()
   game:GetService('TeleportService'):Teleport(game.PlaceId)
