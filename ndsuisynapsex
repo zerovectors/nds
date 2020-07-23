@@ -1163,31 +1163,31 @@ end)
 
 miscellaneous:AddLabel("Next/Current Disaster; (WAITING FOR NEXT ROUND)")
 
-game.Players.LocalPlayer.PlayerGui.MainGui.Hint.List.HintText.Changed:Connect(function()
+game.Players.LocalPlayer.PlayerGui.MainGui.Hint.List.HintText.Changed:Connect(function(property)
 	warn("aa test error? ah works woo!")
-	if game.Players.LocalPlayer.PlayerGui.MainGui.Hint.List.HintText.Text = "Flash Flood! Seek high and stable ground" then
+	if property.Text == "Flash Flood! Seek high and stable ground" then
 		game.CoreGui.UILibrary.Miscellaneous.Container.TextLabel.Text = "Next/Current Disaster;  Flash Flood"
---[[	elseif game.Players.LocalPlayer.PlayerGui.MainGui.Hint.List.HintText.Text == "Earthquake!  Get outside and stay away from tall structures" then
+	elseif property.Text == "Earthquake!  Get outside and stay away from tall structures" then
 		game.CoreGui.UILibrary.Miscellaneous.Container.TextLabel.Text = "Next/Current Disaster;  Earthquake"
 	elseif game.Players.LocalPlayer.PlayerGui.MainGui.Hint.List.HintText.Text == "Tornado!  Stay clear of it's path" then
 		game.CoreGui.UILibrary.Miscellaneous.Container.TextLabel.Text = "Next/Current Disaster;  Tornado"
-	elseif game.Players.LocalPlayer.PlayerGui.MainGui.Hint.List.HintText.Text == "Thunderstorm!  Don't stand in the open or high places" then
+	elseif property.Text == "Thunderstorm!  Don't stand in the open or high places" then
 		game.CoreGui.UILibrary.Miscellaneous.Container.TextLabel.Text = "Next/Current Disaster;  Thunderstorm"
-	elseif game.Players.LocalPlayer.PlayerGui.MainGui.Hint.List.HintText.Text == "Fire!  Keep distance from the fire" then
+	elseif property.Text == "Fire!  Keep distance from the fire" then
 		game.CoreGui.UILibrary.Miscellaneous.Container.TextLabel.Text = "Next/Current Disaster;  Fire"
-	elseif game.Players.LocalPlayer.PlayerGui.MainGui.Hint.List.HintText.Text == "Meteor Shower!  Watch the skies and find shelter" then
+	elseif property.Text == "Meteor Shower!  Watch the skies and find shelter" then
 		game.CoreGui.UILibrary.Miscellaneous.Container.TextLabel.Text = "Next/Current Disaster;  Meteor Shower"
-	elseif game.Players.LocalPlayer.PlayerGui.MainGui.Hint.List.HintText.Text == "Tsunami!  Get to higher ground" then
+	elseif property.Text == "Tsunami!  Get to higher ground" then
 		game.CoreGui.UILibrary.Miscellaneous.Container.TextLabel.Text = "Next/Current Disaster; Tsunami"
-	elseif game.Players.LocalPlayer.PlayerGui.MainGui.Hint.List.HintText.Text == "Blizzard!  Seek warmth and find shelter" then
+	elseif property.Text == "Blizzard!  Seek warmth and find shelter" then
 		game.CoreGui.UILibrary.Miscellaneous.Container.TextLabel.Text = "Next/Current Disaster; Blizzard"
-	elseif game.Players.LocalPlayer.PlayerGui.MainGui.Hint.List.HintText.Text = "Sandstorm!  Dodge flying objects" then
+	elseif property.Text == "Sandstorm!  Dodge flying objects" then
 		game.CoreGui.UILibrary.Miscellaneous.Container.TextLabel.Text = "Next/Current Disaster; Sandstorm"
-	elseif game.Players.LocalPlayer.PlayerGui.MainGui.Hint.List.HintText.Text == "Acid Rain!  Stay indoors" then
+	elseif property.Text == "Acid Rain!  Stay indoors" then
 		game.CoreGui.UILibrary.Miscellaneous.Container.TextLabel.Text = "Next/Current Disaster; Acid Rain"
-	elseif game.Players.LocalPlayer.PlayerGui.MainGui.Hint.List.HintText.Text == "Volcanic Eruption!  Get away from the volcano" then
+	elseif property.Text == "Volcanic Eruption!  Get away from the volcano" then
 		game.CoreGui.UILibrary.Miscellaneous.Container.TextLabel.Text = "Next/Current Disaster; Volcanic Eruption"
-	]]end
+	end
 end)
 
 miscellaneous:AddButton("Rejoin", function()
