@@ -1161,37 +1161,37 @@ miscellaneous:AddButton4("Toggle vFly Key; ' '",function()
 	end
 end)
 
-miscellaneous:AddLabel("Next/Current Disaster; (WAITING FOR NEXT ROUND)")
+miscellaneous:AddLabel2("Next/Current Disaster; (WAITING FOR NEXT ROUND)")
 
 game.Players.LocalPlayer.PlayerGui:WaitForChild("MainGui").Hint.List.HintText.Changed:Connect(function(property)
 	warn("aa test error? ah works woo!")
 	if game.Players.LocalPlayer.PlayerGui.MainGui.Hint.List.HintText.Text  == "Flash Flood!  Seek high and stable ground" then
-		game.CoreGui.UILibrary.Miscellaneous.Container.TextLabel.Text = "Next/Current Disaster;  Flash Flood"
+		game.CoreGui.UILibrary.Miscellaneous.Container.TextLabel2.Text = "Next/Current Disaster;  Flash Flood"
 	elseif game.Players.LocalPlayer.PlayerGui.MainGui.Hint.List.HintText.Text == "Earthquake!  Get outside and stay away from tall structures" then
-		game.CoreGui.UILibrary.Miscellaneous.Container.TextLabel.Text = "Next/Current Disaster;  Earthquake"
+		game.CoreGui.UILibrary.Miscellaneous.Container.TextLabel2.Text = "Next/Current Disaster;  Earthquake"
 	elseif game.Players.LocalPlayer.PlayerGui.MainGui.Hint.List.HintText.Text == "Tornado!  Stay clear of it's path" then
 		warn("if it doesnt update on the textlabel then roblox perms gotta rethink shit")
-		game.CoreGui.UILibrary.Miscellaneous.Container.TextLabel.Text = "Next/Current Disaster;  Tornado"
+		game.CoreGui.UILibrary.Miscellaneous.Container.TextLabel2.Text = "Next/Current Disaster;  Tornado"
 	elseif game.Players.LocalPlayer.PlayerGui.MainGui.Hint.List.HintText.Text == "Thunderstorm!  Don't stand in the open or high places" then
-		game.CoreGui.UILibrary.Miscellaneous.Container.TextLabel.Text = "Next/Current Disaster;  Thunderstorm"
+		game.CoreGui.UILibrary.Miscellaneous.Container.TextLabel2.Text = "Next/Current Disaster;  Thunderstorm"
 	elseif game.Players.LocalPlayer.PlayerGui.MainGui.Hint.List.HintText.Text == "Fire!  Keep distance from the fire" then
-		game.CoreGui.UILibrary.Miscellaneous.Container.TextLabel.Text = "Next/Current Disaster;  Fire"
+		game.CoreGui.UILibrary.Miscellaneous.Container.TextLabel2.Text = "Next/Current Disaster;  Fire"
 	elseif game.Players.LocalPlayer.PlayerGui.MainGui.Hint.List.HintText.Text == "Meteor Shower!  Watch the skies and find shelter" then
-		game.CoreGui.UILibrary.Miscellaneous.Container.TextLabel.Text = "Next/Current Disaster;  Meteor Shower"
+		game.CoreGui.UILibrary.Miscellaneous.Container.TextLabel2.Text = "Next/Current Disaster;  Meteor Shower"
 	elseif game.Players.LocalPlayer.PlayerGui.MainGui.Hint.List.HintText.Text == "Tsunami!  Get to higher ground" then
-		game.CoreGui.UILibrary.Miscellaneous.Container.TextLabel.Text = "Next/Current Disaster;  Tsunami"
+		game.CoreGui.UILibrary.Miscellaneous.Container.TextLabel2.Text = "Next/Current Disaster;  Tsunami"
 	elseif game.Players.LocalPlayer.PlayerGui.MainGui.Hint.List.HintText.Text == "Blizzard!  Seek warmth and find shelter" then
-		game.CoreGui.UILibrary.Miscellaneous.Container.TextLabel.Text = "Next/Current Disaster;  Blizzard"
+		game.CoreGui.UILibrary.Miscellaneous.Container.TextLabel2.Text = "Next/Current Disaster;  Blizzard"
 	elseif game.Players.LocalPlayer.PlayerGui.MainGui.Hint.List.HintText.Text == "Sandstorm!  Dodge flying objects" then
-		game.CoreGui.UILibrary.Miscellaneous.Container.TextLabel.Text = "Next/Current Disaster;  Sandstorm"
+		game.CoreGui.UILibrary.Miscellaneous.Container.TextLabel2.Text = "Next/Current Disaster;  Sandstorm"
 	elseif game.Players.LocalPlayer.PlayerGui.MainGui.Hint.List.HintText.Text == "Acid Rain!  Stay indoors" then
-		game.CoreGui.UILibrary.Miscellaneous.Container.TextLabel.Text = "Next/Current Disaster;  Acid Rain"
+		game.CoreGui.UILibrary.Miscellaneous.Container.TextLabel2.Text = "Next/Current Disaster;  Acid Rain"
 	elseif game.Players.LocalPlayer.PlayerGui.MainGui.Hint.List.HintText.Text == "Volcanic Eruption!  Get away from the volcano" then
-		game.CoreGui.UILibrary.Miscellaneous.Container.TextLabel.Text = "Next/Current Disaster;  Volcanic Eruption"
+		game.CoreGui.UILibrary.Miscellaneous.Container.TextLabel2.Text = "Next/Current Disaster;  Volcanic Eruption"
 	end
 end)
-game.CoreGui.UILibrary.Miscellaneous.Container.TextLabel.Changed:Connect(function()
-	print(game.CoreGui.UILibrary.Miscellaneous.Container.TextLabel.Text)
+game.CoreGui.UILibrary.Miscellaneous.Container.TextLabel2.Changed:Connect(function()
+	print(game.CoreGui.UILibrary.Miscellaneous.Container.TextLabel2.Text)
 	warn("if it doesnt update on the textlabel then roblox perms gotta rethink shit")
 end)
 
