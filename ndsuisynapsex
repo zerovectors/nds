@@ -1161,11 +1161,11 @@ miscellaneous:AddButton4("Toggle vFly Key; ' '",function()
 	end
 end)
 
-miscellaneous:AddLabel2("Next/Current Disaster; (WAITING FOR NEXT ROUND)")
+miscellaneous:AddLabel2("Current Disaster; (WAITING FOR NEXT ROUND)")
 
 game.Players.LocalPlayer.PlayerGui:WaitForChild("MainGui").Hint.List.HintText.Changed:Connect(function(property)
 	warn("aa test error? ah works woo!")
-	game.CoreGui.UILibrary.Miscellaneous.Container.TextLabel2.Text = "The current disaster is a "..game.Players.LocalPlayer.Character.SurvivalTag.Value
+	game.CoreGui.UILibrary.Miscellaneous.Container.TextLabel2.Text = "Current Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value
 end)
 
 miscellaneous:AddButton("Rejoin", function()
