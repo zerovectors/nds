@@ -1163,9 +1163,10 @@ end)
 
 miscellaneous:AddLabel2("Current Disaster; (WAITING FOR NEXT ROUND)")
 
-game.Players.LocalPlayer.PlayerGui:WaitForChild("MainGui").Hint.List.HintText.Changed:Connect(function(property)
-	warn("aa test error? ah works woo!")
+game.Players.LocalPlayer.Character.SurvivalTag.Changed:Connect(function()
 	game.CoreGui.UILibrary.Miscellaneous.Container.TextLabel2.Text = "Current Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value
+	warn("the current fucking disaster is; "..game.Players.LocalPlayer.Character.SurvivalTag.Value)
+	print("woo works im smart :sunglasses:")
 end)
 
 miscellaneous:AddButton("Rejoin", function()
