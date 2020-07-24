@@ -1167,10 +1167,6 @@ game.Players.LocalPlayer.PlayerGui:WaitForChild("MainGui").Hint.List.HintText.Ch
 	warn("aa test error? ah works woo!")
 	game.CoreGui.UILibrary.Miscellaneous.Container.TextLabel2.Text = "The current disaster is a "..game.Players.LocalPlayer.Character.SurvivalTag.Value)
 end)
-game.CoreGui.UILibrary.Miscellaneous.Container.TextLabel2.Changed:Connect(function()
-	print(game.CoreGui.UILibrary.Miscellaneous.Container.TextLabel2.Text)
-	warn("if it doesnt update on the textlabel then roblox perms gotta rethink shit")
-end)
 
 miscellaneous:AddButton("Rejoin", function()
   game:GetService('TeleportService'):Teleport(game.PlaceId)
