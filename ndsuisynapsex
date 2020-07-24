@@ -1163,6 +1163,17 @@ end)
 
 miscellaneous:AddLabel2("Current Disaster; (WAITING FOR NEXT ROUND)")
 
+if game.Players.LocalPlayer.Character:FindFirstChild("SurvivalTag") ~= nil then
+	game.CoreGui.UILibrary.Miscellaneous.Container.TextLabel2.Text = "Current Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value
+	warn("the current fucking disaster is; "..game.Players.LocalPlayer.Character.SurvivalTag.Value)
+	print("woo works im smart :sunglasses:")
+else
+	game.Players.LocalPlayer.Character:WaitForChild("SurvivalTag", 5)
+	if game.Players.LocalPlayer.Character:FindFirstChild("SurvivalTag") ~= nil then
+		game.CoreGui.UILibrary.Miscellaneous.Container.TextLabel2.Text = "Current Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value
+	end
+end
+
 game.Players.LocalPlayer.Character.ChildAdded:Connect(function(object)
 	if object:IsA("StringValue") then
 		if game.Players.LocalPlayer.Character ~= nil then
