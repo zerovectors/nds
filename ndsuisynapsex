@@ -1163,11 +1163,11 @@ end)
 
 miscellaneous:AddLabel2("Current Disaster; (WAITING FOR NEXT ROUND)")
 
-game.Players.LocalPlayer.Character:WaitForChild("SurvivalTag").Changed:Connect(function()
+while wait() do
 	game.CoreGui.UILibrary.Miscellaneous.Container.TextLabel2.Text = "Current Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value
 	warn("the current fucking disaster is; "..game.Players.LocalPlayer.Character.SurvivalTag.Value)
 	print("woo works im smart :sunglasses:")
-end)
+end
 
 miscellaneous:AddButton("Rejoin", function()
   game:GetService('TeleportService'):Teleport(game.PlaceId)
