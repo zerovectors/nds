@@ -1,1271 +1,713 @@
-local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/zerovectors/framework/master/source2", true))()
-local mouse = game.Players.LocalPlayer:GetMouse();
-local fd = game.Players.LocalPlayer.Character:WaitForChild("FallDamageScript")
-local char = game.Players.LocalPlayer.Character
-local Plrs = game:GetService("Players")
-local Run = game:GetService("RunService")
-local CoreGui = game:GetService("CoreGui")
-local StartGui = game:GetService("StarterGui")
-local Teams = game:GetService("Teams")
-local UserInput = game:GetService("UserInputService")
-local Light = game:GetService("Lighting")
-local HTTP = game:GetService("HttpService")
-local RepStor = game:GetService("ReplicatedStorage")
-
-function GetCamera()
-	return workspace:FindFirstChildOfClass("Camera")
-end
-
-local MyPlr = Plrs.LocalPlayer
-local MyChar = MyPlr.Character
-local MyMouse = MyPlr:GetMouse()
-local MyCam = GetCamera()
-if MyCam == nil then
-	return
-end
-
-local Tracers = Instance.new("Folder", MyCam)
-	Tracers.Name = "Tracers"
-	local TracerData = { }
-	local TracerMT = setmetatable(TracerData, {
-		__newindex = function(tab, index, val)
-			rawset(tab, index, val)
-		end
-})
-
-local ChamsFolder = Instance.new("Folder", CoreGui)
-ChamsFolder.Name = "Chams"
-local PlayerChams = Instance.new("Folder", ChamsFolder)
-PlayerChams.Name = "PlayerChams"
-local ItemChams = Instance.new("Folder", ChamsFolder)
-ItemChams.Name = "ItemChams"
-
-local visuals = library:CreateWindow({
-  text = "Visuals"
-})
-local character = library:CreateWindow({
-  text = "Character"
-})
-local teleports = library:CreateWindow({
-  text = "Teleports"
-})
-local miscellaneous = library:CreateWindow({
-  text = "Miscellaneous"
-})
-local changelog = library:CreateWindow({
-  text = "View Changelog"
-})
-
-local credits = library:CreateWindow({text='Credits'})
-credits:AddLabel("Credits\nInori; Dragging\nvect0rs; Scripts an shit\nwally; UI\nsmail; Ideas")
-
-loadstring(game:HttpGet("https://pastebin.com/raw/xKbbAuc7"))() wait(.1)
-
-local settings = {
-  TracersEnabled = false, -- Self explanatory. LEAVE OFF BY DEFAULT.
-  TracersLength = 500, -- MAX DISTANCE IS 2048 DO NOT GO ABOVE OR YOU'LL ENCOUNTER PROBLEMS.
-  PlaceTracersUnderCharacter = false,
-  CHAMSEnabled = false,
-	CHAMSLength = 500,
-	MobChams = false,
-  vfly = false;
-  dmg = false;
-	noclip = false;
-  autofarm = false;
-  autofarmuser = false;
-  bang = false;
-  logs = false;
-  vis = true;
-	headsituser = false;
-	togglekey = "Enum.UserInputType.Q";
-	flykey = "Enum.UserInputType.F";
-	vflykey = "Enum.UserInputType.V";
-  Blacklist = { },
-  FriendList = { },
-  Colors = {
-    Enemy = Color3.new(1, 0, 0),
-    Ally = Color3.new(0, 1, 0),
-    Friend = Color3.new(1, 1, 0),
-    Neutral = Color3.new(1, 1, 1),
-    Crosshair = Color3.new(1, 0, 0),
-    ColorOverride = nil, -- Every player will have the chosen color regardless of enemy or ally.
-  },
-  CharAddedEvent = { },
-	Mob_ESP_CHAMS_Ran_Once = false,
+local library = {
+	windowcount = 0;
 }
 
-if settings.TracersLength > 2048 then
-	settings.TracersLength = 2048
-end
+local dragger = {};
+local resizer = {};
 
-if settings.CHAMSLength > 2048 then
-	settings.CHAMSLength = 2048
-end
+do
+	local mouse = game:GetService("Players").LocalPlayer:GetMouse();
+	local inputService = game:GetService('UserInputService');
+	local heartbeat = game:GetService("RunService").Heartbeat;
+	-- // credits to Ririchi / Inori for this cute drag function :)
+	function dragger.new(frame)
+	    local s, event = pcall(function()
+	    	return frame.MouseEnter
+	    end)
 
-function GetSizeOfObject(Obj)
-	if Obj:IsA("BasePart") then
-		return Obj.Size
-	elseif Obj:IsA("Model") then
-		return Obj:GetExtentsSize()
-	end
-end
+	    if s then
+	    	frame.Active = true;
 
-function GetTeamColor(Plr)
-	if Plr == nil then return nil end
-	if not Plr:IsA("Player") then
-		return nil
-	end
-	local PickedColor = settings.Colors.Enemy
+	    	event:connect(function()
+	    		local input = frame.InputBegan:connect(function(key)
+	    			if key.UserInputType == Enum.UserInputType.MouseButton1 then
+	    				local objectPosition = Vector2.new(mouse.X - frame.AbsolutePosition.X, mouse.Y - frame.AbsolutePosition.Y);
+	    				while heartbeat:wait() and inputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) do
+	    					frame:TweenPosition(UDim2.new(0, mouse.X - objectPosition.X + (frame.Size.X.Offset * frame.AnchorPoint.X), 0, mouse.Y - objectPosition.Y + (frame.Size.Y.Offset * frame.AnchorPoint.Y)), 'Out', 'Quad', 0.1, true);
+	    				end
+	    			end
+	    		end)
 
-	if Plr ~= nil then
-		if game.PlaceId == 606849621 then
-			if settings.Colors.ColorOverride == nil then
-				if not settings.FreeForAll then
-					if MyPlr.Team ~= nil and Plr.Team ~= nil then
-						if settings.FriendList[Plr.Name] == nil then
-							if MyPlr.Team.Name == "Prisoner" then
-								if Plr.Team == MyPlr.Team or Plr.Team.Name == "Criminal" then
-									PickedColor = settings.Colors.Ally
-								else
-									PickedColor = settings.Colors.Enemy
-								end
-							elseif MyPlr.Team.Name == "Criminal" then
-								if Plr.Team == MyPlr.Team or Plr.Team.Name == "Prisoner" then
-									PickedColor = settings.Colors.Ally
-								else
-									PickedColor = settings.Colors.Enemy
-								end
-							elseif MyPlr.Team.Name == "Police" then
-								if Plr.Team == MyPlr.Team then
-									PickedColor = settings.Colors.Ally
-								else
-									if Plr.Team.Name == "Criminal" then
-										PickedColor = settings.Colors.Enemy
-									elseif Plr.Team.Name == "Prisoner" then
-										PickedColor = settings.Colors.Neutral
-									end
-								end
-							end
-						else
-							PickedColor = settings.Colors.Friend
-						end
-					end
-				else
-					if settings.FriendList[Plr.Name] ~= nil then
-						PickedColor = settings.Colors.Friend
-					else
-						PickedColor = settings.Colors.Enemy
-					end
-				end
-			else
-				PickedColor = settings.Colors.ColorOverride
-			end
-		elseif game.PlaceId == 155615604 then
-			if settings.Colors.ColorOverride == nil then
-				if MyPlr.Team ~= nil and Plr.Team ~= nil then
-					if settings.FriendList[Plr.Name] == nil then
-						if MyPlr.Team.Name == "Inmates" then
-							if Plr.Team.Name == "Inmates" then
-								PickedColor = settings.Colors.Ally
-							elseif Plr.Team.Name == "Guards" or Plr.Team.Name == "Criminals" then
-								PickedColor = settings.Colors.Enemy
-							else
-								PickedColor = settings.Colors.Neutral
-							end
-						elseif MyPlr.Team.Name == "Guards" then
-							if Plr.Team.Name == "Inmates" then
-								PickedColor = settings.Colors.Neutral
-							elseif Plr.Team.Name == "Criminals" then
-								PickedColor = settings.Colors.Enemy
-							elseif Plr.Team.Name == "Guards" then
-								PickColor = settings.Colors.Ally
-							end
-						elseif MyPlr.Team.Name == "Criminals" then
-							if Plr.Team.Name == "Inmates" then
-								PickedColor = settings.Colors.Ally
-							elseif Plr.Team.Name == "Guards" then
-								PickedColor = settings.Colors.Enemy
-							else
-								PickedColor = settings.Colors.Neutral
-							end
-						end
-					else
-						PickedColor = settings.Colors.Friend
-					end
-				end
-			else
-				PickedColor = settings.Colors.ColorOverride
-			end
-		elseif game.PlaceId == 746820961 then
-			if settings.Colors.ColorOverride == nil then
-				if MyPlr:FindFirstChild("TeamC") and Plr:FindFirstChild("TeamC") then
-					if Plr.TeamC.Value == MyPlr.TeamC.Value then
-						PickedColor = settings.Colors.Ally
-					else
-						PickedColor = settings.Colors.Enemy
-					end
-				end
-			else
-				PickedColor = settings.Colors.ColorOverride
-			end
-		elseif game.PlaceId == 1382113806 then
-			if settings.Colors.ColorOverride == nil then
-				if MyPlr:FindFirstChild("role") and Plr:FindFirstChild("role") then
-					if MyPlr.role.Value == "assassin" then
-						if Plr.role.Value == "target" then
-							PickedColor = settings.Colors.Enemy
-						elseif Plr.role.Value == "guard" then
-							PickedColor = Color3.new(1, 135 / 255, 0)
-						else
-							PickedColor = settings.Colors.Neutral
-						end
-					elseif MyPlr.role.Value == "target" then
-						if Plr.role.Value == "guard" then
-							PickedColor = settings.Colors.Ally
-						elseif Plr.role.Value == "assassin" then
-							PickedColor = settings.Colors.Enemy
-						else
-							PickedColor = settings.Colors.Neutral
-						end
-					elseif MyPlr.role.Value == "guard" then
-						if Plr.role.Value == "target" then
-							PickedColor = settings.Colors.Friend
-						elseif Plr.role.Value == "guard" then
-							PickedColor = settings.Colors.Ally
-						elseif Plr.role.Value == "assassin" then
-							PickedColor = settings.Colors.Enemy
-						else
-							PickedColor = settings.Colors.Neutral
-						end
-					else
-						if MyPlr.role.Value == "none" then
-							PickedColor = settings.Colors.Neutral
-						end
-					end
-				end
-			else
-				PickedColor = settings.Colors.ColorOverride
-			end
-		elseif game.PlaceId == 1072809192 then
-			if MyPlr:FindFirstChild("Backpack") and Plr:FindFirstChild("Backpack") then
-				if MyPlr.Backpack:FindFirstChild("Knife") or MyChar:FindFirstChild("Knife") then
-					if Plr.Backpack:FindFirstChild("Revolver") or Plr.Character:FindFirstChild("Revolver") then
-						PickedColor = settings.Colors.Enemy
-					else
-						PickedColor = Color3.new(1, 135 / 255, 0)
-					end
-				elseif MyPlr.Backpack:FindFirstChild("Revolver") or MyChar:FindFirstChild("Revolver") then
-					if Plr.Backpack:FindFirstChild("Knife") or Plr.Character:FindFirstChild("Knife") then
-						PickedColor = settings.Colors.Enemy
-					elseif Plr.Backpack:FindFirstChild("Revolver") or Plr.Character:FindFirstChild("Revolver") then
-						PickedColor = settings.Colors.Enemy
-					else
-						PickedColor = settings.Colors.Ally
-					end
-				else
-					if Plr.Backpack:FindFirstChild("Knife") or Plr.Character:FindFirstChild("Knife") then
-						PickedColor = settings.Colors.Enemy
-					elseif Plr.Backpack:FindFirstChild("Revolver") or Plr.Character:FindFirstChild("Revolver") then
-						PickedColor = settings.Colors.Ally
-					else
-						PickedColor = settings.Colors.Neutral
-					end
-				end
-			end
-		elseif game.PlaceId == 142823291 or game.PlaceId == 1122507250 then
-			if MyPlr:FindFirstChild("Backpack") and Plr:FindFirstChild("Backpack") then
-				if MyPlr.Backpack:FindFirstChild("Knife") or MyChar:FindFirstChild("Knife") then
-					if (Plr.Backpack:FindFirstChild("Gun") or Plr.Backpack:FindFirstChild("Revolver")) or (Plr.Character:FindFirstChild("Gun") or Plr.Character:FindFirstChild("Revolver")) then
-						PickedColor = settings.Colors.Enemy
-					else
-						PickedColor = Color3.new(1, 135 / 255, 0)
-					end
-				elseif (MyPlr.Backpack:FindFirstChild("Gun") or MyPlr.Backpack:FindFirstChild("Revolver")) or (MyChar:FindFirstChild("Gun") or MyChar:FindFirstChild("Revolver")) then
-					if Plr.Backpack:FindFirstChild("Knife") or Plr.Character:FindFirstChild("Knife") then
-						PickedColor = settings.Colors.Enemy
-					else
-						PickedColor = settings.Colors.Ally
-					end
-				else
-					if Plr.Backpack:FindFirstChild("Knife") or Plr.Character:FindFirstChild("Knife") then
-						PickedColor = settings.Colors.Enemy
-					elseif (Plr.Backpack:FindFirstChild("Gun") or Plr.Backpack:FindFirstChild("Revolver")) or (Plr.Character:FindFirstChild("Gun") or Plr.Character:FindFirstChild("Revolver")) then
-						PickedColor = settings.Colors.Ally
-					else
-						PickedColor = settings.Colors.Neutral
-					end
-				end
-			end
-		elseif game.PlaceId == 379614936 then
-			if settings.Colors.ColorOverride == nil then
-				if not settings.FriendList[Plr.Name] then
-					local targ = MyPlr:FindFirstChild("PlayerGui"):FindFirstChild("ScreenGui"):FindFirstChild("UI"):FindFirstChild("Target"):FindFirstChild("Img"):FindFirstChild("PlayerText")
-					if targ then
-						if Plr.Name:lower() == targ.Text:lower() then
-							PickedColor = settings.Colors.Enemy
-						else
-							PickedColor = settings.Colors.Neutral
-						end
-					else
-						PickedColor = settings.Colors.Neutral
-					end
-				else
-					PickedColor = settings.Colors.Friend
-				end
-			else
-				PickedColor = settings.Colors.ColorOverride
-			end
-		elseif game.PlaceId == 983224898 then
-			if (tick() - wildrevolvertick) > 10 or wildrevolverteamdata == nil then
-				wildrevolverteamdata = RepStor.Functions.RequestGameData:InvokeServer()
-				wildrevolvertick = tick()
-				return settings.Colors.Neutral
-			end
-			local succ = pcall(function()
-				if wildrevolverteamdata[Plr.Name] ~= nil then
-					if settings.Colors.ColorOverride == nil then
-						if not settings.FriendList[Plr.Name] then
-							if wildrevolverteamdata[Plr.Name]["TeamName"] == wildrevolverteamdata[MyPlr.Name]["TeamName"] then
-								PickedColor = settings.Colors.Ally
-							else
-								PickedColor = settings.Colors.Enemy
-							end
-						else
-							PickedColor = settings.Colors.Friend
-						end
-					else
-						PickedColor = settings.Colors.ColorOverride
-					end
-				else
-					PickedColor = settings.Colors.Neutral
-				end
-			end)
-			if not succ then
-				wildrevolverteamdata = RepStor.Functions.RequestGameData:InvokeServer()
-				wildrevolvertick = tick()
-				return settings.Colors.Neutral
-			end
-		else
-			if settings.Colors.ColorOverride == nil then
-				if not settings.FreeForAll then
-					if MyPlr.Team ~= Plr.Team and not settings.FriendList[Plr.Name] then
-						PickedColor = settings.Colors.Enemy
-					elseif MyPlr.Team == Plr.Team and not settings.FriendList[Plr.Name] then
-						PickedColor = settings.Colors.Ally
-					else
-						PickedColor = settings.Colors.Friend
-					end
-				else
-					if settings.FriendList[Plr.Name] ~= nil then
-						PickedColor = settings.Colors.Friend
-					else
-						PickedColor = settings.Colors.Enemy
-					end
-				end
-			else
-				PickedColor = settings.Colors.ColorOverride
-			end
-		end
+	    		local leave;
+	    		leave = frame.MouseLeave:connect(function()
+	    			input:disconnect();
+	    			leave:disconnect();
+	    		end)
+	    	end)
+	    end
 	end
 
-	return PickedColor
-end
-
-function UpdateTracer(Plr)
-	if settings.TracersEnabled then
-		if MyChar then
-			local MyTor = MyChar:FindFirstChild("HumanoidRootPart")
-			local GetTor = TracerData[Plr.Name]
-			if MyTor and GetTor ~= nil and GetTor.Parent ~= nil then
-				local Dist = (MyTor.Position - GetTor.Position).magnitude
-				if (Dist < settings.TracersLength and not settings.Blacklist[Plr.Name]) and not (MyChar:FindFirstChild("InVehicle") or GetTor.Parent:FindFirstChild("InVehicle")) then
-					if not settings.PlaceTracersUnderCharacter then
-						local R = MyCam:ScreenPointToRay(MyCam.ViewportSize.X / 2, MyCam.ViewportSize.Y, 0)
-						Dist = (R.Origin - (GetTor.Position - Vector3.new(0, 3, 0))).magnitude
-						Tracers[Plr.Name].Transparency = 1
-						Tracers[Plr.Name].Size = Vector3.new(0.05, 0.05, Dist)
-						Tracers[Plr.Name].CFrame = CFrame.new(R.Origin, (GetTor.Position - Vector3.new(0, 4.5, 0))) * CFrame.new(0, 0, -Dist / 2)
-						Tracers[Plr.Name].BrickColor = BrickColor.new(GetTeamColor(Plr))
-						Tracers[Plr.Name].BoxHandleAdornment.Transparency = 0
-						Tracers[Plr.Name].BoxHandleAdornment.Size = Vector3.new(0.001, 0.001, Dist)
-						Tracers[Plr.Name].BoxHandleAdornment.Color3 = GetTeamColor(Plr)
-					else
-						Dist = (MyTor.Position - (GetTor.Position - Vector3.new(0, 3, 0))).magnitude
-						Tracers[Plr.Name].Transparency = 1
-						Tracers[Plr.Name].Size = Vector3.new(0.3, 0.3, Dist)
-						Tracers[Plr.Name].CFrame = CFrame.new(MyTor.Position - Vector3.new(0, 3, 0), (GetTor.Position - Vector3.new(0, 4.5, 0))) * CFrame.new(0, 0, -Dist / 2)
-						Tracers[Plr.Name].BrickColor = BrickColor.new(GetTeamColor(Plr))
-						Tracers[Plr.Name].BoxHandleAdornment.Transparency = 0
-						Tracers[Plr.Name].BoxHandleAdornment.Size = Vector3.new(0.05, 0.05, Dist)
-						Tracers[Plr.Name].BoxHandleAdornment.Color3 = GetTeamColor(Plr)
-					end
-				else
-					Tracers[Plr.Name].Transparency = 1
-					Tracers[Plr.Name].BoxHandleAdornment.Transparency = 1
-				end
-			end
-		end
-	end
-end
-
-function RemoveTracers(Plr)
-	local Find = Tracers:FindFirstChild(Plr.Name)
-	if Find then
-		Find:Destroy()
-	end
-end
-
-function CreateTracers(Plr)
-	local Find = Tracers:FindFirstChild(Plr.Name)
-	if not Find then
-		local P = Instance.new("Part")
-		P.Name = Plr.Name
-		P.Material = "Neon"
-		P.Transparency = 1
-		P.Anchored = true
-		P.Locked = true
-		P.CanCollide = false
-		local B = Instance.new("BoxHandleAdornment", P)
-		B.Adornee = P
-		B.Size = GetSizeOfObject(P)
-		B.AlwaysOnTop = true
-		B.ZIndex = 5
-		B.Transparency = 0
-		B.Color3 = GetTeamColor(Plr) or settings.Colors.Neutral
-		P.Parent = Tracers
-
-		coroutine.resume(coroutine.create(function()
-			while Tracers:FindFirstChild(Plr.Name) do
-				UpdateTracer(Plr)
-				Run.RenderStepped:wait()
-			end
-		end))
-	end
-end
-
-function FindCham(Obj)
-	for i, v in next, ItemChams:GetChildren() do
-		if v.className == "ObjectValue" then
-			if v.Value == Obj then
-				return v.Parent
-			end
-		end
-	end
-
-	return nil
-end
-
-function UpdateChams(Obj)
-	if Obj == nil then return end
-
-	if Obj:IsA("Player") then
-		local Find = PlayerChams:FindFirstChild(Obj.Name)
-		local GetChar = Obj.Character
-
-		local Trans = 0
-		if GetChar and MyChar then
-			local GetHead = GetChar:FindFirstChild("Head")
-			local GetTor = GetChar:FindFirstChild("HumanoidRootPart")
-			local MyHead = MyChar:FindFirstChild("Head")
-			local MyTor = MyChar:FindFirstChild("HumanoidRootPart")
-			if GetHead and GetTor and MyHead and MyTor then
-				if (MyTor.Position - GetTor.Position).magnitude > settings.CHAMSLength or settings.Blacklist[Obj.Name] then
-					Trans = 1
-				else
-					--local MyCharStuff = MyChar:GetDescendants()
-					local Ray = Ray.new(MyCam.CFrame.p, (GetTor.Position - MyCam.CFrame.p).unit * 2048)
-					local part = workspace:FindPartOnRayWithIgnoreList(Ray, {MyChar})
-					if part ~= nil then
-						if part:IsDescendantOf(GetChar) then
-							Trans = 0.9
-						else
-							Trans = 0
-						end
-					end
-				end
-			end
-		end
-
-		if Find then
-			for i, v in next, Find:GetChildren() do
-				if v.className ~= "ObjectValue" then
-					v.Color3 = GetTeamColor(Obj) or settings.Colors.Neutral
-					v.Transparency = Trans
-				end
-			end
-		end
-	end
-end
-
-function RemoveChams(Obj)
-	if Obj ~= nil then
-		local IsPlr = Obj:IsA("Player")
-		local UseFolder = ItemChams
-		if IsPlr then UseFolder = PlayerChams end
-
-		local FindC = UseFolder:FindFirstChild(tostring(Obj)) or FindCham(Obj)
-		if FindC then
-			FindC:Destroy()
-		end
-	end
-end
-
-function CreateChams(Obj)
-	if Obj ~= nil then
-		local IsPlr = Obj:IsA("Player")
-		local UseFolder = ItemChams
-		local Crap = nil
-		local GetTor = nil
-		local t = tick()
-		if IsPlr then
-			Obj = Obj.Character
-			UseFolder = PlayerChams
-		end
-		if Obj == nil then return end
-		GetTor = Obj:FindFirstChild("HumanoidRootPart") or Obj:WaitForChild("HumanoidRootPart")
-		if IsPlr then Crap = Obj:GetChildren() else Crap = Obj:GetDescendants() end
-
-		local FindC = ((IsPlr) and UseFolder:FindFirstChild(Obj.Name)) or FindCham(Obj)
-		if not FindC then
-			FindC = Instance.new("Folder", UseFolder)
-			FindC.Name = Obj.Name
-			local ObjVal = Instance.new("ObjectValue", FindC)
-			ObjVal.Value = Obj
-		end
-
-		for _, P in next, Crap do
-			if P:IsA("PVInstance") and P.Name ~= "HumanoidRootPart" then
-				local Box = Instance.new("BoxHandleAdornment")
-				Box.Size = GetSizeOfObject(P)
-				Box.Name = "Cham"
-				Box.Adornee = P
-				Box.AlwaysOnTop = true
-				Box.ZIndex = 5
-				Box.Transparency = 0
-				Box.Color3 = ((IsPlr) and GetTeamColor(Plrs:GetPlayerFromCharacter(Obj))) or settings.Colors.Neutral
-				Box.Parent = FindC
-			end
-		end
-	end
-end
-
-function CreateMobESPChams()
-	local mobspawn = { }
-
-	for i, v in next, workspace:GetDescendants() do
-		local hum = v:FindFirstChildOfClass("Humanoid")
-		if hum and not Plrs:GetPlayerFromCharacter(hum.Parent) and FindCham(v) == nil and FindESP(v) == nil then
-			mobspawn[tostring(v.Parent)] = v.Parent
-			if settings.CHAMSEnabled and settings.MobChams then
-				CreateChams(v)
-			end
-			if settings.ESPEnabled and settings.MobESP then
-				CreateESP(v)
-			end
-		end
-	end
-
-	if settings.Mob_ESP_CHAMS_Ran_Once == false then
-		for i, v in next, mobspawn do
-			v.ChildAdded:connect(function(Obj)
-				if settings.MobChams then
-					local t = tick()
-					local GetHum = Obj:FindFirstChildOfClass("Humanoid")
-					if GetHum == nil then
-						repeat
-							GetHum = Obj:FindFirstChildOfClass("Humanoid")
-							wait()
-						until GetHum ~= nil or (tick() - t) >= 10
-					end
-					if GetHum == nil then return end
-
-					CreateChams(Obj)
-				end
-
-				if settings.MobESP then
-					local t = tick()
-					local GetHum = Obj:FindFirstChildOfClass("Humanoid")
-					if GetHum == nil then
-						repeat
-							GetHum = Obj:FindFirstChildOfClass("Humanoid")
-							wait()
-						until GetHum ~= nil or (tick() - t) >= 10
-					end
-					if GetHum == nil then return end
-
-					CreateESP(Obj)
-				end
-			end)
-		end
-
-		settings.Mob_ESP_CHAMS_Ran_Once = true
-	end
-end
-
-vflyspeed = 1
-vehicleflyspeed = 1
-function sFLY(vfly)
-	repeat wait() until game.Players.LocalPlayer and game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild('HumanoidRootPart') and game.Players.LocalPlayer.Character:FindFirstChild('Humanoid')
-	repeat wait() until mouse
-
-	local T = game.Players.LocalPlayer.Character.HumanoidRootPart
-	local CONTROL = {F = 0, B = 0, L = 0, R = 0, Q = 0, E = 0}
-	local lCONTROL = {F = 0, B = 0, L = 0, R = 0, Q = 0, E = 0}
-	local SPEED = 0
-
-	local function FLY()
-		settings.vfly = true
-		local BG = Instance.new('BodyGyro', T)
-		local BV = Instance.new('BodyVelocity', T)
-		BG.P = 9e4
-		BG.maxTorque = Vector3.new(9e9, 9e9, 9e9)
-		BG.cframe = T.CFrame
-		BV.velocity = Vector3.new(0, 0, 0)
-		BV.maxForce = Vector3.new(9e9, 9e9, 9e9)
-		spawn(function()
-			repeat wait()
-			if not vfly then
-				game.Players.LocalPlayer.Character:FindFirstChildOfClass('Humanoid').PlatformStand = true
-			end
-			if CONTROL.L + CONTROL.R ~= 0 or CONTROL.F + CONTROL.B ~= 0 or CONTROL.Q + CONTROL.E ~= 0 then
-				SPEED = 50
-			elseif not (CONTROL.L + CONTROL.R ~= 0 or CONTROL.F + CONTROL.B ~= 0 or CONTROL.Q + CONTROL.E ~= 0) and SPEED ~= 0 then
-				SPEED = 0
-			end
-			if (CONTROL.L + CONTROL.R) ~= 0 or (CONTROL.F + CONTROL.B) ~= 0 or (CONTROL.Q + CONTROL.E) ~= 0 then
-				BV.velocity = ((workspace.CurrentCamera.CoordinateFrame.lookVector * (CONTROL.F + CONTROL.B)) + ((workspace.CurrentCamera.CoordinateFrame * CFrame.new(CONTROL.L + CONTROL.R, (CONTROL.F + CONTROL.B + CONTROL.Q + CONTROL.E) * 0.2, 0).p) - workspace.CurrentCamera.CoordinateFrame.p)) * SPEED
-				lCONTROL = {F = CONTROL.F, B = CONTROL.B, L = CONTROL.L, R = CONTROL.R}
-			elseif (CONTROL.L + CONTROL.R) == 0 and (CONTROL.F + CONTROL.B) == 0 and (CONTROL.Q + CONTROL.E) == 0 and SPEED ~= 0 then
-				BV.velocity = ((workspace.CurrentCamera.CoordinateFrame.lookVector * (lCONTROL.F + lCONTROL.B)) + ((workspace.CurrentCamera.CoordinateFrame * CFrame.new(lCONTROL.L + lCONTROL.R, (lCONTROL.F + lCONTROL.B + CONTROL.Q + CONTROL.E) * 0.2, 0).p) - workspace.CurrentCamera.CoordinateFrame.p)) * SPEED
-			else
-				BV.velocity = Vector3.new(0, 0, 0)
-			end
-			BG.cframe = workspace.CurrentCamera.CoordinateFrame
-			until not settings.vfly
-			CONTROL = {F = 0, B = 0, L = 0, R = 0, Q = 0, E = 0}
-			lCONTROL = {F = 0, B = 0, L = 0, R = 0, Q = 0, E = 0}
-			SPEED = 0
-			BG:destroy()
-			BV:destroy()
-			game.Players.LocalPlayer.Character:FindFirstChildOfClass('Humanoid').PlatformStand = false
+	function resizer.new(p, s)
+		p:GetPropertyChangedSignal('AbsoluteSize'):connect(function()
+			s.Size = UDim2.new(s.Size.X.Scale, s.Size.X.Offset, s.Size.Y.Scale, p.AbsoluteSize.Y);
 		end)
 	end
-	mouse.KeyDown:connect(function(KEY)
-		if KEY:lower() == 'w' then
-			if vfly then
-				CONTROL.F = vehicleflyspeed
-			else
-				CONTROL.F = vflyspeed
-			end
-		elseif KEY:lower() == 's' then
-			if vfly then
-				CONTROL.B = - vehicleflyspeed
-			else
-				CONTROL.B = - vflyspeed
-			end
-		elseif KEY:lower() == 'a' then
-			if vfly then
-				CONTROL.L = - vehicleflyspeed
-			else
-				CONTROL.L = - vflyspeed
-			end
-		elseif KEY:lower() == 'd' then
-			if vfly then
-				CONTROL.R = vehicleflyspeed
-			else
-				CONTROL.R = vflyspeed
-            end
-        elseif KEY:lower() == 'e' then
-            if vfly then
-                CONTROL.Q = vehicleflyspeed*2
-            else
-                CONTROL.Q = vflyspeed*2
-            end
-        elseif KEY:lower() == 'q' then
-            if vfly then
-                CONTROL.E = -vehicleflyspeed*2
-            else
-                CONTROL.E = -vflyspeed*2
-            end
-		end
-	end)
-	mouse.KeyUp:connect(function(KEY)
-		if KEY:lower() == 'w' then
-			CONTROL.F = 0
-		elseif KEY:lower() == 's' then
-			CONTROL.B = 0
-		elseif KEY:lower() == 'a' then
-			CONTROL.L = 0
-		elseif KEY:lower() == 'd' then
-            CONTROL.R = 0
-        elseif KEY:lower() == 'e' then
-            CONTROL.Q = 0
-        elseif KEY:lower() == 'q' then
-            CONTROL.E = 0
-		end
-	end)
-	FLY()
 end
 
-function NOFLY()
-	settings.vfly = false
-	game.Players.LocalPlayer.Character:FindFirstChildOfClass('Humanoid').PlatformStand = false
-end
 
-function Time()
-	local HOUR = math.floor((tick() % 86400) / 3600)
-	local MINUTE = math.floor((tick() % 3600) / 60)
-	local SECOND = math.floor(tick() % 60)
-	local AP = HOUR > 11 and 'PM' or 'AM'
-	HOUR = (HOUR % 12 == 0 and 12 or HOUR % 12)
-	HOUR = HOUR < 10 and '0' .. HOUR or HOUR
-	MINUTE = MINUTE < 10 and '0' .. MINUTE or MINUTE
-	SECOND = SECOND < 10 and '0' .. SECOND or SECOND
-	return HOUR .. ':' .. MINUTE .. ':' .. SECOND .. ' ' .. AP
-end
+local defaults = {
+	txtcolor = Color3.fromRGB(255, 255, 255),
+	underline = Color3.fromRGB(121, 9, 255),
+	barcolor = Color3.fromRGB(40, 40, 40),
+	bgcolor = Color3.fromRGB(30, 30, 30),
+}
 
-function CreateLabel(Name, Text)
-	if #game.CoreGui.UILibrary.chatlogs.logpannel.main:GetChildren() >= 2546 then
-		game.CoreGui.UILibrary.chatlogs.logpannel.main:ClearAllChildren()
-	end
-	local alls = 0
-	for i,v in pairs(game.CoreGui.UILibrary.chatlogs.logpannel.main:GetChildren()) do
-		if v then
-			alls = v.Size.Y.Offset + alls
-		end
-		if not v then
-			alls = 0
+function library:Create(class, props)
+	local object = Instance.new(class);
+
+	for i, prop in next, props do
+		if i ~= "Parent" then
+			object[i] = prop;
 		end
 	end
-	local tl = Instance.new('TextLabel', game.CoreGui.UILibrary.chatlogs.logpannel.main)
-	local il = Instance.new('Frame', tl)
-	tl.Name = Name
-	tl.ZIndex = 10
-	tl.Text = Time().." - ["..Name.."]: "..Text
-	tl.Size = UDim2.new(0,322,0,84)
-	tl.BackgroundTransparency = 1
-	tl.BorderSizePixel = 0
-	tl.Font = "SourceSans"
-	tl.Position = UDim2.new(-1,0,0,alls)
-	tl.TextTransparency = 1
-	tl.TextScaled = false
-	tl.TextSize = 14
-	tl.TextWrapped = true
-	tl.TextXAlignment = "Left"
-	tl.TextYAlignment = "Top"
-	il.BackgroundTransparency = 1
-	il.BorderSizePixel = 0
-	il.Size = UDim2.new(0,12,1,0)
-	il.Position = UDim2.new(0,316,0,0)
-	il.ZIndex = 10
-	tl.TextColor3 = Color3.fromRGB(255,255,255)
-	tl.Size = UDim2.new(0,322,0,tl.TextBounds.Y)
-	game.CoreGui.UILibrary.chatlogs.logpannel.main.CanvasPosition = Vector2.new(0,game.CoreGui.UILibrary.chatlogs.logpannel.main.CanvasPosition.Y+tl.TextBounds.Y)
-	local size2 = game.CoreGui.UILibrary.chatlogs.logpannel.main.CanvasSize.Y.Offset
-	tl:TweenPosition(UDim2.new(0,3,0,alls), 'In', 'Quint', 0.5)
-	for i = 0,50 do wait(0.05)
-		tl.TextTransparency = tl.TextTransparency - 0.05
-	end
-	tl.TextTransparency = 0
+
+	object.Parent = props.Parent;
+	return object;
 end
 
-function writefileExploit()
-	if writefile then
-		return true
-	end
-end
+function library:CreateWindow(options)
+	assert(options.text, "no name");
+	local window = {
+		count = 0;
+		toggles = {},
+		closed = false;
+	}
 
-ChatLog = function(plr)
-	plr.Chatted:Connect(function(Message)
-		if settings.logs == true then
-			CreateLabel(plr.Name,Message)
-		end
-	end)
-end
+	local options = options or {};
+	setmetatable(options, {__index = defaults})
 
-local cooldown = false
-function writefileCooldown(name,data)
-	spawn(function()
-		if not cooldown then
-			cooldown = true
-			writefile(name, data)
+	self.windowcount = self.windowcount + 1;
+
+	library.gui = library.gui or self:Create("ScreenGui", {Name = "UILibrary", Parent = game:GetService("CoreGui")})
+	window.frame = self:Create("Frame", {
+		Name = options.text;
+		Parent = self.gui,
+		Active = true,
+		BackgroundTransparency = 0,
+		Size = UDim2.new(0, 190, 0, 30),
+		Position = UDim2.new(0, (15 + ((200 * self.windowcount) - 200)), 0, 15),
+		BackgroundColor3 = options.barcolor,
+		BorderSizePixel = 0;
+	})
+
+	window.background = self:Create('Frame', {
+		Name = 'Background';
+		Parent = window.frame,
+		BorderSizePixel = 0;
+		BackgroundColor3 = options.bgcolor,
+		Position = UDim2.new(0, 0, 1, 0),
+		Size = UDim2.new(1, 0, 0, 25),
+		ClipsDescendants = true;
+	})
+
+	window.container = self:Create('Frame', {
+		Name = 'Container';
+		Parent = window.frame,
+		BorderSizePixel = 0;
+		BackgroundColor3 = options.bgcolor,
+		Position = UDim2.new(0, 0, 1, 0),
+		Size = UDim2.new(1, 0, 0, 25),
+		ClipsDescendants = true;
+	})
+
+	window.organizer = self:Create('UIListLayout', {
+		Name = 'Sorter';
+		--Padding = UDim.new(0, 0);
+		SortOrder = Enum.SortOrder.LayoutOrder;
+		Parent = window.container;
+	})
+
+	window.padder = self:Create('UIPadding', {
+		Name = 'Padding';
+		PaddingLeft = UDim.new(0, 10);
+		PaddingTop = UDim.new(0, 5);
+		Parent = window.container;
+	})
+
+	self:Create("Frame", {
+		Name = 'Underline';
+		Size = UDim2.new(1, 0, 0, 1),
+		Position = UDim2.new(0, 0, 1, -1),
+		BorderSizePixel = 0;
+		BackgroundColor3 = options.underline;
+		Parent = window.frame
+	})
+
+	local togglebutton = self:Create("TextButton", {
+		Name = 'Toggle';
+		ZIndex = 2,
+		BackgroundTransparency = 1;
+		Position = UDim2.new(1, -25, 0, 0),
+		Size = UDim2.new(0, 25, 1, 0),
+		Text = "-",
+		TextSize = 17,
+		TextColor3 = options.txtcolor,
+		Font = Enum.Font.SourceSans;
+		Parent = window.frame,
+	});
+
+	togglebutton.MouseButton1Click:connect(function()
+		window.closed = not window.closed
+		togglebutton.Text = (window.closed and "+" or "-")
+		if window.closed then
+			window:Resize(true, UDim2.new(1, 0, 0, 0))
 		else
-			repeat wait() until cooldown == false
-			writefileCooldown(name,data)
-		end
-		wait(3)
-		cooldown = false
-	end)
-end
-
-visuals:AddToggle("ESP", function(state)
-	settings.CHAMSEnabled = not settings.CHAMSEnabled
-	if settings.CHAMSEnabled then
-		for _, v in next, Plrs:GetPlayers() do
-			if v ~= MyPlr then
-				if settings.CharAddedEvent[v.Name] == nil then
-					settings.CharAddedEvent[v.Name] = v.CharacterAdded:connect(function(Char)
-						if settings.CHAMSEnabled then
-							RemoveChams(v)
-							CreateChams(v)
-						end
-						repeat wait() until Char:FindFirstChild("HumanoidRootPart")
-						TracerMT[v.Name] = Char.HumanoidRootPart
-					end)
-				end
-				RemoveChams(v)
-				CreateChams(v)
-			end
-		end
-		CreateMobESPChams()
-	else
-		PlayerChams:ClearAllChildren()
-		ItemChams:ClearAllChildren()
-	end
-end)
-
-visuals:AddToggle("Tracers", function(state)
-  settings.TracersEnabled = not settings.TracersEnabled
-  if settings.TracersEnabled then
-    for _, v in next, Plrs:GetPlayers() do
-      if v ~= MyPlr then
-        if settings.CharAddedEvent[v.Name] == nil then
-          settings.CharAddedEvent[v.Name] = v.CharacterAdded:connect(function(Char)
-            if settings.TracersEnabled then
-              RemoveTracers(v)
-              CreateTracers(v)
-            end
-          end)
-        end
-        if v.Character ~= nil then
-          local Tor = v.Character:FindFirstChild("HumanoidRootPart")
-          if Tor then
-            TracerMT[v.Name] = Tor
-          end
-        end
-        RemoveTracers(v)
-        CreateTracers(v)
-      end
-    end
-  else
-    for _, v in next, Plrs:GetPlayers() do
-      RemoveTracers(v)
-    end
-  end
-end)
-
-character:AddToggle("SuperSpeed", function(state)
-  if state then
-    game:GetService("Players").LocalPlayer.Character.Humanoid.WalkSpeed = 90
-  else
-    game:GetService("Players").LocalPlayer.Character.Humanoid.WalkSpeed = 16
-  end
-end)
-
-character:AddBox("WalkSpeed", function(object, focus)
-  if focus then
-      game:GetService("Players").LocalPlayer.Character.Humanoid.WalkSpeed = tonumber(object.Text) or 16
-  end
-end)
-
-character:AddToggle("Super Jump", function(state)
-  game:GetService("Players").LocalPlayer.Character.Humanoid.JumpPower = (state and 100 or 50)
-end)
-
-character:AddBox("JumpPower", function(object, focus)
-  if focus then
-      game:GetService("Players").LocalPlayer.Character.Humanoid.JumpPower = tonumber(object.Text) or 50
-  end
-end)
-
-character:AddToggle("Fly", function(state)
-  if state then
-    settings.vfly = true
-    sFLY()
-  else
-    settings.vfly = false;
-    NOFLY()
-  end
-end)
-
-character:AddToggle("Noclip", function(state)
-  if state then
-    local function NoclipLoop()
-      if settings.noclip == false and game.Players.LocalPlayer.Character ~= nil then
-          for _, child in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
-          if child:IsA("BasePart") and child.CanCollide == true then
-              child.CanCollide = false
-          end
-        end
-      end
-    end
-    Noclipping = game:GetService('RunService').Stepped:connect(NoclipLoop)
-  else
-    if Noclipping then
-      Noclipping:Disconnect()
-    end
-  end
-end)
-
-character:AddToggle("No Fall Damage", function(state)
-  if settings.dmg == false then
-    settings.dmg = true
-    while wait() do
-      if game.Players.LocalPlayer.Character:FindFirstChild("FallDamageScript") then
-         game.Players.LocalPlayer.Character:FindFirstChild("FallDamageScript"):Destroy();
-      end;
-      if settings.dmg == false then
-        break
-      end
-    end
-  else
-    settings.dmg = false
-  end
-end)
-
-character:AddButton("Reset", function()
-  game:GetService("Players").LocalPlayer.Character.Humanoid.Health = 0;
-end)
-
-teleports:AddButton("Lobby", function()
-  game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-259.5, 181.6, 289.2)
-end)
-
-teleports:AddButton("Island", function()
-  game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-134.17, 44.9, 8.37)
-end)
-
-miscellaneous:AddToggle("Low Gravity", function(state)
-  if state then
-    workspace.Gravity = 50
-  else
-    workspace.Gravity = 196
-  end
-end)
-
-miscellaneous:AddToggle("Autofarm", function(state)
-  if settings.autofarm == false then
-    settings.autofarm = true
-        while wait() do
-          game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-259.5, 181.6, 289.2)
-        if settings.autofarm == false then
-        break
-      end
-    end
-  else
-    settings.autofarm = false
-  end
-end)
-
-miscellaneous:AddToggle2("Autofarm User", function(state)
-	for i, v in pairs(game.Players:GetChildren()) do
-		if v.Name:lower():match(game.CoreGui.UILibrary.Miscellaneous.Container.TextBox1.Text:lower()) and string ~= "" then
-    if settings.autofarmuser == false then
-          settings.autofarmuser = true;
-          while wait(.3) do
-						for i, v in pairs(game.Players:GetChildren()) do
-							if v.Name:lower():match(game.CoreGui.UILibrary.Miscellaneous.Container.TextBox1.Text:lower()) and string ~= "" then
-            		game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.Character:WaitForChild("HumanoidRootPart").CFrame;
-							end
-						end
-					  player = game.Players.LocalPlayer;
-          if player.Character then
-            if player.Character:FindFirstChild("Humanoid") then
-            player.Character.Humanoid.Name = "1";
-          end;
-          local l = player.Character["1"]:Clone();
-            l.Parent = player.Character;
-            l.Name = "Humanoid"; wait(0.1);
-          player.Character["1"]:Destroy();
-        workspace.CurrentCamera.CameraSubject = player.Character.Humanoid;
-          player.Character.Animate.Disabled = true; wait(0.1);
-        player.Character.Animate.Disabled = false;
-      end;
-      game.Players.LocalPlayer.Character.Humanoid:EquipTool(game.Players.LocalPlayer.Backpack:FindFirstChildOfClass("Tool"));
-        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-259.5, 181.6, 289.2);
-      if settings.autofarmuser == false then
-      break
-        end;
-      end;
-    else
-      settings.autofarmuser = false;
-    end;
-  end;
-	end
-end)
-
-miscellaneous:AddToggle3("Bang/Rape User", function(state)
-	for i, v in pairs(game.Players:GetChildren()) do
-		if v.Name:lower():match(game.CoreGui.UILibrary.Miscellaneous.Container.TextBox2.Text:lower()) and string ~= "" then
-      if settings.bang == false then
-          settings.bang = true
-                  bangAnim = Instance.new("Animation")
-                      bangAnim.AnimationId = "rbxassetid://148840371"
-                  bang = game.Players.LocalPlayer.Character.Humanoid:LoadAnimation(bangAnim)
-              bang:Play(.1, 1, 1)
-          bang:AdjustSpeed(3)
-          while wait() do
-						for i, v in pairs(game.Players:GetChildren()) do
-							if v.Name:lower():match(game.CoreGui.UILibrary.Miscellaneous.Container.TextBox2.Text:lower()) and string ~= "" then
-            		game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.Character:WaitForChild("HumanoidRootPart").CFrame;
-							end
-						end
-          if settings.bang == false then
-            bang:Stop()
-              bangAnim:Destroy()
-                 break
-              end
-          end
-       else
-	          settings.bang = false
-	      end;
-	  end;
-	end
-end)
-
-miscellaneous:AddToggle4("Headsit/Ride User", function(state)
-	for i, v in pairs(game.Players:GetChildren()) do
-		if v.Name:lower():match(game.CoreGui.UILibrary.Miscellaneous.Container.TextBox3.Text:lower()) and string ~= "" then
-		  if settings.headsituser == false then
-		    settings.headsituser = true
-		    while wait() do
-					game.Players.LocalPlayer.Character:FindFirstChildOfClass('Humanoid').Sit = true
-					for i, v in pairs(game.Players:GetChildren()) do
-						if v.Name:lower():match(game.CoreGui.UILibrary.Miscellaneous.Container.TextBox3.Text:lower()) and string ~= "" then
-							game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.Character:WaitForChild("Head").CFrame;
-						end
-					end
-		      if settings.headsituser == false then
-						game.Players.LocalPlayer.Character:FindFirstChildOfClass('Humanoid').Sit = false
-		        break
-		      end
-		    end
-		  else
-		    settings.headsituser = false
-		  end
-		end
-	end
-end)
-
-miscellaneous:AddToggle("Sit", function(state)
-	if state then
-		game.Players.LocalPlayer.Character:FindFirstChildOfClass('Humanoid').Sit = true
-	else
-		game.Players.LocalPlayer.Character:FindFirstChildOfClass('Humanoid').Sit = false
-	end
-end)
-
-miscellaneous:AddToggle("Chatlogs", function(state)
-  if state then
-    game.CoreGui.UILibrary.chatlogs:TweenPosition(UDim2.new(0.035, 0,0.65, 0), "Out", "Linear", .3, true)
-  else
-    game.CoreGui.UILibrary.chatlogs:TweenPosition(UDim2.new(0.71, 0,0.997, 0), "Out", "Linear", .3, true)
-  end
-end)
-
-game.CoreGui.UILibrary.chatlogs.buttons.enable.MouseButton1Down:connect(function()
-	if settings.logs then
-		settings.logs = false
-		game.CoreGui.UILibrary.chatlogs.buttons.enable.Text = 'Disabled'
-	else
-		settings.logs = true
-		game.CoreGui.UILibrary.chatlogs.buttons.enable.Text = 'Enabled'
-	end
-end)
-
-game.CoreGui.UILibrary.chatlogs.buttons.clear.MouseButton1Down:connect(function()
-	for _, child in pairs(game.CoreGui.UILibrary.chatlogs.logpannel.main:GetChildren()) do
-		child:Destroy()
-	end
-end)
-
-game.CoreGui.UILibrary.chatlogs.buttons.save.MouseButton1Down:connect(function()
-  if writefileExploit() then
-    if #game.CoreGui.UILibrary.chatlogs.logpannel.main:GetChildren() > 0 then
-      local placeName = game:GetService('MarketplaceService'):GetProductInfo(game.PlaceId).Name
-      local writelogs = '-- Epic Hakor Man Chatlogs For "'..placeName..'"\n'
-      for _, child in pairs(game.CoreGui.UILibrary.chatlogs.logpannel.main:GetChildren()) do
-        writelogs = writelogs..'\n'..child.Text
-      end
-      local writelogsFile = tostring(writelogs)
-      local fileext = 0
-      local function nameFile()
-        local file
-        pcall(function() file = readfile(placeName..' Chat Logs ('..fileext..').txt') end)
-        if file then
-          fileext = fileext+1
-          nameFile()
-        else
-          writefileCooldown(placeName..' Chat Logs ('..fileext..').txt', writelogsFile)
-        end
-      end
-      nameFile()
-    end
-  else
-  end
-end)
-
-miscellaneous:AddToggle("Vehicle Fly", function(state)
-  if state then
-    settings.vfly = true
-    sFLY(true)
-  else
-    settings.vfly = false
-    NOFLY()
-  end
-end)
-
-miscellaneous:AddBox("Teleport to User", function()
-	game.CoreGui.UILibrary.Miscellaneous.Container.TextBox.FocusLost:Connect(function()
-		for i, v in pairs(game.Players:GetChildren()) do
-			if v.Name:lower():match(game.CoreGui.UILibrary.Miscellaneous.Container.TextBox.Text:lower()) and string ~= "" then
-				game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.Character.HumanoidRootPart.CFrame;
-			end
+			window:Resize(true)
 		end
 	end)
-end)
 
-miscellaneous:AddButton2("Toggle UI Key; ' '",function()
-	game.CoreGui.UILibrary.Miscellaneous.Container.TextButton2.Text = 'Press any Key now'
-	local input = UserInput.InputBegan:wait()
-	if input.UserInputType == Enum.UserInputType.Keyboard then
-		settings.togglekey = tostring(input.KeyCode)
-		game.CoreGui.UILibrary.Miscellaneous.Container.TextButton2.Text = "Toggle UI Key; '"..string.sub(tostring(input.KeyCode), 14).."'"
-	else
-		settings.togglekey = tostring(input.UserInputType)
-		game.CoreGui.UILibrary.Miscellaneous.Container.TextButton2.Text = "Toggle UI Key; '"..string.sub(tostring(input.UserInputType), 20).."'"
+	self:Create("TextLabel", {
+		Size = UDim2.new(1, 0, 1, 0),
+		BackgroundTransparency = 1;
+		BorderSizePixel = 0;
+		TextColor3 = options.txtcolor,
+		TextColor3 = (options.bartextcolor or Color3.fromRGB(255, 255, 255));
+		TextSize = 17,
+		Font = Enum.Font.SourceSansSemibold;
+		Text = options.text or "window",
+		Name = "Window",
+		Parent = window.frame,
+	})
+
+	do
+		dragger.new(window.frame)
+		resizer.new(window.background, window.container);
 	end
-end)
 
-miscellaneous:AddButton3("Toggle Fly Key; ' '",function()
-	game.CoreGui.UILibrary.Miscellaneous.Container.TextButton3.Text = 'Press any Key now'
-	local input = UserInput.InputBegan:wait()
-	if input.UserInputType == Enum.UserInputType.Keyboard then
-		settings.flykey = tostring(input.KeyCode)
-		game.CoreGui.UILibrary.Miscellaneous.Container.TextButton3.Text = "Toggle Fly Key; '"..string.sub(tostring(input.KeyCode), 14).."'"
-	else
-		settings.flykey = tostring(input.UserInputType)
-		game.CoreGui.UILibrary.Miscellaneous.Container.TextButton3.Text = "Toggle Fly Key; '"..string.sub(tostring(input.UserInputType), 20).."'"
-	end
-end)
-
-miscellaneous:AddButton4("Toggle vFly Key; ' '",function()
-	game.CoreGui.UILibrary.Miscellaneous.Container.TextButton4.Text = 'Press any Key now'
-	local input = UserInput.InputBegan:wait()
-	if input.UserInputType == Enum.UserInputType.Keyboard then
-		settings.vflykey = tostring(input.KeyCode)
-		game.CoreGui.UILibrary.Miscellaneous.Container.TextButton4.Text = "Toggle vFly Key; '"..string.sub(tostring(input.KeyCode), 14).."'"
-	else
-		settings.vflykey = tostring(input.UserInputType)
-		game.CoreGui.UILibrary.Miscellaneous.Container.TextButton4.Text = "Toggle vFly Key; '"..string.sub(tostring(input.UserInputType), 20).."'"
-	end
-end)
-
-miscellaneous:AddLabel2("Next/Current Disaster; (WAITING FOR NEXT ROUND)")
-
-game.Players.LocalPlayer.PlayerGui:WaitForChild("MainGui").Hint.List.HintText.Changed:Connect(function(property)
-	warn("aa test error? ah works woo!")
-	if game.Players.LocalPlayer.PlayerGui.MainGui.Hint.List.HintText.Text  == "Flash Flood!  Seek high and stable ground" then
-		game.CoreGui.UILibrary.Miscellaneous.Container.TextLabel2.Text = "Next/Current Disaster;  Flash Flood"
-	elseif game.Players.LocalPlayer.PlayerGui.MainGui.Hint.List.HintText.Text == "Earthquake!  Get outside and stay away from tall structures" then
-		game.CoreGui.UILibrary.Miscellaneous.Container.TextLabel2.Text = "Next/Current Disaster;  Earthquake"
-	elseif game.Players.LocalPlayer.PlayerGui.MainGui.Hint.List.HintText.Text == "Tornado!  Stay clear of it's path" then
-		warn("if it doesnt update on the textlabel then roblox perms gotta rethink shit")
-		game.CoreGui.UILibrary.Miscellaneous.Container.TextLabel2.Text = "Next/Current Disaster;  Tornado"
-	elseif game.Players.LocalPlayer.PlayerGui.MainGui.Hint.List.HintText.Text == "Thunderstorm!  Don't stand in the open or high places" then
-		game.CoreGui.UILibrary.Miscellaneous.Container.TextLabel2.Text = "Next/Current Disaster;  Thunderstorm"
-	elseif game.Players.LocalPlayer.PlayerGui.MainGui.Hint.List.HintText.Text == "Fire!  Keep distance from the fire" then
-		game.CoreGui.UILibrary.Miscellaneous.Container.TextLabel2.Text = "Next/Current Disaster;  Fire"
-	elseif game.Players.LocalPlayer.PlayerGui.MainGui.Hint.List.HintText.Text == "Meteor Shower!  Watch the skies and find shelter" then
-		game.CoreGui.UILibrary.Miscellaneous.Container.TextLabel2.Text = "Next/Current Disaster;  Meteor Shower"
-	elseif game.Players.LocalPlayer.PlayerGui.MainGui.Hint.List.HintText.Text == "Tsunami!  Get to higher ground" then
-		game.CoreGui.UILibrary.Miscellaneous.Container.TextLabel2.Text = "Next/Current Disaster;  Tsunami"
-	elseif game.Players.LocalPlayer.PlayerGui.MainGui.Hint.List.HintText.Text == "Blizzard!  Seek warmth and find shelter" then
-		game.CoreGui.UILibrary.Miscellaneous.Container.TextLabel2.Text = "Next/Current Disaster;  Blizzard"
-	elseif game.Players.LocalPlayer.PlayerGui.MainGui.Hint.List.HintText.Text == "Sandstorm!  Dodge flying objects" then
-		game.CoreGui.UILibrary.Miscellaneous.Container.TextLabel2.Text = "Next/Current Disaster;  Sandstorm"
-	elseif game.Players.LocalPlayer.PlayerGui.MainGui.Hint.List.HintText.Text == "Acid Rain!  Stay indoors" then
-		game.CoreGui.UILibrary.Miscellaneous.Container.TextLabel2.Text = "Next/Current Disaster;  Acid Rain"
-	elseif game.Players.LocalPlayer.PlayerGui.MainGui.Hint.List.HintText.Text == "Volcanic Eruption!  Get away from the volcano" then
-		game.CoreGui.UILibrary.Miscellaneous.Container.TextLabel2.Text = "Next/Current Disaster;  Volcanic Eruption"
-	end
-end)
-game.CoreGui.UILibrary.Miscellaneous.Container.TextLabel2.Changed:Connect(function()
-	print(game.CoreGui.UILibrary.Miscellaneous.Container.TextLabel2.Text)
-	warn("if it doesnt update on the textlabel then roblox perms gotta rethink shit")
-end)
-
-miscellaneous:AddButton("Rejoin", function()
-  game:GetService('TeleportService'):Teleport(game.PlaceId)
-end)
-
-changelog:AddLabel("V5 (CURRENT VERSION )\n + Added Noclip again?\nidk what happened to the version b4\nV4.6\n + Added u dont have\n to enter a players full\n username to bang, autofarm\n or w/e them\n + Bug fix's\nV4.3\n + Added Better Chams (ESP)\n+ Added Custom Toggle UI\nV3.9\n + Added headsit plr\n + Added sit")
-
-for _, plr in pairs(game.Players:GetChildren()) do
-	if plr.ClassName == "Player" then
-		ChatLog(plr)
-	end
-end
-
-Plrs.PlayerAdded:connect(function(Plr)
-	if settings.CharAddedEvent[Plr.Name] == nil then
-		settings.CharAddedEvent[Plr.Name] = Plr.CharacterAdded:connect(function(Char)
-			if settings.TracersEnabled then
-				CreateTracers(Plr)
+	local function getSize()
+		local ySize = 0;
+		for i, object in next, window.container:GetChildren() do
+			if (not object:IsA('UIListLayout')) and (not object:IsA('UIPadding')) then
+				ySize = ySize + object.AbsoluteSize.Y
 			end
-			if settings.CHAMSEnabled then
-				CreateChams(Plr)
-			end
-			repeat wait() until Char:FindFirstChild("HumanoidRootPart")
-			TracerMT[Plr.Name] = Char.HumanoidRootPart
+		end
+		return UDim2.new(1, 0, 0, ySize + 10)
+	end
+
+	function window:Resize(tween, change)
+		local size = change or getSize()
+		self.container.ClipsDescendants = true;
+
+		if tween then
+			self.background:TweenSize(size, "Out", "Sine", 0.5, true)
+		else
+			self.background.Size = size
+		end
+	end
+
+	function window:AddToggle(text, callback)
+		self.count = self.count + 1
+
+		callback = callback or function() end
+		local label = library:Create("TextLabel", {
+			Text =  text,
+			Size = UDim2.new(1, -10, 0, 20);
+			--Position = UDim2.new(0, 5, 0, ((20 * self.count) - 20) + 5),
+			BackgroundTransparency = 1;
+			TextColor3 = Color3.fromRGB(255, 255, 255);
+			TextXAlignment = Enum.TextXAlignment.Left;
+			LayoutOrder = self.Count;
+			TextSize = 16,
+			Font = Enum.Font.SourceSans,
+			Parent = self.container;
+		})
+
+		local button = library:Create("TextButton", {
+			Text = "OFF",
+			TextColor3 = Color3.fromRGB(255, 25, 25),
+			BackgroundTransparency = 1;
+			Position = UDim2.new(1, -25, 0, 0),
+			Size = UDim2.new(0, 25, 1, 0),
+			TextSize = 17,
+			Font = Enum.Font.SourceSansSemibold,
+			Parent = label;
+		})
+
+		button.MouseButton1Click:connect(function()
+			self.toggles[text] = (not self.toggles[text])
+			button.TextColor3 = (self.toggles[text] and Color3.fromRGB(0, 255, 140) or Color3.fromRGB(255, 25, 25))
+			button.Text =(self.toggles[text] and "ON" or "OFF")
+
+			callback(self.toggles[text])
 		end)
+
+		self:Resize()
+		return button
 	end
-end)
 
-Plrs.PlayerRemoving:connect(function(Plr)
-	ChatLog(Plr)
-	if settings.CharAddedEvent[Plr.Name] ~= nil then
-		settings.CharAddedEvent[Plr.Name]:Disconnect()
-		settings.CharAddedEvent[Plr.Name] = nil
+	function window:AddToggle2(text, callback)
+		self.count = self.count + 1
+
+		callback = callback or function() end
+		local label = library:Create("TextBox", {
+			PlaceholderText = text,
+			Text =  '',
+			Name = 'Textbox1';
+			Size = UDim2.new(1, -10, 0, 20);
+			--Position = UDim2.new(0, 5, 0, ((20 * self.count) - 20) + 5),
+			BackgroundTransparency = 1;
+			TextColor3 = Color3.fromRGB(255, 255, 255);
+			TextXAlignment = Enum.TextXAlignment.Left;
+			LayoutOrder = self.Count;
+			TextSize = 16,
+			Font = Enum.Font.SourceSans,
+			Parent = self.container;
+		})
+
+		local button = library:Create("TextButton", {
+			Text = "OFF",
+			TextColor3 = Color3.fromRGB(255, 25, 25),
+			BackgroundTransparency = 1;
+			Position = UDim2.new(1, -25, 0, 0),
+			Size = UDim2.new(0, 25, 1, 0),
+			TextSize = 17,
+			Font = Enum.Font.SourceSansSemibold,
+			Parent = label;
+		})
+
+		button.MouseButton1Click:connect(function()
+			self.toggles[text] = (not self.toggles[text])
+			button.TextColor3 = (self.toggles[text] and Color3.fromRGB(0, 255, 140) or Color3.fromRGB(255, 25, 25))
+			button.Text =(self.toggles[text] and "ON" or "OFF")
+
+			callback(self.toggles[text])
+		end)
+
+		self:Resize()
+		return button
 	end
-	RemoveTracers(Plr)
-	RemoveChams(Plr)
-	TracerMT[Plr.Name] = nil
-end)
+
+	function window:AddToggle3(text, callback)
+		self.count = self.count + 1
+
+		callback = callback or function() end
+		local label = library:Create("TextBox", {
+			PlaceholderText = text,
+			Text =  '',
+			Name = 'TextBox2',
+			Size = UDim2.new(1, -10, 0, 20);
+			--Position = UDim2.new(0, 5, 0, ((20 * self.count) - 20) + 5),
+			BackgroundTransparency = 1;
+			TextColor3 = Color3.fromRGB(255, 255, 255);
+			TextXAlignment = Enum.TextXAlignment.Left;
+			LayoutOrder = self.Count;
+			TextSize = 16,
+			Font = Enum.Font.SourceSans,
+			Parent = self.container;
+		})
+
+		local button = library:Create("TextButton", {
+			Text = "OFF",
+			TextColor3 = Color3.fromRGB(255, 25, 25),
+			BackgroundTransparency = 1;
+			Position = UDim2.new(1, -25, 0, 0),
+			Size = UDim2.new(0, 25, 1, 0),
+			TextSize = 17,
+			Font = Enum.Font.SourceSansSemibold,
+			Parent = label;
+		})
+
+		button.MouseButton1Click:connect(function()
+			self.toggles[text] = (not self.toggles[text])
+			button.TextColor3 = (self.toggles[text] and Color3.fromRGB(0, 255, 140) or Color3.fromRGB(255, 25, 25))
+			button.Text =(self.toggles[text] and "ON" or "OFF")
+
+			callback(self.toggles[text])
+		end)
+
+		self:Resize()
+		return button
+	end
+
+	function window:AddToggle4(text, callback)
+		self.count = self.count + 1
+
+		callback = callback or function() end
+		local label = library:Create("TextBox", {
+			PlaceholderText = text,
+			Text =  '',
+			Name = 'TextBox3',
+			Size = UDim2.new(1, -10, 0, 20);
+			--Position = UDim2.new(0, 5, 0, ((20 * self.count) - 20) + 5),
+			BackgroundTransparency = 1;
+			TextColor3 = Color3.fromRGB(255, 255, 255);
+			TextXAlignment = Enum.TextXAlignment.Left;
+			LayoutOrder = self.Count;
+			TextSize = 16,
+			Font = Enum.Font.SourceSans,
+			Parent = self.container;
+		})
+
+		local button = library:Create("TextButton", {
+			Text = "OFF",
+			TextColor3 = Color3.fromRGB(255, 25, 25),
+			BackgroundTransparency = 1;
+			Position = UDim2.new(1, -25, 0, 0),
+			Size = UDim2.new(0, 25, 1, 0),
+			TextSize = 17,
+			Font = Enum.Font.SourceSansSemibold,
+			Parent = label;
+		})
+
+		button.MouseButton1Click:connect(function()
+			self.toggles[text] = (not self.toggles[text])
+			button.TextColor3 = (self.toggles[text] and Color3.fromRGB(0, 255, 140) or Color3.fromRGB(255, 25, 25))
+			button.Text =(self.toggles[text] and "ON" or "OFF")
+
+			callback(self.toggles[text])
+		end)
+
+		self:Resize()
+		return button
+	end
+
+	function window:AddToggle5(text, callback)
+		self.count = self.count + 1
+
+		callback = callback or function() end
+		local label = library:Create("TextBox", {
+			PlaceholderText = text,
+			Text =  '',
+			Name = 'TextBox5',
+			Size = UDim2.new(1, -10, 0, 20);
+			--Position = UDim2.new(0, 5, 0, ((20 * self.count) - 20) + 5),
+			BackgroundTransparency = 1;
+			TextColor3 = Color3.fromRGB(255, 255, 255);
+			TextXAlignment = Enum.TextXAlignment.Left;
+			LayoutOrder = self.Count;
+			TextSize = 16,
+			Font = Enum.Font.SourceSans,
+			Parent = self.container;
+		})
+
+		local button = library:Create("TextButton", {
+			Text = "OFF",
+			TextColor3 = Color3.fromRGB(255, 25, 25),
+			BackgroundTransparency = 1;
+			Position = UDim2.new(1, -25, 0, 0),
+			Size = UDim2.new(0, 25, 1, 0),
+			TextSize = 17,
+			Font = Enum.Font.SourceSansSemibold,
+			Parent = label;
+		})
+
+		button.MouseButton1Click:connect(function()
+			self.toggles[text] = (not self.toggles[text])
+			button.TextColor3 = (self.toggles[text] and Color3.fromRGB(0, 255, 140) or Color3.fromRGB(255, 25, 25))
+			button.Text =(self.toggles[text] and "ON" or "OFF")
+
+			callback(self.toggles[text])
+		end)
+
+		self:Resize()
+		return button
+	end
+
+	function window:AddBox(text, callback)
+		self.count = self.count + 1
+		callback = callback or function() end
+
+		local box = library:Create("TextBox", {
+			PlaceholderText = text,
+			Size = UDim2.new(1, -10, 0, 20);
+			--Position = UDim2.new(0, 5, 0, ((20 * self.count) - 20) + 5),
+			BackgroundTransparency = 0.75;
+			BackgroundColor3 = options.boxcolor,
+			TextColor3 = Color3.fromRGB(255, 255, 255);
+			TextXAlignment = Enum.TextXAlignment.Center;
+			TextSize = 16,
+			Text = "",
+			Font = Enum.Font.SourceSans,
+			LayoutOrder = self.Count;
+			BorderSizePixel = 0;
+			Parent = self.container;
+		})
+
+		box.FocusLost:connect(function(...)
+			callback(box, ...)
+		end)
+
+		self:Resize()
+		return box
+	end
+
+	function window:AddButton(text, callback)
+		self.count = self.count + 1
+
+		callback = callback or function() end
+		local button = library:Create("TextButton", {
+			Text =  text,
+			Size = UDim2.new(1, -10, 0, 20);
+			--Position = UDim2.new(0, 5, 0, ((20 * self.count) - 20) + 5),
+			BackgroundTransparency = 1;
+			TextColor3 = Color3.fromRGB(255, 255, 255);
+			TextXAlignment = Enum.TextXAlignment.Left;
+			TextSize = 16,
+			Font = Enum.Font.SourceSans,
+			LayoutOrder = self.Count;
+			Parent = self.container;
+		})
+
+		button.MouseButton1Click:connect(callback)
+		self:Resize()
+		return button
+	end
+
+	function window:AddButton2(text, callback)
+		self.count = self.count + 1
+
+		callback = callback or function() end
+		local button = library:Create("TextButton", {
+			Text =  text,
+			Size = UDim2.new(1, -10, 0, 20);
+			Name = 'TextButton2';
+			--Position = UDim2.new(0, 5, 0, ((20 * self.count) - 20) + 5),
+			BackgroundTransparency = 1;
+			TextColor3 = Color3.fromRGB(255, 255, 255);
+			TextXAlignment = Enum.TextXAlignment.Left;
+			TextSize = 16,
+			Font = Enum.Font.SourceSans,
+			LayoutOrder = self.Count;
+			Parent = self.container;
+		})
+
+		button.MouseButton1Click:connect(callback)
+		self:Resize()
+		return button
+	end
+
+	function window:AddButton3(text, callback)
+		self.count = self.count + 1
+
+		callback = callback or function() end
+		local button = library:Create("TextButton", {
+			Text =  text,
+			Size = UDim2.new(1, -10, 0, 20);
+			Name = 'TextButton3';
+			--Position = UDim2.new(0, 5, 0, ((20 * self.count) - 20) + 5),
+			BackgroundTransparency = 1;
+			TextColor3 = Color3.fromRGB(255, 255, 255);
+			TextXAlignment = Enum.TextXAlignment.Left;
+			TextSize = 16,
+			Font = Enum.Font.SourceSans,
+			LayoutOrder = self.Count;
+			Parent = self.container;
+		})
+
+		button.MouseButton1Click:connect(callback)
+		self:Resize()
+		return button
+	end
+
+	function window:AddButton4(text, callback)
+		self.count = self.count + 1
+
+		callback = callback or function() end
+		local button = library:Create("TextButton", {
+			Text =  text,
+			Size = UDim2.new(1, -10, 0, 20);
+			Name = 'TextButton4';
+			--Position = UDim2.new(0, 5, 0, ((20 * self.count) - 20) + 5),
+			BackgroundTransparency = 1;
+			TextColor3 = Color3.fromRGB(255, 255, 255);
+			TextXAlignment = Enum.TextXAlignment.Left;
+			TextSize = 16,
+			Font = Enum.Font.SourceSans,
+			LayoutOrder = self.Count;
+			Parent = self.container;
+		})
+
+		button.MouseButton1Click:connect(callback)
+		self:Resize()
+		return button
+	end
+
+	function window:AddButton5(text, callback)
+		self.count = self.count + 1
+
+		callback = callback or function() end
+		local button = library:Create("TextButton", {
+			Text =  text,
+			Size = UDim2.new(1, -10, 0, 20);
+			Name = 'TextButton5';
+			--Position = UDim2.new(0, 5, 0, ((20 * self.count) - 20) + 5),
+			BackgroundTransparency = 1;
+			TextColor3 = Color3.fromRGB(255, 255, 255);
+			TextXAlignment = Enum.TextXAlignment.Left;
+			TextSize = 16,
+			Font = Enum.Font.SourceSans,
+			LayoutOrder = self.Count;
+			Parent = self.container;
+		})
+
+		button.MouseButton1Click:connect(callback)
+		self:Resize()
+		return button
+	end
+
+	function window:AddLabel(text)
+		self.count = self.count + 1;
+
+		local tSize = game:GetService('TextService'):GetTextSize(text, 16, Enum.Font.SourceSans, Vector2.new(math.huge, math.huge))
+
+		local button = library:Create("TextLabel", {
+			Text =  text,
+			Size = UDim2.new(1, -10, 0, tSize.Y + 5);
+			TextScaled = false;
+			BackgroundTransparency = 1;
+			TextColor3 = Color3.fromRGB(255, 255, 255);
+			TextXAlignment = Enum.TextXAlignment.Left;
+			TextSize = 16,
+			Font = Enum.Font.SourceSans,
+			LayoutOrder = self.Count;
+			Parent = self.container;
+		})
+
+		self:Resize()
+		return button
+	end
+
+	function window:AddLabel2(text)
+		self.count = self.count + 1;
+
+		local tSize = game:GetService('TextService'):GetTextSize(text, 16, Enum.Font.SourceSans, Vector2.new(math.huge, math.huge))
+
+		local button = library:Create("TextLabel", {
+			Text =  text,
+			Name = "TextLabel2";
+			Size = UDim2.new(1, -10, 0, tSize.Y + 5);
+			TextScaled = false;
+			BackgroundTransparency = 1;
+			TextColor3 = Color3.fromRGB(255, 255, 255);
+			TextXAlignment = Enum.TextXAlignment.Left;
+			TextSize = 16,
+			Font = Enum.Font.SourceSans,
+			LayoutOrder = self.Count;
+			Parent = self.container;
+		})
+
+		self:Resize()
+		return button
+	end
+
+	function window:AddDropdown(options, callback)
+		self.count = self.count + 1
+		local default = options[1] or "";
+
+		callback = callback or function() end
+		local dropdown = library:Create("TextLabel", {
+			Size = UDim2.new(1, -10, 0, 20);
+			BackgroundTransparency = 0.75;
+			BackgroundColor3 = options.boxcolor,
+			TextColor3 = Color3.fromRGB(255, 255, 255);
+			TextXAlignment = Enum.TextXAlignment.Center;
+			TextSize = 16,
+			Text = default,
+			Font = Enum.Font.SourceSans,
+			BorderSizePixel = 0;
+			LayoutOrder = self.Count;
+			Parent = self.container;
+		})
+
+		local button = library:Create("ImageButton",{
+			BackgroundTransparency = 1;
+			Image = 'rbxassetid://3234893186';
+			Size = UDim2.new(0, 18, 1, 0);
+			Position = UDim2.new(1, -20, 0, 0);
+			Parent = dropdown;
+		})
+
+		local frame;
+
+		local function isInGui(frame)
+			local mloc = game:GetService('UserInputService'):GetMouseLocation();
+			local mouse = Vector2.new(mloc.X, mloc.Y - 36);
+
+			local x1, x2 = frame.AbsolutePosition.X, frame.AbsolutePosition.X + frame.AbsoluteSize.X;
+			local y1, y2 = frame.AbsolutePosition.Y, frame.AbsolutePosition.Y + frame.AbsoluteSize.Y;
+
+			return (mouse.X >= x1 and mouse.X <= x2) and (mouse.Y >= y1 and mouse.Y <= y2)
+		end
+
+		local function count(t)
+			local c = 0;
+			for i, v in next, t do
+				c = c + 1
+			end
+			return c;
+		end
+
+		button.MouseButton1Click:connect(function()
+			if count(options) == 0 then
+				return
+			end
+
+			if frame then
+				frame:Destroy();
+				frame = nil;
+			end
+
+			self.container.ClipsDescendants = false;
+
+			frame = library:Create('Frame', {
+				Position = UDim2.new(0, 0, 1, 0);
+				BackgroundColor3 = Color3.fromRGB(40, 40, 40);
+				Size = UDim2.new(0, dropdown.AbsoluteSize.X, 0, (count(options) * 21));
+				BorderSizePixel = 0;
+				Parent = dropdown;
+				ClipsDescendants = true;
+				ZIndex = 2;
+			})
+
+			library:Create('UIListLayout', {
+				Name = 'Layout';
+				Parent = frame;
+			})
+
+			for i, option in next, options do
+				local selection = library:Create('TextButton', {
+					Text = option;
+					BackgroundColor3 = Color3.fromRGB(40, 40, 40);
+					TextColor3 = Color3.fromRGB(255, 255, 255);
+					BorderSizePixel = 0;
+					TextSize = 16;
+					Font = Enum.Font.SourceSans;
+					Size = UDim2.new(1, 0, 0, 21);
+					Parent = frame;
+					ZIndex = 2;
+				})
+
+				selection.MouseButton1Click:connect(function()
+					dropdown.Text = option;
+					callback(option)
+					frame.Size = UDim2.new(1, 0, 0, 0);
+					game:GetService('Debris'):AddItem(frame, 0.1)
+				end)
+			end
+		end);
+
+		game:GetService('UserInputService').InputBegan:connect(function(m)
+			if m.UserInputType == Enum.UserInputType.MouseButton1 then
+				if frame and (not isInGui(frame)) then
+					game:GetService('Debris'):AddItem(frame);
+				end
+			end
+		end)
+
+		callback(default);
+		self:Resize()
+		return {
+			Refresh = function(self, array)
+				game:GetService('Debris'):AddItem(frame);
+				options = array
+				dropdown.Text = options[1];
+			end
+		}
+	end;
 
 
-UserInput.InputBegan:Connect(function(input)
-  if tostring(input.KeyCode) == settings.togglekey or tostring(input.UserInputType) == settings.togglekey then
-    if settings.vis == true then
-      settings.vis = false
-      for _,v in ipairs(game.CoreGui.UILibrary:GetDescendants()) do
-        if v:IsA("Frame") then
-              v.Visible = false
-           end
-         end
-    elseif settings.vis == false then
-      settings.vis = true
-      for _,v in ipairs(game.CoreGui.UILibrary:GetDescendants()) do
-        if v:IsA("Frame") then
-              v.Visible = true
-           end
-         end
-       end
-		 elseif tostring(input.KeyCode) == settings.flykey or tostring(input.UserInputType) == settings.flykey then
-	 			if settings.vfly == false then
-	 				settings.vfly = true
-	 				sFLY()
-	 			else
-	 				settings.vfly = true
-	 				NOFLY()
-	 			end
-			elseif tostring(input.KeyCode) == settings.vflykey or tostring(input.UserInputType) == settings.vflykey then
-					if settings.vfly == false then
-						settings.vfly = true
-						sFLY(true)
-					else
-						settings.vfly = true
-						NOFLY()
-					end
-    end
-end)
+	return window
+end
+
+return library
+warn("ui loaded")
