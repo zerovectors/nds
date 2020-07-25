@@ -1193,10 +1193,8 @@ end)
 game.Players.LocalPlayer.CharacterAdded:connect(function()
 	if game.Players.LocalPlayer.Character:FindFirstChild("SurvivalTag") ~= nil then
 		game.CoreGui.UILibrary.Miscellaneous.Container.TextLabel2.Text = "Current Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value
-		warn("the current fucking disaster is; "..game.Players.LocalPlayer.Character.SurvivalTag.Value)
-		print("woo works im smart :sunglasses:")
 	else
-		game.Players.LocalPlayer.Character:WaitForChild("SurvivalTag", 5)
+		game.Players.LocalPlayer.Character:WaitForChild("SurvivalTag")
 		if game.Players.LocalPlayer.Character:FindFirstChild("SurvivalTag") ~= nil then
 			game.CoreGui.UILibrary.Miscellaneous.Container.TextLabel2.Text = "Current Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value
 		end
