@@ -1,0 +1,2380 @@
+-- settings
+local settings = {
+	fullbright = false;
+	superjump = false;
+    superspeed = false;
+    gravity = false;
+    icon = true;
+	on = Color3.fromRGB(221, 3, 255);
+	off = Color3.fromRGB(255,255,255);
+	visualopen = true;
+    characteropen = true;
+    miscellaneousopen = true;
+	vfly = false;
+	noclip = false;
+    espoptionstoggle = true;
+    interfaceoptionstoggle = true;
+	TracersEnabled = false;
+  	PlaceTracersUnderCharacter = false;
+	CHAMSEnabled = false;
+	ESPEnabled = false;
+	TracersLength = 500;
+	CHAMSLength = 500;
+    ESPLength = 10000;
+    flykey = "Enum.UserInputType.F";
+	vflykey = "Enum.UserInputType.V";
+  	Blacklist = { };
+ 	FriendList = { };
+  	Colors = {
+	    Enemy = Color3.new(1, 0, 0);
+	    Ally = Color3.fromRGB(221, 3, 255);
+	    Friend = Color3.fromRGB(221, 3, 255);
+	    Neutral = Color3.fromRGB(255,255,255);
+	    ColorOverride = nil;
+  	},
+  	CharAddedEvent = { };
+	Mob_ESP_CHAMS_Ran_Once = false;
+};
+local coloursettings = {
+	linecolor = Color3.fromRGB(221, 3, 255);
+	togglebuttoncolor = Color3.fromRGB(35, 35, 35);
+	buttoncolor = Color3.fromRGB(25, 25, 25);
+	labelcolor = Color3.fromRGB(35, 35, 35);
+    hotkeybuttoncolor = Color3.fromRGB(25, 25, 25);
+    textboxcolor = Color3.fromRGB(30,30,30);
+    textboxtogglecolor = Color3.fromRGB(30,30,30);
+	icon = "rbxassetid://5448429554";
+};
+function GetCamera()
+	return workspace:FindFirstChildOfClass("Camera")
+end;
+
+local mouse = game.Players.LocalPlayer:GetMouse();
+local TweenService = game:GetService("TweenService");
+local Plrs = game.Players;
+local MyPlr = Plrs.LocalPlayer;
+local MyChar = MyPlr.Character;
+local MyMouse = MyPlr:GetMouse();
+local MyCam = GetCamera();
+local char = game.Players.LocalPlayer.Character;
+local Plrs = game:GetService("Players");
+local Run = game:GetService("RunService");
+local CoreGui = game:GetService("CoreGui");
+local PlayerGui = game.Players.LocalPlayer.PlayerGui;
+local StartGui = game:GetService("StarterGui");
+local Teams = game:GetService("Teams");
+local UserInput = game:GetService("UserInputService");
+local Light = game:GetService("Lighting");
+local HTTP = game:GetService("HttpService");
+local version = "0.1";
+local RepStor = game:GetService("ReplicatedStorage");
+local MyCam = GetCamera();
+if MyCam == nil then
+	return
+end;
+local Tracers = Instance.new("Folder", MyCam);
+	Tracers.Name = "Tracers";
+	local TracerData = { };
+	local TracerMT = setmetatable(TracerData, {
+		__newindex = function(tab, index, val)
+			rawset(tab, index, val)
+		end
+});
+
+local ChamsFolder = Instance.new("Folder", PlayerGui);
+ChamsFolder.Name = "Chams";
+local PlayerChams = Instance.new("Folder", ChamsFolder);
+PlayerChams.Name = "PlayerChams";
+local ItemChams = Instance.new("Folder", ChamsFolder);
+ItemChams.Name = "ItemChams";
+
+local ESPFolder = Instance.new("Folder", PlayerGui)
+ESPFolder.Name = "ESP Stuff"
+local PlayerESP = Instance.new("Folder", ESPFolder)
+PlayerESP.Name = "PlayerESP"
+local ItemESP = Instance.new("Folder", ESPFolder)
+ItemESP.Name = "ItemESP"
+local function Tween(Object, Property, Style, Direction, Time)
+    return TweenService:Create(Object, TweenInfo.new(Time, Enum.EasingStyle[Style], Enum.EasingDirection[Direction]), Property):Play()
+end;
+
+function createtemplates()
+	warn("starting menu");
+	warn("creating ui");
+	local ui = Instance.new("ScreenGui",game.Players.LocalPlayer.PlayerGui);
+	ui.Name = "Vect0rs hub";
+	ui.ResetOnSpawn = false;
+	print("successfully  created "..ui.Name.. "'s ui!");
+	warn("creating mainframe");
+	local mainframe = Instance.new("Frame", ui);
+	mainframe.Name = "mainframe";
+	mainframe.Size = UDim2.new(0, 1655,0, 804);
+	mainframe.Position = UDim2.new(0.15, 0,0.013, 0)
+	mainframe.BackgroundTransparency = 1;
+	local uilistlayout = Instance.new("UIListLayout", mainframe);
+    uilistlayout.FillDirection = "Horizontal";
+    uilistlayout.SortOrder = "Name";
+	uilistlayout.Padding = UDim.new(0,10);
+	print("successfully  created mainframe!");
+	warn("creating folders");
+	local windowsfolder = Instance.new("Folder", ui);
+	windowsfolder.Name = "Windows"
+	local templatesfolder = Instance.new("Folder", ui);
+	templatesfolder.Name = "Templates";
+	local optionsfolder = Instance.new("Folder", ui);
+	optionsfolder.Name = "Options";
+	print("successfully  created folders!")
+	-- creation of frame templates --
+	warn("creating templates")
+	
+	-- button template
+	local buttontemplateframe = Instance.new("Frame",templatesfolder);
+	buttontemplateframe.Name = "Template Button";
+	buttontemplateframe.BackgroundColor3 = Color3.fromRGB(35,35,35);
+	buttontemplateframe.Position = UDim2.new(0.019, 0,0.132, 0);
+	buttontemplateframe.Size = UDim2.new(0, 271,0, 31);
+	buttontemplateframe.Visible = false;
+	buttontemplateframe.BorderSizePixel = 0;
+	local buttontemplatebutton = Instance.new("TextButton", buttontemplateframe);
+	buttontemplatebutton.Name = "Button";
+	buttontemplatebutton.BackgroundTransparency = 1;
+	buttontemplatebutton.Position = UDim2.new(0.027,0,0,0);
+	buttontemplatebutton.Size = UDim2.new(0,263,0,30);
+	buttontemplatebutton.TextColor3 = Color3.fromRGB(255,255,255)
+	buttontemplatebutton.TextSize = 17
+	buttontemplatebutton.Font = "SourceSans"
+	buttontemplatebutton.TextXAlignment = "Left"
+	
+	-- label template
+	local labeltemplateframe = Instance.new("Frame",templatesfolder);
+	labeltemplateframe.Name = "Template Label";
+	labeltemplateframe.BackgroundColor3 = Color3.fromRGB(35,35,35);
+	labeltemplateframe.Position = UDim2.new(0.019, 0,0.132, 0);
+	labeltemplateframe.Size = UDim2.new(0, 271,0, 31);
+	labeltemplateframe.Visible = false;
+	labeltemplateframe.BorderSizePixel = 0;
+	local labeltemplatelabel = Instance.new("TextLabel", labeltemplateframe);
+	labeltemplatelabel.Name = "Label";
+	labeltemplatelabel.BackgroundTransparency = 1;
+	labeltemplatelabel.Position = UDim2.new(0.027,0,0,0);
+	labeltemplatelabel.Size = UDim2.new(0,262,0,30);
+	labeltemplatelabel.TextColor3 = Color3.fromRGB(255,255,255);
+	labeltemplatelabel.TextSize = 17;
+	labeltemplatelabel.Font = "SourceSans"
+	labeltemplatelabel.TextXAlignment = "Left"
+	
+	-- toggle button template
+	local togglebuttontemplateframe = Instance.new("Frame",templatesfolder);
+	togglebuttontemplateframe.Name = "Template Toggle Button";
+	togglebuttontemplateframe.BackgroundColor3 = Color3.fromRGB(35,35,35);
+	togglebuttontemplateframe.Position = UDim2.new(0.019, 0,0.132, 0);
+	togglebuttontemplateframe.Size = UDim2.new(0, 271,0, 31);
+	togglebuttontemplateframe.Visible = false;
+	togglebuttontemplateframe.BorderSizePixel = 0;
+	local labeltemplatelabel = Instance.new("TextLabel", togglebuttontemplateframe);
+	labeltemplatelabel.Name = "Name";
+	labeltemplatelabel.BackgroundTransparency = 1;
+	labeltemplatelabel.Position = UDim2.new(0.027,0,0,0);
+	labeltemplatelabel.Size = UDim2.new(0, 218,0, 30);
+	labeltemplatelabel.TextColor3 = Color3.fromRGB(255,255,255);
+	labeltemplatelabel.TextSize = 17;
+	labeltemplatelabel.Font = "SourceSans";
+	labeltemplatelabel.TextXAlignment = "Left"
+	local buttontemplatebutton = Instance.new("TextButton", togglebuttontemplateframe);
+	buttontemplatebutton.Name = "Toggle";
+	buttontemplatebutton.Text = "OFF";
+	buttontemplatebutton.BackgroundTransparency = 1;
+	buttontemplatebutton.Position = UDim2.new(0.838, 0,0, 0);
+	buttontemplatebutton.Size = UDim2.new(0, 44,0, 30);
+	buttontemplatebutton.TextColor3 = Color3.fromRGB(255,255,255);
+	buttontemplatebutton.TextSize = 17;
+	buttontemplatebutton.Font = "SourceSans";
+	buttontemplatebutton.TextXAlignment = "Left"
+	
+	-- multiple options template
+	local multipleoptionstemplateframe = Instance.new("Frame", templatesfolder);
+	multipleoptionstemplateframe.Name = "Template Multiple options";
+	multipleoptionstemplateframe.BackgroundColor3 = Color3.fromRGB(18,18,18);
+	multipleoptionstemplateframe.Position = UDim2.new(0, 0,0, 0);
+	multipleoptionstemplateframe.Size = UDim2.new(0, 271,0, 619);
+	multipleoptionstemplateframe.BackgroundTransparency = 1;
+	multipleoptionstemplateframe.Visible = false;
+	local uilistlayout = Instance.new("UIListLayout", multipleoptionstemplateframe);
+	local options = Instance.new("Frame", multipleoptionstemplateframe);
+	options.Name = "Options";
+	options.Size = UDim2.new(0, 271,0, 258);
+	options.BackgroundTransparency = 1;
+    options.ClipsDescendants = true;
+    options.BorderSizePixel = 0;
+	local uilistlayout = Instance.new("UIListLayout", options);
+	uilistlayout.SortOrder = "LayoutOrder";
+	local namee = Instance.new("TextLabel", multipleoptionstemplateframe);
+	namee.Size = UDim2.new(0, 271,0, 31);
+	namee.Name = "Namee";
+    namee.BackgroundColor3 = Color3.fromRGB(18, 18, 18);
+    namee.BorderSizePixel = 0;
+	namee.TextColor3 = Color3.fromRGB(255,255,255);
+	namee.Font = "SourceSansBold";
+	namee.TextSize = 18
+	namee.TextXAlignment = "Left";
+	local toggle = Instance.new("TextButton", namee);
+	toggle.TextSize = 25
+	toggle.Name = "toggle"
+	toggle.Text = "-"
+	toggle.TextColor3 = Color3.fromRGB(255,255,255);
+	toggle.BackgroundTransparency = 1;
+	toggle.Position = UDim2.new(0.834, 0,-0.161, 0);
+	toggle.Size = UDim2.new(0, 44,0, 41);
+	toggle.Font = "SourceSans";
+	
+	-- slider template
+	local slidertemplateframe = Instance.new("Frame", templatesfolder);
+	slidertemplateframe.BackgroundColor3 = Color3.fromRGB(35, 35, 35);
+	slidertemplateframe.Size = UDim2.new(0, 271,0, 35);
+	slidertemplateframe.BorderSizePixel = 0;
+	slidertemplateframe.Name = "Template Slider";
+	slidertemplateframe.Visible = false;
+	local line = Instance.new("Frame", slidertemplateframe);
+	line.Size = UDim2.new(0, 130,0, 2);
+	line.Position = UDim2.new(0.52, 0,0.451, 0);
+	line.BackgroundColor3 = Color3.fromRGB(221, 3, 255);
+	line.BorderSizePixel = 0;
+	local scroller = Instance.new("ScrollingFrame", slidertemplateframe);
+	scroller.Name = "Scroller"
+	scroller.BackgroundTransparency = 1;
+	scroller.BorderSizePixel = 0;
+	scroller.Position = UDim2.new(0.494, 0,0, 0);
+	scroller.Size = UDim2.new(0, 144,0, 24);
+	scroller.CanvasSize = UDim2.new(0, 5000,0, 0);
+	scroller.ScrollBarImageColor3 = Color3.fromRGB(221, 3, 255);
+	scroller.ScrollBarThickness = 12;
+	scroller.VerticalScrollBarInset = "None";
+	local namee = Instance.new("TextLabel", slidertemplateframe);
+	namee.Name = "Namee";
+	namee.BackgroundTransparency = 1;
+	namee.BorderSizePixel = 0;
+    namee.TextSize = 15;
+    namee.TextScaled = true;
+	namee.TextColor3 = Color3.fromRGB(255,255,255);
+	namee.Size = UDim2.new(0, 63,0, 18);
+	namee.Position = UDim2.new(0.022, 0,0.2, 0);
+	namee.Font = "SourceSans";
+	namee.TextXAlignment = "Left"
+	local value = Instance.new("TextLabel", slidertemplateframe);
+	value.Name = "Value";
+	value.BackgroundTransparency = 1;
+	value.Size = UDim2.new(0, 33,0, 18);
+	value.Position = UDim2.new(0.699, 0,0.214, 0);
+	value.BorderSizePixel = 0;
+	value.TextSize = 18;
+	value.TextColor3 = Color3.fromRGB(255,255,255);
+	value.Font = "SourceSansBold";
+	value.Text = "0";
+	local value2 = Instance.new("TextLabel", slidertemplateframe);
+	value2.Name = "Value2";
+	value2.BackgroundTransparency = 1;
+	value2.Size = UDim2.new(0, 41,0, 18);
+	value2.Position = UDim2.new(0.28, 0,0.2, 0);
+	value2.BorderSizePixel = 0;
+	value2.TextSize = 15;
+	value2.TextColor3 = Color3.fromRGB(255,255,255);
+	value2.Text = "[0/0]"
+	value2.Font = "SourceSans";
+	
+    -- hotkey button template
+    local hotkeybuttontemplateframe = Instance.new("Frame", templatesfolder);
+    hotkeybuttontemplateframe.Name = "Template Hotkey Button";
+    hotkeybuttontemplateframe.Size = UDim2.new(0, 271,0, 31);
+    hotkeybuttontemplateframe.Visible = false;
+    hotkeybuttontemplateframe.BorderSizePixel = 0;
+    local hotkeybutton = Instance.new("TextButton", hotkeybuttontemplateframe);
+    hotkeybutton.BackgroundTransparency = 1
+    hotkeybutton.Name = "Namee"
+    hotkeybutton.Position = UDim2.new(0.027, 0,0, 0);
+    hotkeybutton.Size = UDim2.new(0, 263,0, 30);
+    hotkeybutton.BorderSizePixel = 0;
+    hotkeybutton.Font = "SourceSans";
+    hotkeybutton.TextSize = 17;
+    hotkeybutton.TextColor3 = Color3.fromRGB(255, 255, 255);
+    hotkeybutton.TextXAlignment = "Left";
+
+    -- textbox template
+    local textboxtemplateframe = Instance.new("Frame", templatesfolder);
+    textboxtemplateframe.Name = "Template TextBox";
+    textboxtemplateframe.Size = UDim2.new(0, 271,0, 31);
+    textboxtemplateframe.BorderSizePixel = 0;
+    textboxtemplateframe.Visible = false;
+    local textbox = Instance.new("TextBox", textboxtemplateframe);
+    textbox.BackgroundTransparency = 1
+    textbox.Name = "Namee"
+    textbox.Position = UDim2.new(0.027, 0,0, 0);
+    textbox.Size = UDim2.new(0, 263,0, 30);
+    textbox.BorderSizePixel = 0;
+    textbox.Font = "SourceSans";
+    textbox.TextSize = 17;
+    textbox.Text = "";
+    textbox.TextColor3 = Color3.fromRGB(255, 255, 255);
+    textbox.TextXAlignment = "Left";
+
+    -- textbox toggle template
+    local textboxtoggletemplateframe = Instance.new("Frame", templatesfolder);
+    textboxtoggletemplateframe.Name = "Template TextBox Toggle";
+    textboxtoggletemplateframe.BorderSizePixel = 0;
+    textboxtoggletemplateframe.Size = UDim2.new(0, 271,0, 31);
+    textboxtoggletemplateframe.Visible = false;
+    local textbox = Instance.new("TextBox", textboxtoggletemplateframe);
+    textbox.BackgroundTransparency = 1;
+    textbox.BorderSizePixel = 0;
+    textbox.Name = "Namee";
+    textbox.Position = UDim2.new(0.027, 0,0, 0);
+    textbox.Size = UDim2.new(0, 263,0, 30);
+    textbox.BorderSizePixel = 0;
+    textbox.Font = "SourceSans";
+    textbox.Text = "";
+    textbox.TextSize = 17;
+    textbox.TextColor3 = Color3.fromRGB(255, 255, 255);
+    textbox.TextXAlignment = "Left";
+    local textboxtogglebutton = Instance.new("TextButton", textboxtoggletemplateframe);
+    textboxtogglebutton.BackgroundTransparency = 1;
+    textboxtogglebutton.BorderSizePixel = 0;
+    textboxtogglebutton.Position = UDim2.new(0.838, 0,0, 0);
+    textboxtogglebutton.Size = UDim2.new(0, 44,0, 30);
+    textboxtogglebutton.BorderSizePixel = 0;
+    textboxtogglebutton.Font = "SourceSans";
+    textboxtogglebutton.TextSize = 17;
+    textboxtogglebutton.Text = "OFF";
+    textboxtogglebutton.TextColor3 = Color3.fromRGB(255, 255, 255);
+
+	
+	-- window template
+	local windowtemplateframe = Instance.new("Frame",templatesfolder);
+	windowtemplateframe.Name = "Template Window";
+	windowtemplateframe.BackgroundColor3 = Color3.fromRGB(35,35,35);
+	windowtemplateframe.BackgroundTransparency = 1;
+	windowtemplateframe.Position = UDim2.new(0,0,0,0);
+	windowtemplateframe.Size = UDim2.new(0, 271,0, 480);
+	windowtemplateframe.Visible = false;
+	windowtemplateframe.BorderSizePixel = 0;
+	windowtemplateframe.ClipsDescendants = true
+	local selection = Instance.new("Frame", windowtemplateframe);
+	selection.Name = "Selection";
+	selection.BackgroundTransparency = 1;
+	selection.Size = UDim2.new(0, 271,0, 130);
+	selection.Position = UDim2.new(-0.004, 0,0.087, 0)
+	local uilistlayout = Instance.new("UIListLayout", selection);
+	uilistlayout.SortOrder = "Name"
+	local title = Instance.new("TextLabel", windowtemplateframe);
+	title.Size = UDim2.new(0, 271,0, 41);
+	title.Position = UDim2.new(-0.002, 0,-0.002, 0)
+	title.BackgroundColor3 = Color3.fromRGB(35,35,35);
+	title.BorderSizePixel = 0;
+	title.Font = "SourceSansBold";
+	title.TextSize = 18;
+	title.TextColor3 = Color3.fromRGB(255,255,255);
+	title.Name = "Title";
+	local line = Instance.new("ImageLabel", windowtemplateframe);
+	line.Size = UDim2.new(0, 270,0, 2);
+	line.Position = UDim2.new(0.001, 0,0.083, 0)
+	line.Image = "";
+    line.BackgroundColor3 = Color3.fromRGB(185, 20, 255);
+    line.BorderSizePixel = 0;
+	line.Name = "Line"
+	local togglebutton = Instance.new("TextButton", title);
+	togglebutton.Name = "toggle"
+	togglebutton.BackgroundTransparency = 1;
+	togglebutton.Font = "SourceSans";
+	togglebutton.TextSize = 25;
+	togglebutton.Text = "-";
+	togglebutton.TextColor3 = Color3.fromRGB(255,255,255)
+	togglebutton.Size = UDim2.new(0, 44,0, 41);
+	togglebutton.Position = UDim2.new(0.838, 0,0, 0);
+	local icon = Instance.new("ImageLabel", title);
+	icon.Name = "Icon";
+	icon.Size = UDim2.new(0, 75,0, 63);
+	icon.Position = UDim2.new(-0.063, 0,-0.288, 0);
+	icon.BackgroundTransparency = 1;
+	icon.BorderSizePixel = 0;
+	icon.Image = coloursettings.icon;
+	print("successfully created templates!");
+	print("menu successfully started!");
+end;
+
+function createuioptions()
+    warn("creating ui options");
+    -- main shit
+    local visuals=Instance.new("Folder", game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].Windows)
+    visuals.Name="Visuals"
+    local character=Instance.new("Folder", game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].Windows)
+    character.Name="Character"
+    local miscellaneous = Instance.new("Folder", game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].Windows)
+    miscellaneous.Name = "Miscellaneous"
+    local uisettings = Instance.new("Folder", game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].Windows)
+    uisettings.Name = "UI Settings"
+
+
+    -- visual options
+    local visualsoptions=Instance.new("Folder", game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].Options)
+    visualsoptions.Name = "Visuals Options"
+    local visualstogglebuttonoptions=Instance.new("Folder", visualsoptions)
+    visualstogglebuttonoptions.Name = "Toggle Options"
+    local visualsbuttonoptions=Instance.new("Folder", visualsoptions)
+    visualsbuttonoptions.Name = "Button Options"
+    local visualslabeloptions=Instance.new("Folder", visualsoptions)
+    visualslabeloptions.Name = "Label Options"
+    local visualhotkeyoptions=Instance.new("Folder", visualsoptions)
+    visualhotkeyoptions.Name = "Hotkey Options"
+    local visualtextboxoptions=Instance.new("Folder", visualsoptions)
+    visualtextboxoptions.Name = "TextBox Options"
+    local visualtextboxtoggleoptions=Instance.new("Folder", visualsoptions)
+    visualtextboxtoggleoptions.Name = "TextBox Toggle Options"
+    local espoptions = Instance.new("Folder",visualsoptions)
+    espoptions.Name = "Esp options"
+    local espoptionsoptions = Instance.new("Folder",espoptions)
+    espoptionsoptions.Name = "ESP Options"
+    local espoptionstogglebuttonoptions=Instance.new("Folder", espoptionsoptions)
+    espoptionstogglebuttonoptions.Name = "Toggle Options"
+    local espoptionsbuttonoptions=Instance.new("Folder", espoptionsoptions)
+    espoptionsbuttonoptions.Name = "Button Options"
+    local espoptionslabeloptions=Instance.new("Folder", espoptionsoptions)
+    espoptionslabeloptions.Name = "Label Options"
+    local espoptionsslideroptions = Instance.new("Folder",espoptionsoptions)
+    espoptionsslideroptions.Name = "Slider Options"
+    local espoptionshotkeyoptions=Instance.new("Folder", espoptionsoptions)
+    espoptionshotkeyoptions.Name = "Hotkey Options"
+    local espoptionstextboxoptions=Instance.new("Folder", espoptionsoptions)
+    espoptionstextboxoptions.Name = "TextBox Options"
+    local espoptionstextboxtoggleoptions=Instance.new("Folder", espoptionsoptions)
+    espoptionstextboxtoggleoptions.Name = "TextBox Toggle Options"
+    
+    -- character options
+    local characteroptions=Instance.new("Folder", game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].Options)
+    characteroptions.Name = "Character Options"
+    local charactertogglebuttonoptions=Instance.new("Folder", characteroptions)
+    charactertogglebuttonoptions.Name = "Toggle Options"
+    local characterbuttonoptions=Instance.new("Folder", characteroptions)
+    characterbuttonoptions.Name = "Button Options"
+    local characterlabeloptions=Instance.new("Folder", characteroptions)
+    characterlabeloptions.Name = "Label Options"
+    local characterslideroptions = Instance.new("Folder",characteroptions)
+    characterslideroptions.Name = "Slider Options"
+    local characterhotkeyoptions=Instance.new("Folder", characteroptions)
+    characterhotkeyoptions.Name = "Hotkey Options"
+    local charactertextboxoptions=Instance.new("Folder", characteroptions)
+    charactertextboxoptions.Name = "TextBox Options"
+    local charactertextboxtoggleoptions=Instance.new("Folder", characteroptions)
+    charactertextboxtoggleoptions.Name = "TextBox Toggle Options"
+    
+    -- miscellaneous options
+    local miscellaneousoptions=Instance.new("Folder", game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].Options)
+    miscellaneousoptions.Name = "Miscellaneous Options"
+    local miscellaneoustogglebuttonoptions=Instance.new("Folder", miscellaneousoptions)
+    miscellaneoustogglebuttonoptions.Name = "Toggle Options"
+    local miscellaneousbuttonoptions=Instance.new("Folder", miscellaneousoptions)
+    miscellaneousbuttonoptions.Name = "Button Options"
+    local miscellaneouslabeloptions=Instance.new("Folder", miscellaneousoptions)
+    miscellaneouslabeloptions.Name = "Label Options"
+    local miscellaneousslideroptions = Instance.new("Folder",miscellaneousoptions)
+    miscellaneousslideroptions.Name = "Slider Options"
+    local miscellaneoushotkeyoptions=Instance.new("Folder", miscellaneousoptions)
+    miscellaneoushotkeyoptions.Name = "Hotkey Options"
+    local miscellaneoustextboxoptions=Instance.new("Folder", miscellaneousoptions)
+    miscellaneoustextboxoptions.Name = "TextBox Options"
+    local miscellaneoustextboxtoggleoptions=Instance.new("Folder", miscellaneousoptions)
+    miscellaneoustextboxtoggleoptions.Name = "TextBox Toggle Options"
+    
+    -- ui settings options
+    local uisettingsoptions=Instance.new("Folder", game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].Options)
+    uisettingsoptions.Name = "UI Settings Options"
+    local uisettingstogglebuttonoptions=Instance.new("Folder", uisettingsoptions)
+    uisettingstogglebuttonoptions.Name = "Toggle Options"
+    local uisettingsbuttonoptions=Instance.new("Folder", uisettingsoptions)
+    uisettingsbuttonoptions.Name = "Button Options"
+    local uisettingslabeloptions=Instance.new("Folder", uisettingsoptions)
+    uisettingslabeloptions.Name = "Label Options"
+    local uisettingsslideroptions = Instance.new("Folder",uisettingsoptions)
+    uisettingsslideroptions.Name = "Slider Options"
+    local uisettingshotkeyoptions=Instance.new("Folder", uisettingsoptions)
+    uisettingshotkeyoptions.Name = "Hotkey Options"
+    local uisettingstextboxoptions=Instance.new("Folder", uisettingsoptions)
+    uisettingstextboxoptions.Name = "TextBox Options"
+    local uisettingstextboxtoggleoptions=Instance.new("Folder", uisettingsoptions)
+    uisettingstextboxtoggleoptions.Name = "TextBox Toggle Options"
+    
+    local interfaceoptions = Instance.new("Folder",uisettings)
+    interfaceoptions.Name = "Interface"
+    local interfaceoptionsoptions = Instance.new("Folder",interfaceoptions)
+    interfaceoptionsoptions.Name = "Interface"
+    local interfaceoptionstogglebuttonoptions=Instance.new("Folder", interfaceoptionsoptions)
+    interfaceoptionstogglebuttonoptions.Name = "Toggle Options"
+    local interfaceoptionsbuttonoptions=Instance.new("Folder", interfaceoptionsoptions)
+    interfaceoptionsbuttonoptions.Name = "Button Options"
+    local interfaceoptionslabeloptions=Instance.new("Folder", interfaceoptionsoptions)
+    interfaceoptionslabeloptions.Name = "Label Options"
+    local interfaceoptionsslideroptions = Instance.new("Folder",interfaceoptionsoptions)
+    interfaceoptionsslideroptions.Name = "Slider Options"
+    local interfaceoptionshotkeyoptions=Instance.new("Folder", interfaceoptionsoptions)
+    interfaceoptionshotkeyoptions.Name = "Hotkey Options"
+    local interfaceoptionstextboxoptions=Instance.new("Folder", interfaceoptionsoptions)
+    interfaceoptionstextboxoptions.Name = "TextBox Options"
+    local interfaceoptionstextboxtoggleoptions=Instance.new("Folder", interfaceoptionsoptions)
+    interfaceoptionstextboxtoggleoptions.Name = "TextBox Toggle Options"
+
+    function setupui()
+        -- actual window tabs
+        for i,v in pairs(game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].Windows:GetChildren()) do
+            local window = game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].Templates['Template Window']:Clone();
+            window.Parent=game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe;
+            window.Visible=true;
+            window.Name=v.Name;
+            window:WaitForChild("Title").Text=v.Name;
+        end
+        -- multiple options in a tab
+        
+        -- visuals
+        for i,v in pairs(visualstogglebuttonoptions:GetChildren()) do
+            local togglebutton = game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].Templates["Template Toggle Button"]:Clone();
+            togglebutton.Parent=game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Visuals").Selection;
+            togglebutton.Visible=true;
+            togglebutton.Name=v.Name;
+            togglebutton:WaitForChild("Name").Text=v.Name;
+        end
+        for i,v in pairs(visualsbuttonoptions:GetChildren()) do
+            local button = game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].Templates["Template Button"]:Clone();
+            button.Parent=game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Visuals").Selection;
+            button.Visible=true;
+            button.Name=v.Name;
+            button:WaitForChild("Button").Text=v.Name;
+        end
+        for i,v in pairs(visualslabeloptions:GetChildren()) do
+            local button = game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].Templates["Template Label"]:Clone();
+            button.Parent=game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Visuals").Selection;
+            button.Visible=true;
+            button.Name=v.Name;
+            button:WaitForChild("Label").Text=v.Name;
+        end
+        for i,v in pairs(visualhotkeyoptions:GetChildren()) do
+            local button = game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].Templates["Template Hotkey Button"]:Clone();
+            button.Parent=game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Visuals").Selection;
+            button.Visible=true;
+            button.Name=v.Name;
+            button:WaitForChild("Namee").Text = v.Name;
+        end
+        for i,v in pairs(visualtextboxoptions:GetChildren()) do
+            local button = game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].Templates["Template TextBox"]:Clone();
+            button.Parent=game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Visuals").Selection;
+            button.Visible=true;
+            button.Name=v.Name;
+            button:WaitForChild("Namee").PlaceholderText = v.Name;
+        end
+        for i,v in pairs(visualtextboxtoggleoptions:GetChildren()) do
+            local button = game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].Templates["Template TextBox Toggle"]:Clone();
+            button.Parent=game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Visuals").Selection;
+            button.Visible=true;
+            button.Name=v.Name;
+            button:WaitForChild("Namee").PlaceholderText = v.Name;
+        end
+        for i,v in pairs(espoptions:GetChildren()) do
+            local button = game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].Templates["Template Multiple options"]:Clone();
+            button.Parent=game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Visuals").Selection;
+            button.Visible=true;
+            button.Name=v.Name;
+            button.Namee.Text = v.Name; 
+        end
+        for i,v in pairs(espoptionstogglebuttonoptions:GetChildren()) do
+            local togglebutton = game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].Templates["Template Toggle Button"]:Clone();
+            togglebutton.Parent=game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Visuals").Selection["ESP Options"].Options;
+            togglebutton.Visible=true;
+            togglebutton.Name=v.Name;
+            togglebutton:WaitForChild("Name").Text=v.Name;
+        end
+        for i,v in pairs(espoptionslabeloptions:GetChildren()) do
+            local togglebutton = game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].Templates["Template Label"]:Clone();
+            togglebutton.Parent=game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Visuals").Selection["ESP Options"].Options;
+            togglebutton.Visible=true;
+            togglebutton.Name=v.Name;
+            togglebutton:WaitForChild("Name").Text=v.Name;
+        end
+        for i,v in pairs(espoptionsslideroptions:GetChildren()) do
+            local togglebutton = game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].Templates["Template Slider"]:Clone();
+            togglebutton.Parent=game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Visuals").Selection["ESP Options"].Options;
+            togglebutton.Visible=true;
+            togglebutton.Name=v.Name;
+            togglebutton:WaitForChild("Namee").Text=v.Name;
+        end
+        for i,v in pairs(espoptionshotkeyoptions:GetChildren()) do
+            local button = game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].Templates["Template Hotkey Button"]:Clone();
+            button.Parent=game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Visuals").Selection;
+            button.Visible=true;
+            button.Name=v.Name;
+            button:WaitForChild("Namee").Text = v.Name;
+        end
+        for i,v in pairs(espoptionstextboxoptions:GetChildren()) do
+            local button = game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].Templates["Template TextBox"]:Clone();
+            button.Parent=game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Visuals").Selection;
+            button.Visible=true;
+            button.Name=v.Name;
+            button:WaitForChild("Namee").PlaceholderText = v.Name;
+        end
+        for i,v in pairs(espoptionstextboxtoggleoptions:GetChildren()) do
+            local button = game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].Templates["Template TextBox Toggle"]:Clone();
+            button.Parent=game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Visuals").Selection;
+            button.Visible=true;
+            button.Name=v.Name;
+            button:WaitForChild("Namee").PlaceholderText = v.Name;
+        end
+
+        --chartacter
+        for i,v in pairs(charactertogglebuttonoptions:GetChildren()) do
+            local togglebutton = game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].Templates["Template Toggle Button"]:Clone();
+            togglebutton.Parent=game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Character").Selection;
+            togglebutton.Visible=true;
+            togglebutton.Name=v.Name;
+            togglebutton:WaitForChild("Name").Text=v.Name;
+        end
+        for i,v in pairs(characterbuttonoptions:GetChildren()) do
+            local button = game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].Templates["Template Button"]:Clone();
+            button.Parent=game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Character").Selection;
+            button.Visible=true;
+            button.Name=v.Name;
+            button:WaitForChild("Button").Text=v.Name;
+        end
+        for i,v in pairs(characterlabeloptions:GetChildren()) do
+            local button = game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].Templates["Template Label"]:Clone();
+            button.Parent=game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Character").Selection;
+            button.Visible=true;
+            button.Name=v.Name;
+            button:WaitForChild("Label").Text=v.Name;
+        end
+        for i,v in pairs(characterslideroptions:GetChildren()) do
+            local button = game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].Templates["Template Slider"]:Clone();
+            button.Parent=game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Character").Selection;
+            button.Visible=true;
+            button.Name=v.Name;
+            button:WaitForChild("Namee").Text = v.Name;
+        end
+        for i,v in pairs(characterhotkeyoptions:GetChildren()) do
+            local button = game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].Templates["Template Hotkey Button"]:Clone();
+            button.Parent=game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Character").Selection;
+            button.Visible=true;
+            button.Name=v.Name;
+            button:WaitForChild("Namee").Text = v.Name;
+        end
+        for i,v in pairs(charactertextboxoptions:GetChildren()) do
+            local button = game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].Templates["Template TextBox"]:Clone();
+            button.Parent=game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Character").Selection;
+            button.Visible=true;
+            button.Name=v.Name;
+            button:WaitForChild("Namee").PlaceholderText = v.Name;
+        end
+        for i,v in pairs(charactertextboxtoggleoptions:GetChildren()) do
+            local button = game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].Templates["Template TextBox Toggle"]:Clone();
+            button.Parent=game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Character").Selection;
+            button.Visible=true;
+            button.Name=v.Name;
+            button:WaitForChild("Namee").PlaceholderText = v.Name;
+        end
+
+        --miscellaneous
+        for i,v in pairs(miscellaneoustogglebuttonoptions:GetChildren()) do
+            local togglebutton = game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].Templates["Template Toggle Button"]:Clone();
+            togglebutton.Parent=game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Miscellaneous").Selection;
+            togglebutton.Visible=true;
+            togglebutton.Name=v.Name;
+            togglebutton:WaitForChild("Name").Text=v.Name;
+        end
+        for i,v in pairs(miscellaneousbuttonoptions:GetChildren()) do
+            local button = game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].Templates["Template Button"]:Clone();
+            button.Parent=game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Miscellaneous").Selection;
+            button.Visible=true;
+            button.Name=v.Name;
+            button:WaitForChild("Button").Text=v.Name;
+        end
+        for i,v in pairs(miscellaneouslabeloptions:GetChildren()) do
+            local button = game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].Templates["Template Label"]:Clone();
+            button.Parent=game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Miscellaneous").Selection;
+            button.Visible=true;
+            button.Name=v.Name;
+            button:WaitForChild("Label").Text=v.Name;
+        end
+        for i,v in pairs(miscellaneousslideroptions:GetChildren()) do
+            local button = game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].Templates["Template Slider"]:Clone();
+            button.Parent=game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Miscellaneous").Selection;
+            button.Visible=true;
+            button.Name=v.Name;
+            button:WaitForChild("Namee").Text = v.Name;
+        end
+        for i,v in pairs(miscellaneoushotkeyoptions:GetChildren()) do
+            local button = game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].Templates["Template Hotkey Button"]:Clone();
+            button.Parent=game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Miscellaneous").Selection;
+            button.Visible=true;
+            button.Name=v.Name;
+            button:WaitForChild("Namee").Text = v.Name;
+        end
+        for i,v in pairs(miscellaneoustextboxoptions:GetChildren()) do
+            local button = game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].Templates["Template TextBox"]:Clone();
+            button.Parent=game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Miscellaneous").Selection;
+            button.Visible=true;
+            button.Name=v.Name;
+            button:WaitForChild("Namee").PlaceholderText = v.Name;
+        end
+        for i,v in pairs(miscellaneoustextboxtoggleoptions:GetChildren()) do
+            local button = game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].Templates["Template TextBox Toggle"]:Clone();
+            button.Parent=game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Miscellaneous").Selection;
+            button.Visible=true;
+            button.Name=v.Name;
+            button:WaitForChild("Namee").PlaceholderText = v.Name;
+        end
+
+        -- ui settings
+        for i,v in pairs(uisettingstogglebuttonoptions:GetChildren()) do
+            local togglebutton = game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].Templates["Template Toggle Button"]:Clone();
+            togglebutton.Parent=game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("UI Settings").Selection;
+            togglebutton.Visible=true;
+            togglebutton.Name=v.Name;
+            togglebutton:WaitForChild("Name").Text=v.Name;
+        end
+        for i,v in pairs(uisettingsbuttonoptions:GetChildren()) do
+            local button = game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].Templates["Template Button"]:Clone();
+            button.Parent=game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("UI Settings").Selection;
+            button.Visible=true;
+            button.Name=v.Name;
+            button:WaitForChild("Button").Text=v.Name;
+        end
+        for i,v in pairs(uisettingslabeloptions:GetChildren()) do
+            local button = game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].Templates["Template Label"]:Clone();
+            button.Parent=game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("UI Settings").Selection;
+            button.Visible=true;
+            button.Name=v.Name;
+            button:WaitForChild("Label").Text=v.Name;
+        end
+        for i,v in pairs(uisettingshotkeyoptions:GetChildren()) do
+            local button = game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].Templates["Template Hotkey Button"]:Clone();
+            button.Parent=game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("UI Settings").Selection;
+            button.Visible=true;
+            button.Name=v.Name;
+            button:WaitForChild("Namee").Text = v.Name;
+        end
+        for i,v in pairs(uisettingstextboxoptions:GetChildren()) do
+            local button = game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].Templates["Template TextBox"]:Clone();
+            button.Parent=game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("UI Settings").Selection;
+            button.Visible=true;
+            button.Name=v.Name;
+            button:WaitForChild("Namee").PlaceholderText = v.Name;
+        end
+        for i,v in pairs(uisettingstextboxtoggleoptions:GetChildren()) do
+            local button = game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].Templates["Template TextBox Toggle"]:Clone();
+            button.Parent=game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("UI Settings").Selection;
+            button.Visible=true;
+            button.Name=v.Name;
+            button:WaitForChild("Namee").PlaceholderText = v.Name;
+        end
+        for i,v in pairs(interfaceoptions:GetChildren()) do
+            local button = game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].Templates["Template Multiple options"]:Clone();
+            button.Parent=game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("UI Settings").Selection;
+            button.Visible=true;
+            button.Name=v.Name;
+            button.Namee.Text = v.Name; 
+        end
+        for i,v in pairs(interfaceoptionstogglebuttonoptions:GetChildren()) do
+            local togglebutton = game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].Templates["Template Toggle Button"]:Clone();
+            togglebutton.Parent=game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("UI Settings").Selection["Interface"].Options;
+            togglebutton.Visible=true;
+            togglebutton.Name=v.Name;
+            togglebutton:WaitForChild("Name").Text=v.Name;
+        end
+        for i,v in pairs(interfaceoptionslabeloptions:GetChildren()) do
+            local togglebutton = game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].Templates["Template Label"]:Clone();
+            togglebutton.Parent=game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("UI Settings").Selection["Interface"].Options;
+            togglebutton.Visible=true;
+            togglebutton.Name=v.Name;
+            togglebutton:WaitForChild("Name").Text=v.Name;
+        end
+        for i,v in pairs(interfaceoptionsbuttonoptions:GetChildren()) do
+            local togglebutton = game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].Templates["Template Button"]:Clone();
+            togglebutton.Parent=game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("UI Settings").Selection["Interface"].Options;
+            togglebutton.Visible=true;
+            togglebutton.Name=v.Name;
+            togglebutton:WaitForChild("Button").Text=v.Name;
+        end
+        for i,v in pairs(interfaceoptionsslideroptions:GetChildren()) do
+            local togglebutton = game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].Templates["Template Slider"]:Clone();
+            togglebutton.Parent=game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("UI Settings").Selection["Interface"].Options;
+            togglebutton.Visible=true;
+            togglebutton.Name=v.Name;
+            togglebutton:WaitForChild("Namee").Text=v.Name;
+        end
+        for i,v in pairs(interfaceoptionshotkeyoptions:GetChildren()) do
+            local button = game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].Templates["Template Hotkey Button"]:Clone();
+            button.Parent=game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("UI Settings").Selection["Interface"].Options;
+            button.Visible=true;
+            button.Name=v.Name;
+            button:WaitForChild("Namee").Text = v.Name;
+        end
+        for i,v in pairs(interfaceoptionstextboxoptions:GetChildren()) do
+            local button = game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].Templates["Template TextBox"]:Clone();
+            button.Parent=game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("UI Settings").Selection["Interface"].Options;
+            button.Visible=true;
+            button.Name=v.Name;
+            button:WaitForChild("Namee").PlaceholderText = v.Name;
+        end
+        for i,v in pairs(interfaceoptionstextboxtoggleoptions:GetChildren()) do
+            local button = game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].Templates["Template TextBox Toggle"]:Clone();
+            button.Parent=game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("UI Settings").Selection["Interface"].Options;
+            button.Visible=true;
+            button.Name=v.Name;
+            button:WaitForChild("Namee").PlaceholderText = v.Name;
+        end
+    end
+
+    --[[	--- options u can add ---
+        -  Template Multiple options
+        -  Template Button
+        -  Template Label
+        -  Template Toggle Button
+        -  Template Window
+        -  Template Hotkey Button
+        -  Template Slider
+    ]]
+
+
+    --visuals
+    local fullbright = Instance.new("Folder", visualstogglebuttonoptions)
+    fullbright.Name = "FullBright"
+    local esp = Instance.new("Folder",espoptionstogglebuttonoptions)
+    esp.Name = "ESP"
+    local chams = Instance.new("Folder",espoptionstogglebuttonoptions)
+    chams.Name = "Chams"
+    local tracers = Instance.new("Folder", espoptionstogglebuttonoptions)
+    tracers.Name = "Tracers"
+    -- character
+    local superjump = Instance.new("Folder", charactertogglebuttonoptions)
+    superjump.Name = "Super Jump"
+    local superspeed = Instance.new("Folder", charactertogglebuttonoptions)
+    superspeed.Name = "Super Speed"
+    local fly = Instance.new("Folder", charactertogglebuttonoptions)
+    fly.Name = "Fly"
+    local vehiclefly = Instance.new("Folder", charactertogglebuttonoptions)
+    vehiclefly.Name = "Vehicle Fly"
+    local noclip = Instance.new("Folder", charactertogglebuttonoptions)
+    noclip.Name = "Noclip"
+    local walkspeed = Instance.new("Folder", characterslideroptions)
+    walkspeed.Name = "WalkSpeed"
+    local jumppower = Instance.new("Folder", characterslideroptions)
+    jumppower.Name = "JumpPower"
+    local flyhotkey = Instance.new("Folder", characterhotkeyoptions)
+    flyhotkey.Name = "Toggle Fly Hotkey;"
+    local vflyhotkey = Instance.new("Folder", characterhotkeyoptions)
+    vflyhotkey.Name = "Toggle Vehicle Fly Hotkey;"
+    -- miscellaneous
+    local gravity = Instance.new("Folder", miscellaneoustogglebuttonoptions)
+    gravity.Name = "Low Gravity"
+    local gravityslider = Instance.new("Folder", miscellaneousslideroptions)
+    gravityslider.Name = "Gravity Slider"
+    local bhop = Instance.new("Folder", miscellaneousbuttonoptions)
+    bhop.Name = "BHop"
+    local rejoin = Instance.new("Folder", miscellaneousbuttonoptions)
+    rejoin.Name = "Rejoin"
+    -- ui settings
+    local transparency = Instance.new("Folder", interfaceoptionsslideroptions)
+    transparency.Name = "Button Transparency"
+    local icon = Instance.new("Folder", interfaceoptionstextboxoptions)
+    icon.Name = "Icon ID;"
+    local iconenabled = Instance.new("Folder", interfaceoptionstogglebuttonoptions)
+    iconenabled.Name = "Icon"
+    local rgbcool = Instance.new("Folder", interfaceoptionstogglebuttonoptions)
+    rgbcool.Name = "WOOW RGB VERY KOOL"
+    local resetinterface = Instance.new("Folder", interfaceoptionsbuttonoptions)
+    resetinterface.Name = "Reset Interface"
+
+
+    setupui()
+
+    function tweening()
+        if settings.visualopen then
+            for index, visual in pairs(visual) do
+                if visual:IsA("Frame") then
+                    Tween(visual, {BackgroundTransparency = 0}, "Linear", "Out", .1) --these are just an examples
+                    wait(.1)
+                    visual.Visible = true
+                end
+            end		
+            for index, visual in pairs(visual) do
+                if visual:IsA("TextButton") then
+                    Tween(visual, {TextTransparency = 0}, "Linear", "Out", .1) --these are just an examples
+                    visual.Visible = true
+                end
+            end	
+            for index, visual in pairs(visual) do
+                if visual:IsA("TextLabel") then
+                    Tween(visual, {TextTransparency = 0}, "Linear", "Out", .1) --these are just an examples
+                    visual.Visible = true
+                end
+            end	
+        else
+                for index, visual in pairs(visual) do
+                if visual:IsA("Frame") then
+                    Tween(visual, {BackgroundTransparency = 1}, "Linear", "Out", .1) --these are just an examples
+                    wait(.1)
+                    visual.Visible = false
+                end
+            end		
+            for index, visual in pairs(visual) do
+                if visual:IsA("TextButton") then
+                    Tween(visual, {TextTransparency = 1}, "Linear", "Out", .1) --these are just an examples
+                end
+            end	
+            for index, visual in pairs(visual) do
+                if visual:IsA("TextLabel") then
+                    Tween(visual, {TextTransparency = 1}, "Linear", "Out", .1) --these are just an examples
+                end
+            end		
+        end
+            if settings.characteropen then
+            for index, character in pairs(character) do
+                if character:IsA("Frame") then
+                    Tween(character, {BackgroundTransparency = 0}, "Linear", "Out", .1) --these are just an examples
+                    wait(.1)
+                    character.Visible = true
+                end
+            end		
+            for index, character in pairs(character) do
+                if character:IsA("TextButton") then
+                    Tween(character, {TextTransparency = 0}, "Linear", "Out", .1) --these are just an examples
+                    character.Visible = true
+                end
+            end	
+            for index, character in pairs(character) do
+                if character:IsA("TextLabel") then
+                    Tween(character, {TextTransparency = 0}, "Linear", "Out", .1) --these are just an examples
+                    character.Visible = true
+                end
+            end	
+        else
+                for index, character in pairs(character) do
+                if character:IsA("Frame") then
+                    Tween(character, {BackgroundTransparency = 1}, "Linear", "Out", .1) --these are just an examples
+                    wait(.1)
+                    character.Visible = false
+                end
+            end		
+            for index, character in pairs(character) do
+                if character:IsA("TextButton") then
+                    Tween(character, {TextTransparency = 1}, "Linear", "Out", .1) --these are just an examples
+                end
+            end	
+            for index, character in pairs(character) do
+                if character:IsA("TextLabel") then
+                    Tween(character, {TextTransparency = 1}, "Linear", "Out", .1) --these are just an examples
+                end
+            end		
+        end
+    end
+    print("successfully created ui options!")
+end;
+
+function colourshit()
+	game.Players.LocalPlayer.PlayerGui:WaitForChild("Vect0rs hub").Templates["Template Window"].Line.BackgroundColor3 = coloursettings.linecolor;
+	game.Players.LocalPlayer.PlayerGui:WaitForChild("Vect0rs hub").Templates["Template Button"].BackgroundColor3 = coloursettings.buttoncolor;
+	game.Players.LocalPlayer.PlayerGui:WaitForChild("Vect0rs hub").Templates["Template Toggle Button"].BackgroundColor3 = coloursettings.togglebuttoncolor;
+	game.Players.LocalPlayer.PlayerGui:WaitForChild("Vect0rs hub").Templates["Template Label"].BackgroundColor3 = coloursettings.labelcolor;
+    game.Players.LocalPlayer.PlayerGui:WaitForChild("Vect0rs hub").Templates["Template Hotkey Button"].BackgroundColor3 = coloursettings.hotkeybuttoncolor;
+    game.Players.LocalPlayer.PlayerGui:WaitForChild("Vect0rs hub").Templates["Template TextBox"].BackgroundColor3 = coloursettings.textboxcolor;
+    game.Players.LocalPlayer.PlayerGui:WaitForChild("Vect0rs hub").Templates["Template TextBox Toggle"].BackgroundColor3 = coloursettings.textboxcolor;
+end;
+
+function mousebuttonscriptshit()
+  -- functions
+    vflyspeed = 1
+    vehicleflyspeed = 1
+    function sFLY(vfly)
+        repeat wait() until game.Players.LocalPlayer and game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild('HumanoidRootPart') and game.Players.LocalPlayer.Character:FindFirstChild('Humanoid')
+        repeat wait() until mouse
+
+        local T = game.Players.LocalPlayer.Character.HumanoidRootPart
+        local CONTROL = {F = 0, B = 0, L = 0, R = 0, Q = 0, E = 0}
+        local lCONTROL = {F = 0, B = 0, L = 0, R = 0, Q = 0, E = 0}
+        local SPEED = 0
+
+        local function FLY()
+            settings.vfly = true
+            local BG = Instance.new('BodyGyro', T)
+            local BV = Instance.new('BodyVelocity', T)
+            BG.P = 9e4
+            BG.maxTorque = Vector3.new(9e9, 9e9, 9e9)
+            BG.cframe = T.CFrame
+            BV.velocity = Vector3.new(0, 0, 0)
+            BV.maxForce = Vector3.new(9e9, 9e9, 9e9)
+            spawn(function()
+                repeat wait()
+                if not vfly then
+                    game.Players.LocalPlayer.Character:FindFirstChildOfClass('Humanoid').PlatformStand = true
+                end
+                if CONTROL.L + CONTROL.R ~= 0 or CONTROL.F + CONTROL.B ~= 0 or CONTROL.Q + CONTROL.E ~= 0 then
+                    SPEED = 50
+                elseif not (CONTROL.L + CONTROL.R ~= 0 or CONTROL.F + CONTROL.B ~= 0 or CONTROL.Q + CONTROL.E ~= 0) and SPEED ~= 0 then
+                    SPEED = 0
+                end
+                if (CONTROL.L + CONTROL.R) ~= 0 or (CONTROL.F + CONTROL.B) ~= 0 or (CONTROL.Q + CONTROL.E) ~= 0 then
+                    BV.velocity = ((workspace.CurrentCamera.CoordinateFrame.lookVector * (CONTROL.F + CONTROL.B)) + ((workspace.CurrentCamera.CoordinateFrame * CFrame.new(CONTROL.L + CONTROL.R, (CONTROL.F + CONTROL.B + CONTROL.Q + CONTROL.E) * 0.2, 0).p) - workspace.CurrentCamera.CoordinateFrame.p)) * SPEED
+                    lCONTROL = {F = CONTROL.F, B = CONTROL.B, L = CONTROL.L, R = CONTROL.R}
+                elseif (CONTROL.L + CONTROL.R) == 0 and (CONTROL.F + CONTROL.B) == 0 and (CONTROL.Q + CONTROL.E) == 0 and SPEED ~= 0 then
+                    BV.velocity = ((workspace.CurrentCamera.CoordinateFrame.lookVector * (lCONTROL.F + lCONTROL.B)) + ((workspace.CurrentCamera.CoordinateFrame * CFrame.new(lCONTROL.L + lCONTROL.R, (lCONTROL.F + lCONTROL.B + CONTROL.Q + CONTROL.E) * 0.2, 0).p) - workspace.CurrentCamera.CoordinateFrame.p)) * SPEED
+                else
+                    BV.velocity = Vector3.new(0, 0, 0)
+                end
+                BG.cframe = workspace.CurrentCamera.CoordinateFrame
+                until not settings.vfly
+                CONTROL = {F = 0, B = 0, L = 0, R = 0, Q = 0, E = 0}
+                lCONTROL = {F = 0, B = 0, L = 0, R = 0, Q = 0, E = 0}
+                SPEED = 0
+                BG:destroy()
+                BV:destroy()
+                game.Players.LocalPlayer.Character:FindFirstChildOfClass('Humanoid').PlatformStand = false
+            end)
+        end
+        mouse.KeyDown:connect(function(KEY)
+            if KEY:lower() == 'w' then
+                if vfly then
+                    CONTROL.F = vehicleflyspeed
+                else
+                    CONTROL.F = vflyspeed
+                end
+            elseif KEY:lower() == 's' then
+                if vfly then
+                    CONTROL.B = - vehicleflyspeed
+                else
+                    CONTROL.B = - vflyspeed
+                end
+            elseif KEY:lower() == 'a' then
+                if vfly then
+                    CONTROL.L = - vehicleflyspeed
+                else
+                    CONTROL.L = - vflyspeed
+                end
+            elseif KEY:lower() == 'd' then
+                if vfly then
+                    CONTROL.R = vehicleflyspeed
+                else
+                    CONTROL.R = vflyspeed
+                end
+            elseif KEY:lower() == 'e' then
+                if vfly then
+                    CONTROL.Q = vehicleflyspeed*2
+                else
+                    CONTROL.Q = vflyspeed*2
+                end
+            elseif KEY:lower() == 'q' then
+                if vfly then
+                    CONTROL.E = -vehicleflyspeed*2
+                else
+                    CONTROL.E = -vflyspeed*2
+                end
+            end
+        end)
+        mouse.KeyUp:connect(function(KEY)
+            if KEY:lower() == 'w' then
+                CONTROL.F = 0
+            elseif KEY:lower() == 's' then
+                CONTROL.B = 0
+            elseif KEY:lower() == 'a' then
+                CONTROL.L = 0
+            elseif KEY:lower() == 'd' then
+                CONTROL.R = 0
+            elseif KEY:lower() == 'e' then
+                CONTROL.Q = 0
+            elseif KEY:lower() == 'q' then
+                CONTROL.E = 0
+            end
+        end)
+        FLY()
+    end
+
+    function NOFLY()
+        settings.vfly = false
+        game.Players.LocalPlayer.Character:FindFirstChildOfClass('Humanoid').PlatformStand = false
+    end
+        
+    function fullbright()
+            if settings.fullbright then
+            warn("fullbright enabled")
+            game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Visuals").Selection["FullBright"].Toggle.Text = "ON"
+            game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Visuals").Selection["FullBright"].Toggle.TextColor3 = settings.on
+            local bloom = Instance.new("BloomEffect");
+            bloom.Enabled = true;
+            bloom.Intensity = 0.55;
+            bloom.Size = 30;
+            bloom.Threshold = 0.95;
+            bloom.Parent = game.Lighting;
+            local colorcorrection = Instance.new("ColorCorrectionEffect");
+            colorcorrection.Enabled = true;
+            colorcorrection.Brightness = 0;
+            colorcorrection.Contrast = 0;
+            colorcorrection.Saturation = 1;
+            colorcorrection.TintColor = Color3.fromRGB(255,255,255);
+            colorcorrection.Parent = game.Lighting;
+            local sunrays = Instance.new("SunRaysEffect");
+            sunrays.Enabled = true;
+            sunrays.Intensity = 0.4;
+            sunrays.Spread = 1;
+            sunrays.Parent = game.Lighting;
+            else
+            warn("fullbright disabled")
+            game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Visuals").Selection["FullBright"].Toggle.Text = "OFF"
+            game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Visuals").Selection["FullBright"].Toggle.TextColor3 = settings.off
+            for i,v in pairs(game.Lighting:GetChildren()) do
+                if v:IsA("BloomEffect") or v:IsA("ColorCorrectionEffect") or v:IsA("SunRaysEffect") then
+                    v:Destroy();
+                end
+            end
+        end
+    end
+        
+    if settings.TracersLength > 2048 then
+        settings.TracersLength = 2048
+    end
+
+    if settings.CHAMSLength > 2048 then
+        settings.CHAMSLength = 2048
+    end
+
+    function GetSizeOfObject(Obj)
+        if Obj:IsA("BasePart") then
+            return Obj.Size
+        elseif Obj:IsA("Model") then
+            return Obj:GetExtentsSize()
+        end
+    end
+
+    function GetTeamColor(Plr)
+        if Plr == nil then return nil end
+        if not Plr:IsA("Player") then
+            return nil
+        end
+        local PickedColor = settings.Colors.Enemy
+
+        if Plr ~= nil then
+            if game.PlaceId == 606849621 then
+                if settings.Colors.ColorOverride == nil then
+                    if not settings.FreeForAll then
+                        if MyPlr.Team ~= nil and Plr.Team ~= nil then
+                            if settings.FriendList[Plr.Name] == nil then
+                                if MyPlr.Team.Name == "Prisoner" then
+                                    if Plr.Team == MyPlr.Team or Plr.Team.Name == "Criminal" then
+                                        PickedColor = settings.Colors.Ally
+                                    else
+                                        PickedColor = settings.Colors.Enemy
+                                    end
+                                elseif MyPlr.Team.Name == "Criminal" then
+                                    if Plr.Team == MyPlr.Team or Plr.Team.Name == "Prisoner" then
+                                        PickedColor = settings.Colors.Ally
+                                    else
+                                        PickedColor = settings.Colors.Enemy
+                                    end
+                                elseif MyPlr.Team.Name == "Police" then
+                                    if Plr.Team == MyPlr.Team then
+                                        PickedColor = settings.Colors.Ally
+                                    else
+                                        if Plr.Team.Name == "Criminal" then
+                                            PickedColor = settings.Colors.Enemy
+                                        elseif Plr.Team.Name == "Prisoner" then
+                                            PickedColor = settings.Colors.Neutral
+                                        end
+                                    end
+                                end
+                            else
+                                PickedColor = settings.Colors.Friend
+                            end
+                        end
+                    else
+                        if settings.FriendList[Plr.Name] ~= nil then
+                            PickedColor = settings.Colors.Friend
+                        else
+                            PickedColor = settings.Colors.Enemy
+                        end
+                    end
+                else
+                    PickedColor = settings.Colors.ColorOverride
+                end
+            elseif game.PlaceId == 155615604 then
+                if settings.Colors.ColorOverride == nil then
+                    if MyPlr.Team ~= nil and Plr.Team ~= nil then
+                        if settings.FriendList[Plr.Name] == nil then
+                            if MyPlr.Team.Name == "Inmates" then
+                                if Plr.Team.Name == "Inmates" then
+                                    PickedColor = settings.Colors.Ally
+                                elseif Plr.Team.Name == "Guards" or Plr.Team.Name == "Criminals" then
+                                    PickedColor = settings.Colors.Enemy
+                                else
+                                    PickedColor = settings.Colors.Neutral
+                                end
+                            elseif MyPlr.Team.Name == "Guards" then
+                                if Plr.Team.Name == "Inmates" then
+                                    PickedColor = settings.Colors.Neutral
+                                elseif Plr.Team.Name == "Criminals" then
+                                    PickedColor = settings.Colors.Enemy
+                                elseif Plr.Team.Name == "Guards" then
+                                    PickedColor = settings.Colors.Ally
+                                end
+                            elseif MyPlr.Team.Name == "Criminals" then
+                                if Plr.Team.Name == "Inmates" then
+                                    PickedColor = settings.Colors.Ally
+                                elseif Plr.Team.Name == "Guards" then
+                                    PickedColor = settings.Colors.Enemy
+                                else
+                                    PickedColor = settings.Colors.Neutral
+                                end
+                            end
+                        else
+                            PickedColor = settings.Colors.Friend
+                        end
+                    end
+                else
+                    PickedColor = settings.Colors.ColorOverride
+                end
+            elseif game.PlaceId == 746820961 then
+                if settings.Colors.ColorOverride == nil then
+                    if MyPlr:FindFirstChild("TeamC") and Plr:FindFirstChild("TeamC") then
+                        if Plr.TeamC.Value == MyPlr.TeamC.Value then
+                            PickedColor = settings.Colors.Ally
+                        else
+                            PickedColor = settings.Colors.Enemy
+                        end
+                    end
+                else
+                    PickedColor = settings.Colors.ColorOverride
+                end
+            elseif game.PlaceId == 1382113806 then
+                if settings.Colors.ColorOverride == nil then
+                    if MyPlr:FindFirstChild("role") and Plr:FindFirstChild("role") then
+                        if MyPlr.role.Value == "assassin" then
+                            if Plr.role.Value == "target" then
+                                PickedColor = settings.Colors.Enemy
+                            elseif Plr.role.Value == "guard" then
+                                PickedColor = Color3.new(1, 135 / 255, 0)
+                            else
+                                PickedColor = settings.Colors.Neutral
+                            end
+                        elseif MyPlr.role.Value == "target" then
+                            if Plr.role.Value == "guard" then
+                                PickedColor = settings.Colors.Ally
+                            elseif Plr.role.Value == "assassin" then
+                                PickedColor = settings.Colors.Enemy
+                            else
+                                PickedColor = settings.Colors.Neutral
+                            end
+                        elseif MyPlr.role.Value == "guard" then
+                            if Plr.role.Value == "target" then
+                                PickedColor = settings.Colors.Friend
+                            elseif Plr.role.Value == "guard" then
+                                PickedColor = settings.Colors.Ally
+                            elseif Plr.role.Value == "assassin" then
+                                PickedColor = settings.Colors.Enemy
+                            else
+                                PickedColor = settings.Colors.Neutral
+                            end
+                        else
+                            if MyPlr.role.Value == "none" then
+                                PickedColor = settings.Colors.Neutral
+                            end
+                        end
+                    end
+                else
+                    PickedColor = settings.Colors.ColorOverride
+                end
+            elseif game.PlaceId == 1072809192 then
+                if MyPlr:FindFirstChild("Backpack") and Plr:FindFirstChild("Backpack") then
+                    if MyPlr.Backpack:FindFirstChild("Knife") or MyChar:FindFirstChild("Knife") then
+                        if Plr.Backpack:FindFirstChild("Revolver") or Plr.Character:FindFirstChild("Revolver") then
+                            PickedColor = settings.Colors.Enemy
+                        else
+                            PickedColor = Color3.new(1, 135 / 255, 0)
+                        end
+                    elseif MyPlr.Backpack:FindFirstChild("Revolver") or MyChar:FindFirstChild("Revolver") then
+                        if Plr.Backpack:FindFirstChild("Knife") or Plr.Character:FindFirstChild("Knife") then
+                            PickedColor = settings.Colors.Enemy
+                        elseif Plr.Backpack:FindFirstChild("Revolver") or Plr.Character:FindFirstChild("Revolver") then
+                            PickedColor = settings.Colors.Enemy
+                        else
+                            PickedColor = settings.Colors.Ally
+                        end
+                    else
+                        if Plr.Backpack:FindFirstChild("Knife") or Plr.Character:FindFirstChild("Knife") then
+                            PickedColor = settings.Colors.Enemy
+                        elseif Plr.Backpack:FindFirstChild("Revolver") or Plr.Character:FindFirstChild("Revolver") then
+                            PickedColor = settings.Colors.Ally
+                        else
+                            PickedColor = settings.Colors.Neutral
+                        end
+                    end
+                end
+            elseif game.PlaceId == 142823291 or game.PlaceId == 1122507250 then
+                if MyPlr:FindFirstChild("Backpack") and Plr:FindFirstChild("Backpack") then
+                    if MyPlr.Backpack:FindFirstChild("Knife") or MyChar:FindFirstChild("Knife") then
+                        if (Plr.Backpack:FindFirstChild("Gun") or Plr.Backpack:FindFirstChild("Revolver")) or (Plr.Character:FindFirstChild("Gun") or Plr.Character:FindFirstChild("Revolver")) then
+                            PickedColor = settings.Colors.Enemy
+                        else
+                            PickedColor = Color3.new(1, 135 / 255, 0)
+                        end
+                    elseif (MyPlr.Backpack:FindFirstChild("Gun") or MyPlr.Backpack:FindFirstChild("Revolver")) or (MyChar:FindFirstChild("Gun") or MyChar:FindFirstChild("Revolver")) then
+                        if Plr.Backpack:FindFirstChild("Knife") or Plr.Character:FindFirstChild("Knife") then
+                            PickedColor = settings.Colors.Enemy
+                        else
+                            PickedColor = settings.Colors.Ally
+                        end
+                    else
+                        if Plr.Backpack:FindFirstChild("Knife") or Plr.Character:FindFirstChild("Knife") then
+                            PickedColor = settings.Colors.Enemy
+                        elseif (Plr.Backpack:FindFirstChild("Gun") or Plr.Backpack:FindFirstChild("Revolver")) or (Plr.Character:FindFirstChild("Gun") or Plr.Character:FindFirstChild("Revolver")) then
+                            PickedColor = settings.Colors.Ally
+                        else
+                            PickedColor = settings.Colors.Neutral
+                        end
+                    end
+                end
+            elseif game.PlaceId == 379614936 then
+                if settings.Colors.ColorOverride == nil then
+                    if not settings.FriendList[Plr.Name] then
+                        local targ = MyPlr:FindFirstChild("PlayerGui"):FindFirstChild("ScreenGui"):FindFirstChild("UI"):FindFirstChild("Target"):FindFirstChild("Img"):FindFirstChild("PlayerText")
+                        if targ then
+                            if Plr.Name:lower() == targ.Text:lower() then
+                                PickedColor = settings.Colors.Enemy
+                            else
+                                PickedColor = settings.Colors.Neutral
+                            end
+                        else
+                            PickedColor = settings.Colors.Neutral
+                        end
+                    else
+                        PickedColor = settings.Colors.Friend
+                    end
+                else
+                    PickedColor = settings.Colors.ColorOverride
+                end
+            elseif game.PlaceId == 983224898 then
+                if (tick() - wildrevolvertick) > 10 or wildrevolverteamdata == nil then
+                    wildrevolverteamdata = RepStor.Functions.RequestGameData:InvokeServer()
+                    wildrevolvertick = tick()
+                    return settings.Colors.Neutral
+                end
+                local succ = pcall(function()
+                    if wildrevolverteamdata[Plr.Name] ~= nil then
+                        if settings.Colors.ColorOverride == nil then
+                            if not settings.FriendList[Plr.Name] then
+                                if wildrevolverteamdata[Plr.Name]["TeamName"] == wildrevolverteamdata[MyPlr.Name]["TeamName"] then
+                                    PickedColor = settings.Colors.Ally
+                                else
+                                    PickedColor = settings.Colors.Enemy
+                                end
+                            else
+                                PickedColor = settings.Colors.Friend
+                            end
+                        else
+                            PickedColor = settings.Colors.ColorOverride
+                        end
+                    else
+                        PickedColor = settings.Colors.Neutral
+                    end
+                end)
+                if not succ then
+                    wildrevolverteamdata = RepStor.Functions.RequestGameData:InvokeServer()
+                    wildrevolvertick = tick()
+                    return settings.Colors.Neutral
+                end
+            else
+                if settings.Colors.ColorOverride == nil then
+                    if not settings.FreeForAll then
+                        if MyPlr.Team ~= Plr.Team and not settings.FriendList[Plr.Name] then
+                            PickedColor = settings.Colors.Enemy
+                        elseif MyPlr.Team == Plr.Team and not settings.FriendList[Plr.Name] then
+                            PickedColor = settings.Colors.Ally
+                        else
+                            PickedColor = settings.Colors.Friend
+                        end
+                    else
+                        if settings.FriendList[Plr.Name] ~= nil then
+                            PickedColor = settings.Colors.Friend
+                        else
+                            PickedColor = settings.Colors.Enemy
+                        end
+                    end
+                else
+                    PickedColor = settings.Colors.ColorOverride
+                end
+            end
+        end
+
+        return PickedColor
+    end
+        
+        
+    function UpdateESP(Plr)
+        if Plr ~= nil then
+            local Find = PlayerESP:FindFirstChild("ESP Crap_" .. Plr.Name)
+            if Find then
+                local PickColor = GetTeamColor(Plr)
+                Find.Frame.Names.TextColor3 = PickColor
+                Find.Frame.Dist.TextColor3 = PickColor
+                Find.Frame.Health.TextColor3 = PickColor
+                --Find.Frame.Pos.TextColor3 = PickColor
+                local GetChar = Plr.Character
+                if MyChar and GetChar then
+                    local Find2 = MyChar:FindFirstChild("HumanoidRootPart")
+                    local Find3 = GetChar:FindFirstChild("HumanoidRootPart")
+                    local Find4 = GetChar:FindFirstChildOfClass("Humanoid")
+                    if Find2 and Find3 then
+                        local pos = Find3.Position
+                        local Dist = (Find2.Position - pos).magnitude
+                        if Dist > settings.ESPLength or settings.Blacklist[Plr.Name] then
+                            Find.Frame.Names.Visible = false
+                            Find.Frame.Dist.Visible = false
+                            Find.Frame.Health.Visible = false
+                            return
+                        else
+                            Find.Frame.Names.Visible = true
+                            Find.Frame.Dist.Visible = true
+                            Find.Frame.Health.Visible = true
+                        end
+                        Find.Frame.Dist.Text = "Distance: " .. string.format("%.0f", Dist)
+                        --Find.Frame.Pos.Text = "(X: " .. string.format("%.0f", pos.X) .. ", Y: " .. string.format("%.0f", pos.Y) .. ", Z: " .. string.format("%.0f", pos.Z) .. ")"
+                        if Find4 then
+                            Find.Frame.Health.Text = "Health: " .. string.format("%.0f", Find4.Health)
+                        else
+                            Find.Frame.Health.Text = ""
+                        end
+                    end
+                end
+            end
+        end
+    end
+
+    function RemoveESP(Obj)
+        if Obj ~= nil then
+            local IsPlr = Obj:IsA("Player")
+            local UseFolder = ItemESP
+            if IsPlr then UseFolder = PlayerESP end
+
+            local FindESP = ((IsPlr) and UseFolder:FindFirstChild("ESP Crap_" .. Obj.Name)) or FindESP(Obj)
+            if FindESP then
+                FindESP:Destroy()
+            end
+        end
+    end
+
+    function CreateESP(Obj)
+        if Obj ~= nil then
+            local IsPlr = Obj:IsA("Player")
+            local UseFolder = ItemESP
+            local GetChar = ((IsPlr) and Obj.Character) or Obj
+            local Head = GetChar:FindFirstChild("Head")
+            local t = tick()
+            if IsPlr then UseFolder = PlayerESP end
+            if Head == nil then
+                repeat
+                    Head = GetChar:FindFirstChild("Head")
+                    wait()
+                until Head ~= nil or (tick() - t) >= 10
+            end
+            if Head == nil then return end
+            
+            local bb = Instance.new("BillboardGui")
+            bb.Adornee = Head
+            bb.ExtentsOffset = Vector3.new(0, 1, 0)
+            bb.AlwaysOnTop = true
+            bb.Size = UDim2.new(0, 5, 0, 5)
+            bb.StudsOffset = Vector3.new(0, 3, 0)
+            bb.Name = "ESP Crap_" .. Obj.Name
+            bb.Parent = UseFolder
+            
+            local frame = Instance.new("Frame", bb)
+            frame.ZIndex = 10
+            frame.BackgroundTransparency = 1
+            frame.Size = UDim2.new(1, 0, 1, 0)
+            
+            local TxtName = Instance.new("TextLabel", frame)
+            TxtName.Name = "Names"
+            TxtName.ZIndex = 10
+            TxtName.Text = Obj.Name
+            TxtName.BackgroundTransparency = 1
+            TxtName.Position = UDim2.new(0, 0, 0, -45)
+            TxtName.Size = UDim2.new(1, 0, 10, 0)
+            TxtName.Font = "SourceSansBold"
+            TxtName.TextSize = 13
+            TxtName.TextStrokeTransparency = 0.5
+
+            local TxtDist = nil
+            local TxtHealth = nil
+            if IsPlr then
+                TxtDist = Instance.new("TextLabel", frame)
+                TxtDist.Name = "Dist"
+                TxtDist.ZIndex = 10
+                TxtDist.Text = ""
+                TxtDist.BackgroundTransparency = 1
+                TxtDist.Position = UDim2.new(0, 0, 0, -35)
+                TxtDist.Size = UDim2.new(1, 0, 10, 0)
+                TxtDist.Font = "SourceSansBold"
+                TxtDist.TextSize = 13
+                TxtDist.TextStrokeTransparency = 0.5
+
+                TxtHealth = Instance.new("TextLabel", frame)
+                TxtHealth.Name = "Health"
+                TxtHealth.ZIndex = 10
+                TxtHealth.Text = ""
+                TxtHealth.BackgroundTransparency = 1
+                TxtHealth.Position = UDim2.new(0, 0, 0, -25)
+                TxtHealth.Size = UDim2.new(1, 0, 10, 0)
+                TxtHealth.Font = "SourceSansBold"
+                TxtHealth.TextSize = 13
+                TxtHealth.TextStrokeTransparency = 0.5
+            else
+                local ObjVal = Instance.new("ObjectValue", bb)
+                ObjVal.Value = Obj
+            end
+            
+            local PickColor = GetTeamColor(Obj) or settings.Colors.Neutral
+            TxtName.TextColor3 = PickColor
+
+            if IsPlr then
+                TxtDist.TextColor3 = PickColor
+                TxtHealth.TextColor3 = PickColor
+            end
+        end
+    end
+        
+    function UpdateTracer(Plr)
+        if settings.TracersEnabled then
+            if MyChar then
+                local MyTor = MyChar:FindFirstChild("HumanoidRootPart")
+                local GetTor = TracerData[Plr.Name]
+                if MyTor and GetTor ~= nil and GetTor.Parent ~= nil then
+                    local Dist = (MyTor.Position - GetTor.Position).magnitude
+                    if (Dist < settings.TracersLength and not settings.Blacklist[Plr.Name]) and not (MyChar:FindFirstChild("InVehicle") or GetTor.Parent:FindFirstChild("InVehicle")) then
+                        if not settings.PlaceTracersUnderCharacter then
+                            local R = MyCam:ScreenPointToRay(MyCam.ViewportSize.X / 2, MyCam.ViewportSize.Y, 0)
+                            Dist = (R.Origin - (GetTor.Position - Vector3.new(0, 3, 0))).magnitude
+                            Tracers[Plr.Name].Transparency = 1
+                            Tracers[Plr.Name].Size = Vector3.new(0.05, 0.05, Dist)
+                            Tracers[Plr.Name].CFrame = CFrame.new(R.Origin, (GetTor.Position - Vector3.new(0, 4.5, 0))) * CFrame.new(0, 0, -Dist / 2)
+                            Tracers[Plr.Name].BrickColor = BrickColor.new(GetTeamColor(Plr))
+                            Tracers[Plr.Name].BoxHandleAdornment.Transparency = 0
+                            Tracers[Plr.Name].BoxHandleAdornment.Size = Vector3.new(0.001, 0.001, Dist)
+                            Tracers[Plr.Name].BoxHandleAdornment.Color3 = GetTeamColor(Plr)
+                        else
+                            Dist = (MyTor.Position - (GetTor.Position - Vector3.new(0, 3, 0))).magnitude
+                            Tracers[Plr.Name].Transparency = 1
+                            Tracers[Plr.Name].Size = Vector3.new(0.3, 0.3, Dist)
+                            Tracers[Plr.Name].CFrame = CFrame.new(MyTor.Position - Vector3.new(0, 3, 0), (GetTor.Position - Vector3.new(0, 4.5, 0))) * CFrame.new(0, 0, -Dist / 2)
+                            Tracers[Plr.Name].BrickColor = BrickColor.new(GetTeamColor(Plr))
+                            Tracers[Plr.Name].BoxHandleAdornment.Transparency = 0
+                            Tracers[Plr.Name].BoxHandleAdornment.Size = Vector3.new(0.05, 0.05, Dist)
+                            Tracers[Plr.Name].BoxHandleAdornment.Color3 = GetTeamColor(Plr)
+                        end
+                    else
+                        Tracers[Plr.Name].Transparency = 1
+                        Tracers[Plr.Name].BoxHandleAdornment.Transparency = 1
+                    end
+                end
+            end
+        end
+    end
+
+    function RemoveTracers(Plr)
+        local Find = Tracers:FindFirstChild(Plr.Name)
+        if Find then
+            Find:Destroy()
+        end
+    end
+
+    function CreateTracers(Plr)
+        local Find = Tracers:FindFirstChild(Plr.Name)
+        if not Find then
+            local P = Instance.new("Part")
+            P.Name = Plr.Name
+            P.Material = "Neon"
+            P.Transparency = 1
+            P.Anchored = true
+            P.Locked = true
+            P.CanCollide = false
+            local B = Instance.new("BoxHandleAdornment", P)
+            B.Adornee = P
+            B.Size = GetSizeOfObject(P)
+            B.AlwaysOnTop = true
+            B.ZIndex = 5
+            B.Transparency = 0
+            B.Color3 = GetTeamColor(Plr) or settings.Colors.Neutral
+            P.Parent = Tracers
+
+            coroutine.resume(coroutine.create(function()
+                while Tracers:FindFirstChild(Plr.Name) do
+                    UpdateTracer(Plr)
+                    Run.RenderStepped:wait()
+                end
+            end))
+        end
+    end
+
+    function FindCham(Obj)
+        for i, v in next, ItemChams:GetChildren() do
+            if v.className == "ObjectValue" then
+                if v.Value == Obj then
+                    return v.Parent
+                end
+            end
+        end
+
+        return nil
+    end
+        
+    function FindESP(Obj)
+        for i, v in next, ItemESP:GetChildren() do
+            if v.className == "ObjectValue" then
+                if v.Value == Obj then
+                    return v.Parent
+                end
+            end
+        end
+
+        return nil
+    end	
+        
+    function UpdateChams(Obj)
+        if Obj == nil then return end
+
+        if Obj:IsA("Player") then
+            local Find = PlayerChams:FindFirstChild(Obj.Name)
+            local GetChar = Obj.Character
+
+            local Trans = 0
+            if GetChar and MyChar then
+                local GetHead = GetChar:FindFirstChild("Head")
+                local GetTor = GetChar:FindFirstChild("HumanoidRootPart")
+                local MyHead = MyChar:FindFirstChild("Head")
+                local MyTor = MyChar:FindFirstChild("HumanoidRootPart")
+                if GetHead and GetTor and MyHead and MyTor then
+                    if (MyTor.Position - GetTor.Position).magnitude > settings.CHAMSLength or settings.Blacklist[Obj.Name] then
+                        Trans = 1
+                    else
+                        --local MyCharStuff = MyChar:GetDescendants()
+                        local Ray = Ray.new(MyCam.CFrame.p, (GetTor.Position - MyCam.CFrame.p).unit * 2048)
+                        local part = workspace:FindPartOnRayWithIgnoreList(Ray, {MyChar})
+                        if part ~= nil then
+                            if part:IsDescendantOf(GetChar) then
+                                Trans = 0.9
+                            else
+                                Trans = 0
+                            end
+                        end
+                    end
+                end
+            end
+
+            if Find then
+                for i, v in next, Find:GetChildren() do
+                    if v.className ~= "ObjectValue" then
+                        v.Color3 = GetTeamColor(Obj) or settings.Colors.Neutral
+                        v.Transparency = Trans
+                    end
+                end
+            end
+        end
+    end
+
+    function RemoveChams(Obj)
+        if Obj ~= nil then
+            local IsPlr = Obj:IsA("Player")
+            local UseFolder = ItemChams
+            if IsPlr then UseFolder = PlayerChams end
+
+            local FindC = UseFolder:FindFirstChild(tostring(Obj)) or FindCham(Obj)
+            if FindC then
+                FindC:Destroy()
+            end
+        end
+    end
+
+    function CreateChams(Obj)
+        if Obj ~= nil then
+            local IsPlr = Obj:IsA("Player")
+            local UseFolder = ItemChams
+            local Crap = nil
+            local GetTor = nil
+            local t = tick()
+            if IsPlr then
+                Obj = Obj.Character
+                UseFolder = PlayerChams
+            end
+            if Obj == nil then return end
+            GetTor = Obj:FindFirstChild("HumanoidRootPart") or Obj:WaitForChild("HumanoidRootPart")
+            if IsPlr then Crap = Obj:GetChildren() else Crap = Obj:GetDescendants() end
+
+            local FindC = ((IsPlr) and UseFolder:FindFirstChild(Obj.Name)) or FindCham(Obj)
+            if not FindC then
+                FindC = Instance.new("Folder", UseFolder)
+                FindC.Name = Obj.Name
+                local ObjVal = Instance.new("ObjectValue", FindC)
+                ObjVal.Value = Obj
+            end
+
+            for _, P in next, Crap do
+                if P:IsA("PVInstance") and P.Name ~= "HumanoidRootPart" then
+                    local Box = Instance.new("BoxHandleAdornment")
+                    Box.Size = GetSizeOfObject(P)
+                    Box.Name = "Cham"
+                    Box.Adornee = P
+                    Box.AlwaysOnTop = true
+                    Box.ZIndex = 5
+                    Box.Transparency = 0
+                    Box.Color3 = ((IsPlr) and GetTeamColor(Plrs:GetPlayerFromCharacter(Obj))) or settings.Colors.Neutral
+                    Box.Parent = FindC
+                end
+            end
+        end
+    end
+        
+        
+    -- frame adjust shit dont touch
+    function calculatetestToScale(dir,scale)
+        local num = 31;
+        local scaleToFrame = scale;
+        for i,v in pairs(dir:GetChildren()) do
+            if v.ClassName ~= "UIListLayout" then
+                num = num + scaleToFrame;
+            end
+        end
+        return num;
+    end
+
+    game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Visuals").Selection["ESP Options"].Options.Size = UDim2.new(0, 271,0, calculatetestToScale(game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Visuals").Selection["ESP Options"].Options,31))
+    game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Visuals").Selection["ESP Options"].Size = UDim2.new(0, 271,0, calculatetestToScale(game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Visuals").Selection["ESP Options"],46))	
+    game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Visuals").Selection.Size = UDim2.new(0, 271,0, calculatetestToScale(game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Visuals").Selection,50))	
+
+        
+    -- toggle stuff
+        -- visuals
+    game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Visuals").Title.toggle.MouseButton1Down:Connect(function()
+        settings.visualopen = not settings.visualopen
+        if settings.visualopen then
+            game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Visuals"):TweenSize(UDim2.new(0, 271,0, 488), "Out", "Linear", .2, true)
+            game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild('Visuals').Line.Position = UDim2.new(0.001, 0,0.083, 0)
+
+        else
+            game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Visuals"):TweenSize(UDim2.new(0, 271,0, 40), "Out", "Linear", .2, true)
+            game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild('Visuals').Line.Position = UDim2.new(0.001, 0,0.916, 0)
+
+        end
+    end)
+        
+    game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Visuals").Selection["ESP Options"].Namee.toggle.MouseButton1Down:Connect(function()
+        settings.espoptionstoggle = not settings.espoptionstoggle
+        if settings.espoptionstoggle then
+                game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Visuals").Selection["ESP Options"].Options:TweenSize(UDim2.new(0, 271,0, calculatetestToScale(game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Visuals").Selection["ESP Options"].Options,31)), "Out", "Linear", .2, true)
+                game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Visuals").Selection["ESP Options"]:TweenSize(UDim2.new(0, 271,0, calculatetestToScale(game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Visuals").Selection["ESP Options"],46)), "Out", "Linear", .2, true)
+
+        else
+                game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Visuals").Selection["ESP Options"].Options:TweenSize(UDim2.new(0, 271,0, 0), "Out", "Linear", .2, true)
+                game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Visuals").Selection["ESP Options"]:TweenSize(UDim2.new(0, 271,0, 30), "Out", "Linear", .2, true)
+
+        end
+    end)
+        
+    -- character stuff
+    game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Character").Title.toggle.MouseButton1Down:Connect(function()
+        settings.characteropen = not settings.characteropen
+        if settings.characteropen then
+            game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Character"):TweenSize(UDim2.new(0, 271,0, 488), "Out", "Linear", .2, true)
+            game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild('Character').Line.Position = UDim2.new(0.001, 0,0.083, 0)
+
+        else
+            game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Character"):TweenSize(UDim2.new(0, 271,0, 40), "Out", "Linear", .2, true)
+            game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild('Character').Line.Position = UDim2.new(0.001, 0,0.916, 0)
+
+        end
+    end)
+
+    -- miscellaneous stuff
+    game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Miscellaneous").Title.toggle.MouseButton1Down:Connect(function()
+        settings.miscellaneousopen = not settings.miscellaneousopen
+        if settings.miscellaneousopen then
+            game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Miscellaneous"):TweenSize(UDim2.new(0, 271,0, 488), "Out", "Linear", .2, true)
+            game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild('Miscellaneous').Line.Position = UDim2.new(0.001, 0,0.083, 0)
+
+        else
+            game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Miscellaneous"):TweenSize(UDim2.new(0, 271,0, 40), "Out", "Linear", .2, true)
+            game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild('Miscellaneous').Line.Position = UDim2.new(0.001, 0,0.916, 0)
+
+        end
+    end)
+
+    -- ui settings stuff
+    game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("UI Settings").Title.toggle.MouseButton1Down:Connect(function()
+        settings.miscellaneousopen = not settings.miscellaneousopen
+        if settings.miscellaneousopen then
+            game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("UI Settings"):TweenSize(UDim2.new(0, 271,0, 488), "Out", "Linear", .2, true)
+            game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild('UI Settings').Line.Position = UDim2.new(0.001, 0,0.083, 0)
+        else
+            game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("UI Settings"):TweenSize(UDim2.new(0, 271,0, 40), "Out", "Linear", .2, true)
+            game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild('UI Settings').Line.Position = UDim2.new(0.001, 0,0.916, 0)
+        end
+    end)
+
+    game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("UI Settings").Selection["Interface"].Namee.toggle.MouseButton1Down:Connect(function()
+        settings.interfaceoptionstoggle = not settings.interfaceoptionstoggle
+        if settings.interfaceoptionstoggle then
+                game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("UI Settings").Selection["Interface"].Options:TweenSize(UDim2.new(0, 271,0, calculatetestToScale(game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Visuals").Selection["ESP Options"].Options,31)), "Out", "Linear", .2, true)
+                game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("UI Settings").Selection["Interface"]:TweenSize(UDim2.new(0, 271,0, calculatetestToScale(game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Visuals").Selection["ESP Options"],46)), "Out", "Linear", .2, true)
+
+        else
+                game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("UI Settings").Selection["Interface"].Options:TweenSize(UDim2.new(0, 271,0, 0), "Out", "Linear", .2, true)
+                game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("UI Settings").Selection["Interface"]:TweenSize(UDim2.new(0, 271,0, 30), "Out", "Linear", .2, true)
+        end
+    end)
+
+    -- main
+
+    --visual shit
+        
+    game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Visuals").Selection["FullBright"].Toggle.MouseButton1Down:Connect(function()
+        settings.fullbright = not settings.fullbright;
+        fullbright();
+    end)
+        
+    game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Visuals").Selection["ESP Options"].Options.Chams.Toggle.MouseButton1Down:Connect(function()
+        settings.CHAMSEnabled = not settings.CHAMSEnabled
+        if settings.CHAMSEnabled then
+            game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Visuals").Selection["ESP Options"].Options.Chams.Toggle.Text = "ON"
+            game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Visuals").Selection["ESP Options"].Options.Chams.Toggle.TextColor3 = settings.on
+            warn("chams enabled")
+            for _, v in next, Plrs:GetPlayers() do
+                if v ~= MyPlr then
+                    if settings.CharAddedEvent[v.Name] == nil then
+                        settings.CharAddedEvent[v.Name] = v.CharacterAdded:connect(function(Char)
+                            if settings.CHAMSEnabled then
+                                RemoveChams(v)
+                                CreateChams(v)
+                            end
+                            repeat wait() until Char:FindFirstChild("HumanoidRootPart")
+                            TracerMT[v.Name] = Char.HumanoidRootPart
+                        end)
+                    end
+                    RemoveChams(v)
+                    CreateChams(v)
+                end
+            end
+        else
+            game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Visuals").Selection["ESP Options"].Options.Chams.Toggle.Text = "OFF"
+            game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Visuals").Selection["ESP Options"].Options.Chams.Toggle.TextColor3 = settings.off
+            warn("chams disabled")
+            PlayerChams:ClearAllChildren()
+            ItemChams:ClearAllChildren()
+        end
+    end)
+        
+    game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Visuals").Selection["ESP Options"].Options.Tracers.Toggle.MouseButton1Down:Connect(function()
+    settings.TracersEnabled = not settings.TracersEnabled
+        if settings.TracersEnabled then
+            warn("tracers enabled")
+        game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Visuals").Selection["ESP Options"].Options.Tracers.Toggle.Text = "ON"
+        game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Visuals").Selection["ESP Options"].Options.Tracers.Toggle.TextColor3= settings.on
+            for _, v in next, Plrs:GetPlayers() do
+            if v ~= MyPlr then
+                if settings.CharAddedEvent[v.Name] == nil then
+                settings.CharAddedEvent[v.Name] = v.CharacterAdded:connect(function(Char)
+                    if settings.TracersEnabled then
+                    RemoveTracers(v)
+                    CreateTracers(v)
+                    end
+                end)
+                end
+                if v.Character ~= nil then
+                local Tor = v.Character:FindFirstChild("HumanoidRootPart")
+                if Tor then
+                    TracerMT[v.Name] = Tor
+                end
+                end
+                RemoveTracers(v)
+                CreateTracers(v)
+            end
+            end
+        else
+        warn("tracers disabled")
+        game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Visuals").Selection["ESP Options"].Options.Tracers.Toggle.Text = "OFF"
+        game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Visuals").Selection["ESP Options"].Options.Tracers.Toggle.TextColor3= settings.off
+            for _, v in next, Plrs:GetPlayers() do
+            RemoveTracers(v)
+            end
+        end
+    end)
+        
+    game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Visuals").Selection["ESP Options"].Options.ESP.Toggle.MouseButton1Down:Connect(function()
+            settings.ESPEnabled = not settings.ESPEnabled
+            if settings.ESPEnabled then
+                warn("esp enabled")
+                game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Visuals").Selection["ESP Options"].Options.ESP.Toggle.Text = "ON"
+                game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Visuals").Selection["ESP Options"].Options.ESP.Toggle.TextColor3 = settings.on
+                for _, v in next, Plrs:GetPlayers() do
+                    if v ~= MyPlr then
+                        if settings.CharAddedEvent[v.Name] == nil then
+                            settings.CharAddedEvent[v.Name] = v.CharacterAdded:connect(function(Char)
+                                if settings.ESPEnabled then
+                                    RemoveESP(v)
+                                    CreateESP(v)
+                                end
+                                repeat wait() until Char:FindFirstChild("HumanoidRootPart")
+                                TracerMT[v.Name] = Char.HumanoidRootPart
+                            end)
+                        end
+                        RemoveESP(v)
+                        CreateESP(v)
+                    end
+                end
+            else
+                warn("esp disabled")
+                game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Visuals").Selection["ESP Options"].Options.ESP.Toggle.Text = "OFF"
+                game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Visuals").Selection["ESP Options"].Options.ESP.Toggle.TextColor3 = settings.off
+                PlayerESP:ClearAllChildren()
+                ItemESP:ClearAllChildren()
+            end
+    end)
+
+    -- character shit
+    game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Character").Selection["Super Jump"].Toggle.MouseButton1Down:Connect(function()
+        settings.superjump = not settings.superjump
+        if settings.superjump then
+            game.Players.LocalPlayer.Character.Humanoid.JumpPower = 500
+            game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Character").Selection["Super Jump"].Toggle.Text = "ON"
+            game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Character").Selection["Super Jump"].Toggle.TextColor3 = settings.on
+        else
+            game.Players.LocalPlayer.Character.Humanoid.JumpPower = 50
+            game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Character").Selection["Super Jump"].Toggle.Text = "OFF"
+            game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Character").Selection["Super Jump"].Toggle.TextColor3 = settings.off
+        end
+        warn(game.Players.LocalPlayer.Name.."'s jumpower is; "..game.Players.LocalPlayer.Character.Humanoid.JumpPower)
+    end)
+
+    game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Character").Selection["Super Speed"].Toggle.MouseButton1Down:Connect(function()
+        settings.superspeed = not settings.superspeed
+        if settings.superspeed then
+            game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 150
+            game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Character").Selection["Super Speed"].Toggle.Text = "ON"
+            game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Character").Selection["Super Speed"].Toggle.TextColor3 = settings.on
+        else
+            game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 16
+            game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Character").Selection["Super Speed"].Toggle.Text = "OFF"
+            game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Character").Selection["Super Speed"].Toggle.TextColor3 = settings.off
+        end
+        warn(game.Players.LocalPlayer.Name.."'s walkspeed is; "..game.Players.LocalPlayer.Character.Humanoid.WalkSpeed)
+    end)
+
+    game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Character").Selection["Fly"].Toggle.MouseButton1Down:Connect(function()
+        settings.vfly = not settings.vfly
+        if settings.vfly then
+            warn("fly enabled")
+            sFLY()
+            game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Character").Selection["Fly"].Toggle.Text = "ON"
+            game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Character").Selection["Fly"].Toggle.TextColor3 = settings.on
+        else
+            warn("fly disabled")
+            NOFLY()
+            game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Character").Selection["Fly"].Toggle.Text = "OFF"
+            game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Character").Selection["Fly"].Toggle.TextColor3 = settings.off
+        end
+    end)
+        
+    game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Character").Selection["Vehicle Fly"].Toggle.MouseButton1Down:Connect(function()
+        settings.vfly = not settings.vfly
+        if settings.vfly then
+            warn("vfly enabled")
+            sFLY(true)
+            game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Character").Selection["Vehicle Fly"].Toggle.Text = "ON"
+            game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Character").Selection["Vehicle Fly"].Toggle.TextColor3 = settings.on
+        else
+            warn("vfly disabled")
+            NOFLY()
+            game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Character").Selection["Vehicle Fly"].Toggle.Text = "OFF"
+            game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Character").Selection["Vehicle Fly"].Toggle.TextColor3 = settings.off
+        end
+    end)
+
+    game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Character").Selection["Noclip"].Toggle.MouseButton1Down:Connect(function()
+        settings.noclip = not settings.noclip
+        if settings.noclip then
+            warn("noclip enabled")
+            game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Character").Selection["Noclip"].Toggle.Text = "ON"
+            game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Character").Selection["Noclip"].Toggle.TextColor3 = settings.on
+            local function NoclipLoop()
+            if settings.noclip == true and game.Players.LocalPlayer.Character ~= nil then
+                for _, child in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
+                        if child:IsA("BasePart") and child.CanCollide == true then
+                            child.CanCollide = false
+                        end
+                        end
+                    end
+                end
+                Noclipping = game:GetService('RunService').Stepped:connect(NoclipLoop)
+        else
+            warn("noclip disabled")
+            game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Character").Selection["Noclip"].Toggle.Text = "OFF"
+            game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Character").Selection["Noclip"].Toggle.TextColor3 = settings.off
+                if Noclipping then
+                        Noclipping:Disconnect()
+                end
+            end
+    end)
+        
+    local maxval = math.floor(game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Character").Selection["WalkSpeed"].Scroller.CanvasPosition.X / (game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Character").Selection["WalkSpeed"].Scroller.CanvasSize.X.Offset - game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Character").Selection["WalkSpeed"].Scroller.AbsoluteWindowSize.X) * 150)
+    game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Character").Selection["WalkSpeed"].Value.Text = tostring(maxval * 1);
+    game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Character").Selection["WalkSpeed"].Value2.Text = "["..tostring(maxval * 1).."/150]";
+    game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Character").Selection["WalkSpeed"].Scroller.Changed:Connect(function(c) if (c ~= "CanvasPosition") then return end
+        local maxval = math.floor(game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Character").Selection["WalkSpeed"].Scroller.CanvasPosition.X / (game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Character").Selection["WalkSpeed"].Scroller.CanvasSize.X.Offset - game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Character").Selection["WalkSpeed"].Scroller.AbsoluteWindowSize.X) * 150)
+        game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Character").Selection["WalkSpeed"].Value.Text = tostring(maxval * 1);
+        game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Character").Selection["WalkSpeed"].Value2.Text = "["..tostring(maxval * 1).."/150]";
+        game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = maxval * 1
+    end)
+        
+    local maxval = math.floor(game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Character").Selection["JumpPower"].Scroller.CanvasPosition.X / (game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Character").Selection["JumpPower"].Scroller.CanvasSize.X.Offset - game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Character").Selection["JumpPower"].Scroller.AbsoluteWindowSize.X) * 500)
+    game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Character").Selection["JumpPower"].Value.Text = tostring(maxval * 1);
+    game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Character").Selection["JumpPower"].Value2.Text = "["..tostring(maxval * 1).."/500]";
+    game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Character").Selection["JumpPower"].Scroller.Changed:Connect(function(c) if (c ~= "CanvasPosition") then return end
+        local maxval = math.floor(game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Character").Selection["JumpPower"].Scroller.CanvasPosition.X / (game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Character").Selection["JumpPower"].Scroller.CanvasSize.X.Offset - game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Character").Selection["JumpPower"].Scroller.AbsoluteWindowSize.X) * 500)
+        game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Character").Selection["JumpPower"].Value.Text = tostring(maxval * 1);
+        game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Character").Selection["JumpPower"].Value2.Text = "["..tostring(maxval * 1).."/500]";
+        game.Players.LocalPlayer.Character.Humanoid.JumpPower = maxval * 1
+    end)
+
+    game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Character").Selection["Toggle Fly Hotkey;"].Namee.MouseButton1Click:Connect(function()
+        game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Character").Selection["Toggle Fly Hotkey;"].Namee.Text = 'Press any Key now'
+        local input = UserInput.InputBegan:wait()
+        if input.UserInputType == Enum.UserInputType.Keyboard then
+            settings.flykey = tostring(input.KeyCode)
+            game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Character").Selection["Toggle Fly Hotkey;"].Namee.Text = "Toggle Fly Key; '"..string.sub(tostring(input.KeyCode), 14).."'"
+        else
+            settings.flykey = tostring(input.UserInputType)
+            game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Character").Selection["Toggle Fly Hotkey;"].Namee.Text = "Toggle Fly Key; '"..string.sub(tostring(input.UserInputType), 20).."'"
+        end
+    end)
+
+    game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Character").Selection["Toggle Vehicle Fly Hotkey;"].Namee.MouseButton1Click:Connect(function()
+        game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Character").Selection["Toggle Vehicle Fly Hotkey;"].Namee.Text = 'Press any Key now'
+        local input = UserInput.InputBegan:wait()
+        if input.UserInputType == Enum.UserInputType.Keyboard then
+            settings.vflykey = tostring(input.KeyCode)
+            game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Character").Selection["Toggle Vehicle Fly Hotkey;"].Namee.Text = "Toggle Fly Key; '"..string.sub(tostring(input.KeyCode), 14).."'"
+        else
+            settings.vflykey = tostring(input.UserInputType)
+            game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Character").Selection["Toggle Vehicle Fly Hotkey;"].Namee.Text = "Toggle Fly Key; '"..string.sub(tostring(input.UserInputType), 20).."'"
+        end
+    end)
+
+    -- miscellaneous shit
+    game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Miscellaneous").Selection["Low Gravity"].Toggle.MouseButton1Down:Connect(function()
+        settings.gravity = not settings.gravity;
+        if settings.gravity then
+            warn("low gravity enabled");
+            game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Miscellaneous").Selection["Low Gravity"].Toggle.Text = "ON";
+            game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Miscellaneous").Selection["Low Gravity"].Toggle.TextColor3 = settings.on
+            workspace.Gravity = 50;
+        else
+            warn("low gravity disabled");
+            game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Miscellaneous").Selection["Low Gravity"].Toggle.Text = "OFF";
+            game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Miscellaneous").Selection["Low Gravity"].Toggle.TextColor3 = settings.off
+            workspace.Gravity = 196;
+        end;
+    end)
+
+    local maxval = math.floor(game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Miscellaneous").Selection["Gravity Slider"].Scroller.CanvasPosition.X / (game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Miscellaneous").Selection["Gravity Slider"].Scroller.CanvasSize.X.Offset - game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Miscellaneous").Selection["Gravity Slider"].Scroller.AbsoluteWindowSize.X) * 196)
+    game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Miscellaneous").Selection["Gravity Slider"].Value.Text = tostring(maxval * 1);
+    game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Miscellaneous").Selection["Gravity Slider"].Value2.Text = "["..tostring(maxval * 1).."/196]";
+    game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Miscellaneous").Selection["Gravity Slider"].Scroller.Changed:Connect(function(c) if (c ~= "CanvasPosition") then return end
+        local maxval = math.floor(game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Miscellaneous").Selection["Gravity Slider"].Scroller.CanvasPosition.X / (game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Miscellaneous").Selection["Gravity Slider"].Scroller.CanvasSize.X.Offset - game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Miscellaneous").Selection["Gravity Slider"].Scroller.AbsoluteWindowSize.X) * 196)
+        game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Miscellaneous").Selection["Gravity Slider"].Value.Text = tostring(maxval * 1);
+        game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Miscellaneous").Selection["Gravity Slider"].Value2.Text = "["..tostring(maxval * 1).."/196]";
+        game.workspace.Gravity = maxval * 1
+    end)
+
+    game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Miscellaneous").Selection.Rejoin.Button.MouseButton1Down:Connect(function()
+        game:GetService('TeleportService'):Teleport(game.PlaceId)
+    end)
+
+    game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Miscellaneous").Selection.BHop.Button.MouseButton1Down:Connect(function()
+        loadstring(game:HttpGet('https://raw.githubusercontent.com/zerovectors/bhop/master/bhop%20test',true))()
+        warn("BHopping enabled!")
+    end)
+
+    -- ui settings
+    game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("UI Settings").Selection["Interface"].Options.Icon.Toggle.Text = "ON";
+    game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("UI Settings").Selection["Interface"].Options.Icon.Toggle.TextColor3 = settings.on
+    game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("UI Settings").Selection["Interface"].Options.Icon.Toggle.MouseButton1Down:Connect(function()
+        settings.icon = not settings.icon
+        if settings.icon then
+            game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("UI Settings").Selection["Interface"].Options.Icon.Toggle.Text = "ON";
+            game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("UI Settings").Selection["Interface"].Options.Icon.Toggle.TextColor3 = settings.on        
+            game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("UI Settings").Title.Icon.Visible = true
+            game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Visuals").Title.Icon.Visible = true
+            game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Character").Title.Icon.Visible = true
+            game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Miscellaneous").Title.Icon.Visible = true
+        else
+            game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("UI Settings").Selection["Interface"].Options.Icon.Toggle.Text = "OFF";
+            game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("UI Settings").Selection["Interface"].Options.Icon.Toggle.TextColor3 = settings.off        
+            game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("UI Settings").Title.Icon.Visible = false
+            game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Visuals").Title.Icon.Visible = false
+            game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Character").Title.Icon.Visible = false
+            game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Miscellaneous").Title.Icon.Visible = false    
+        end
+    end)
+
+    game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("UI Settings").Selection["Interface"].Options["Icon ID;"].Namee.FocusLost:Connect(function()     
+            game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("UI Settings").Title.Icon.Image = "rbxassetid://"..game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("UI Settings").Selection["Interface"].Options["Icon ID;"].Namee.Text
+            game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Visuals").Title.Icon.Image = "rbxassetid://"..game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("UI Settings").Selection["Interface"].Options["Icon ID;"].Namee.Text
+            game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Character").Title.Icon.Image = "rbxassetid://"..game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("UI Settings").Selection["Interface"].Options["Icon ID;"].Namee.Text
+            game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Miscellaneous").Title.Icon.Image = "rbxassetid://"..game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("UI Settings").Selection["Interface"].Options["Icon ID;"].Namee.Text
+    local idvalue = game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("UI Settings").Selection["Interface"].Options["Icon ID;"].Namee.Text
+    game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("UI Settings").Selection["Interface"].Options["Icon ID;"].Namee.Text = "Icon ID; "..idvalue
+    end)
+
+	local maxval = math.floor(game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("UI Settings").Selection.Interface.Options["Button Transparency"].Scroller.CanvasPosition.X / (game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("UI Settings").Selection.Interface.Options["Button Transparency"].Scroller.AbsoluteWindowSize.X) * 100)
+	game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("UI Settings").Selection.Interface.Options["Button Transparency"].Value.Text = tostring(maxval / 100);
+    game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("UI Settings").Selection.Interface.Options["Button Transparency"].Value2.Text = "[0/1]";
+    game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("UI Settings").Selection.Interface.Options["Button Transparency"].Scroller.Changed:Connect(function(c) if (c ~= "CanvasPosition") then return end
+        local maxval = math.floor(game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("UI Settings").Selection.Interface.Options["Button Transparency"].Scroller.CanvasPosition.X / (game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("UI Settings").Selection.Interface.Options["Button Transparency"].Scroller.CanvasSize.X.Offset - game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("UI Settings").Selection.Interface.Options["Button Transparency"].Scroller.AbsoluteWindowSize.X) * 100)
+        game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("UI Settings").Selection.Interface.Options["Button Transparency"].Value.Text = tostring(maxval / 100)
+        game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("UI Settings").Selection.Interface.Options["Button Transparency"].Value2.Text = "["..tostring(maxval / 100).."/1]";
+        --script.Parent.ImageTransparency = maxval / 100
+        for i,v in pairs(game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Visuals").Selection:GetChildren()) do
+            if not v:IsA("UIListLayout") then
+                v.BackgroundTransparency = maxval / 100
+            end
+        end
+        for i,v in pairs(game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Visuals").Selection["ESP Options"].Options:GetChildren()) do
+            if not v:IsA("UIListLayout") then
+                v.BackgroundTransparency = maxval / 100
+            end
+        end
+        for i,v in pairs(game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Visuals").Selection["ESP Options"]:GetChildren()) do
+            if v:IsA("TextLabel") then
+                v.BackgroundTransparency = maxval / 100
+            end
+        end
+        for i,v in pairs(game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Character").Selection:GetChildren()) do
+            if not v:IsA("UIListLayout") then
+                v.BackgroundTransparency = maxval / 100
+            end
+        end
+        for i,v in pairs(game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("Miscellaneous").Selection:GetChildren()) do
+            if not v:IsA("UIListLayout") then
+                v.BackgroundTransparency = maxval / 100
+            end
+        end
+        for i,v in pairs(game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("UI Settings").Selection.Interface.Options:GetChildren()) do
+            if not v:IsA("UIListLayout") then
+                v.BackgroundTransparency = maxval / 100
+            end
+        end
+        for i,v in pairs(game.Players.LocalPlayer.PlayerGui["Vect0rs hub"].mainframe:WaitForChild("UI Settings").Selection.Interface:GetChildren()) do
+            if v:IsA("TextLabel") then
+                v.BackgroundTransparency = maxval / 100
+            end
+        end
+    end)
+end;
+
+function rgbchatshit()
+	local functions = { }
+    local loops = { }
+    local p = game.Players.LocalPlayer
+    local sg = game:GetService("StarterGui")
+    local g = p:FindFirstChild("PlayerGui") or p:WaitForChild("PlayerGui")
+    local r = game:GetService("RunService")
+    local messages_of_the_day = nil
+
+    function functions:LoopRunning(name)
+        return loops[name].Running
+        end
+        
+        function functions:CreateLoop(name, func, waitt, ...)
+        if loops[name] ~= nil then return end
+        
+        loops[name] = { }
+        loops[name].Running = false
+        loops[name].Destroy = false
+        loops[name].Loop = coroutine.create(function(...)
+        while true do
+        if loops[name].Running then
+        func(...)
+        end
+        
+        if loops[name].Destroy then
+        break
+        end
+        
+        if type(wait) == "userdata" then
+        waitt:wait()
+        else
+        wait(waitt)
+        end
+        end
+        end)
+        end
+    function functions:RunLoop(name, func, waitt, ...)
+        if loops[name] == nil then
+        if func ~= nil then
+        self:CreateLoop(name, func, waitt, ...)
+        end
+        end
+        
+        loops[name].Running = true
+        local succ, out = coroutine.resume(loops[name].Loop)
+        if not succ then
+        warn("Loop: " .. tostring(name) .. " ERROR: " .. tostring(out))
+        end
+        end
+        
+        function functions:StopLoop(name)
+        if loops[name] == nil then return end
+        
+        loops[name].Running = false
+        end
+        
+        function functions:DestroyLoop(name)
+        if loops[name] == nil then return end
+        
+        self:StopLoop(name)
+        loops[name].Destroy = true
+        
+        loops[name] = nil
+        end
+        
+        function functions:AddComma(str) -- stole from Mining Simulator :)
+        local f, k = str, nil
+        while true do
+        f, k = string.gsub(f, "^(-?%d+)(%d%d%d)", "%1,%2")
+        if k == 0 then
+        break
+        end
+        end
+        return f
+        end
+
+        functions:RunLoop("Version_Check", function()
+            local data = loadstring(game:HttpGet("https://raw.githubusercontent.com/zerovectors/ui-library-test/master/game%20version%20msgs%20shit", true))()
+            messages_of_the_day = data.messages_of_the_day
+            blacklist = data.blacklist_table
+            data = data["Natural Disasters"]
+            
+            local current_version, reason = data.version, data.reason
+            while wait() do
+                if version ~= current_version then
+                    game.Players.LocalPlayer:Kick("This script has updated, please re-connect. Current Version: " .. tostring(current_version) .. " your version: " .. version .. "\nReason: " .. reason)
+                end
+            end
+            
+            if blacklist[tostring(p.userId)] then
+            for i, v in next, m do
+            m[i] = "Pornhub"
+            end
+            end
+            end, 300)
+
+        functions:RunLoop("Messages of the Day", function()
+            if messages_of_the_day == nil then return end
+            
+            for i = 1, #messages_of_the_day do
+            functions:Console(tostring(messages_of_the_day[i]))
+            wait(150)
+            end
+    end, r.RenderStepped)
+
+    function functions:Console(txt)
+        sg:SetCore("ChatMakeSystemMessage",
+        {
+        Text = "Vect0rs (max); ".. txt,
+        Color = Color3.new(248, 118, 37),
+        Font = Enum.Font.Cartoon,
+        TextSize = 18
+        }
+        )
+        
+        local msg = g.Chat:GetDescendants()
+        repeat
+        for i, v in next, msg do
+        if v:IsA("TextLabel") or v:IsA("TextButton") then
+        if v.Text == "Vect0rs (max); ".. txt then
+        msg = v
+        break
+        end
+        end
+        end
+        
+        r.RenderStepped:wait()
+        until type(msg) ~= "table"
+        
+        spawn(function()
+        local n = 0
+        while msg.Text == "Vect0rs (max); " .. txt do
+        msg.TextColor3 = Color3.fromHSV(n, 0.4, 1)
+        n = (n + 0.01) % 1
+        
+        r.RenderStepped:wait()
+        end
+        
+        msg.TextColor3 = Color3.new(1, 1, 1)
+        end)
+    end
+end;
+
+
+UserInput.InputBegan:Connect(function(input)
+    if tostring(input.KeyCode) == settings.flykey or tostring(input.UserInputType) == settings.flykey then
+        if settings.vfly == false then
+            settings.vfly = true
+            sFLY()
+        else
+            settings.vfly = true
+            NOFLY()
+        end
+    elseif tostring(input.KeyCode) == settings.vflykey or tostring(input.UserInputType) == settings.vflykey then
+        if settings.vfly == false then
+            settings.vfly = true
+            sFLY(true)
+        else
+            settings.vfly = true
+            NOFLY()
+        end
+    end
+end)
+
+Plrs.PlayerAdded:connect(function(Plr)
+	if settings.CharAddedEvent[Plr.Name] == nil then
+		settings.CharAddedEvent[Plr.Name] = Plr.CharacterAdded:connect(function(Char)
+			if settings.TracersEnabled then
+				CreateTracers(Plr)
+			end
+			if settings.CHAMSEnabled then
+				CreateChams(Plr)
+			end
+			if settings.ESPEnabled then
+				RemoveESP(Plr)
+				CreateESP(Plr)
+			end
+			repeat wait() until Char:FindFirstChild("HumanoidRootPart")
+			TracerMT[Plr.Name] = Char.HumanoidRootPart
+		end)
+	end
+end)
+
+Plrs.PlayerRemoving:connect(function(Plr)
+	--ChatLog(Plr)
+	if settings.CharAddedEvent[Plr.Name] ~= nil then
+		settings.CharAddedEvent[Plr.Name]:Disconnect()
+		settings.CharAddedEvent[Plr.Name] = nil
+	end
+	RemoveTracers(Plr)
+	RemoveChams(Plr)
+	RemoveESP(Plr)
+	TracerMT[Plr.Name] = nil
+end)
+
+-- loader --
+createtemplates();
+colourshit();
+createuioptions();
+mousebuttonscriptshit();
+rgbchatshit();
