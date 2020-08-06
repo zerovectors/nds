@@ -3011,6 +3011,7 @@ do -- NDS UI
     local Character = Window:AddTab("Character")
     local Miscellaneous = Window:AddTab("Miscellaneous")
 	local UISettings = Window:AddTab("UI Settings")
+	local currentdisaster = Window:AddTab("Current Disaster")
 	local Credits = Window:AddTab("Credits")
 	loadstring(game:HttpGet("https://pastebin.com/raw/xKbbAuc7"))() wait(.1)
 
@@ -3463,6 +3464,44 @@ do -- NDS UI
 			ui_options.min_size = old_ui_options.min_size
 			cp:Set(Color3.fromRGB(200, 0, 255))
 			warn("Interface Reset!")
+		end)
+
+		if game.Players.LocalPlayer.Character:FindFirstChild("SurvivalTag") ~= nil then
+			currentdisaster:AddLabel("Current Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value)
+			warn("the current fucking disaster is; "..game.Players.LocalPlayer.Character.SurvivalTag.Value)
+			print("woo works im smart :sunglasses:")
+		else
+			game.Players.LocalPlayer.Character:WaitForChild("SurvivalTag", 5)
+			if game.Players.LocalPlayer.Character:FindFirstChild("SurvivalTag") ~= nil then
+				game.CoreGui.UILibrary.Miscellaneous.Container.TextLabel2.Text = "Current Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value
+			end
+		end
+		
+		game.Players.LocalPlayer.Character.ChildAdded:Connect(function(object)
+			if object:IsA("StringValue") then
+				if game.Players.LocalPlayer.Character ~= nil then
+					if game.Players.LocalPlayer.Character:FindFirstChild("SurvivalTag") ~= nil then
+						currentdisaster:AddLabel("Current Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value)
+						warn("the current fucking disaster is; "..game.Players.LocalPlayer.Character.SurvivalTag.Value)
+						print("woo works im smart :sunglasses:")
+					else
+						game.Players.LocalPlayer.Character:WaitForChild("SurvivalTag", 5)
+						if game.Players.LocalPlayer.Character:FindFirstChild("SurvivalTag") ~= nil then
+							currentdisaster:AddLabel("Current Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value)
+						end
+					end
+				end
+			end
+		end)
+		game.Players.LocalPlayer.CharacterAdded:Connect(function()
+			if game.Players.LocalPlayer.Character:FindFirstChild("SurvivalTag") ~= nil then
+				game.CoreGui.UILibrary.Miscellaneous.Container.TextLabel2.Text = "Current Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value
+			else
+				game.Players.LocalPlayer.Character:WaitForChild("SurvivalTag")
+				if game.Players.LocalPlayer.Character:FindFirstChild("SurvivalTag") ~= nil then
+					game.CoreGui.UILibrary.Miscellaneous.Container.TextLabel2.Text = "Current Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value
+				end
+			end
 		end)
 
 		Credits:AddLabel("Vect0rs(max); Scripts an fixing the ui library a tad bit")
