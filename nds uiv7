@@ -3024,7 +3024,7 @@ end
 	end)
 
 do -- NDS UI
-	local Window = library:AddWindow("Natural Disasters UI V7", {
+	local Window = library:AddWindow("Natural Disasters UI V7.1", {
 		main_color = ui_options.main_color,
 		min_size = ui_options.min_size,
 		toggle_key = ui_options.toggle_key,
