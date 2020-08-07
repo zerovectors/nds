@@ -3230,9 +3230,7 @@ do -- NDS UI
 
 		Character:AddKeybind("Vehicle Fly", function(key)
             settings.vflykey = key
-        end, { -- (options are optional)
-            ["standard"] = Enum.KeyCode.V
-		})
+        end)
 
 		UIS.InputBegan:Connect(function(input)
 			if input.KeyCode == ((typeof(settings.flykey) == "EnumItem") and settings.flykey or Enum.KeyCode.F4) then
