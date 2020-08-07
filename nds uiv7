@@ -6,17 +6,23 @@
 
 local old_ui_options = {
 	main_color = Color3.fromRGB(200, 0, 255),
+	cursor_color = Color3.fromRGB(200, 0, 255),
 	min_size = Vector2.new(500, 600),
 	can_resize = true,
 	RGB = false,
+	RGBCursor = false,
+	Cursorvisible = false
 }
 
 local ui_options = {
 	main_color = Color3.fromRGB(200, 0, 255),
+	cursor_color = Color3.fromRGB(200, 0, 255),
 	min_size = Vector2.new(500, 600),
 	toggle_key = Enum.KeyCode.Q,
 	can_resize = true,
 	RGB = false,
+	RGBCursor = false,
+	Cursorvisible = false
 }
 
 local settings = {
@@ -897,6 +903,18 @@ Windows.BackgroundColor3 = Color3.new(1, 1, 1)
 Windows.BackgroundTransparency = 1
 Windows.Position = UDim2.new(0, 20, 0, 20)
 Windows.Size = UDim2.new(1, 20, 1, -20)
+
+local ui = Instance.new("ScreenGui", game.CoreGui)
+ui.Name = "Cursor"
+local cursor = Instance.new("ImageLabel", ui);
+cursor.Image = "http://www.roblox.com/asset/?id=282305376";
+cursor.Name = "Cursor";
+cursor.BackgroundTransparency = 1;
+cursor.BorderSizePixel = 1;
+cursor.ImageColor3 = Color3.new(ui_options.main_color)
+cursor.Position = UDim2.new(0.189, 0,0.229, 0);
+cursor.Size = UDim2.new(0, 13,0, 14);
+cursor.Visible = false;
 
 --[[ Script ]]--
 script.Parent = imgui
@@ -3000,6 +3018,11 @@ end
 		end
 	end
 
+	local Cursor = game.CoreGui.Cursor:WaitForChild("Cursor")
+	game:GetService("RunService").RenderStepped:Connect(function()
+		Cursor.Position = UDim2.new(-0.004, mouse.X, -0.01, mouse.Y)
+	end)
+
 do -- NDS UI
 	local Window = library:AddWindow("Natural Disasters UI V7", {
 		main_color = ui_options.main_color,
@@ -3400,7 +3423,7 @@ do -- NDS UI
 			warn("BHop loaded")
 		end)
 		
-		local rejoin = Miscellaneous:AddButton("Rejoin", function()
+		local rejoin = Miscellaneous:AddButton("ReJoin", function()
 			game:GetService('TeleportService'):Teleport(game.PlaceId)
 		end)
 
@@ -3437,11 +3460,30 @@ do -- NDS UI
 		end)
 		resizeui:Set(true)
 
+		local cursorenabledtog = UISettings:AddSwitch("Cursor", function(bool)
+			ui_options.Cursorvisible = not ui_options.Cursorvisible
+			if ui_options.Cursorvisible then
+				Cursor.Visible = true
+				warn("cursor enabled")
+			else
+				Cursor.Visible = false
+				warn("cursor disabled")
+			end
+		end)
+		cursorenabledtog:Set(true)
+
 		UISettings:AddLabel("Theme Colour")
 		local cp = UISettings:AddColorPicker(function(color)
 			ui_options.main_color = color
 		end)
 		cp:Set(Color3.fromRGB(200, 0, 255))
+
+		UISettings:AddLabel("Cursor Colour")
+		local cursorcolorpicker = UISettings:AddColorPicker(function(color)
+			ui_options.cursor_color = color
+			Cursor.ImageColor3 = ui_options.cursor_color
+		end)
+		cursorcolorpicker:Set(Color3.fromRGB(200, 0, 255))
 
 		local rgb = UISettings:AddSwitch("RGB", function(bool)
 			ui_options.RGB = not ui_options.RGB
@@ -3458,11 +3500,26 @@ do -- NDS UI
 			end
 		end)
 
+		local rgbcursor = UISettings:AddSwitch("RGB Cursor", function()
+			ui_options.RGBCursor = not ui_options.RGBCursor
+			local n = 0
+			while wait() do
+				Cursor.ImageColor3 = Color3.fromHSV(n, 0.4, 1)
+				n = (n + 0.01) % 1
+				cursorcolorpicker:Set(Cursor.ImageColor3)
+				if ui_options.RGBCursor == false then
+					break
+				end 
+			end
+		end)
+
 		UISettings:AddButton("Reset Interface", function()
-			ui_options.can_resize = old_ui_options.can_resize
 			ui_options.main_color = old_ui_options.main_color
+			ui_options.can_resize = old_ui_options.can_resize
 			ui_options.min_size = old_ui_options.min_size
+			ui_options.cursor_color = old_ui_options.cursor_color
 			cp:Set(Color3.fromRGB(200, 0, 255))
+			cursorcolorpicker:Set(Color3.fromRGB(200, 0, 255))
 			warn("Interface Reset!")
 		end)
 
@@ -3497,7 +3554,7 @@ do -- NDS UI
 			if game.Players.LocalPlayer.Character:FindFirstChild("SurvivalTag") ~= nil then
 				currentdisaster:AddLabel("Current Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value)
 			else
-				game.Players.LocalPlayer.Character:WaitForChild("SurvivalTag")
+				game.Players.LocalPlayer.Character:FindFirstChild("SurvivalTag")
 				if game.Players.LocalPlayer.Character:FindFirstChild("SurvivalTag") ~= nil then
 					currentdisaster:AddLabel("Current Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value)
 				end
@@ -3540,7 +3597,7 @@ do -- NDS UI
 		TracerMT[Plr.Name] = nil
 	end)
 
-    Visuals:Show()
-	library:FormatWindows()
 	chatlogshit()
+	Visuals:Show()
+	library:FormatWindows()
 end
