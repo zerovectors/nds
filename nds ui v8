@@ -887,7 +887,7 @@ function createinfothingy()
 	Name.Position = UDim2.new(0, 0, 0.409090906, 0)
 	Name.Size = UDim2.new(0, 39, 0, 13)
 	Name.Font = Enum.Font.SourceSansBold
-	Name.Text = gamename
+	Name.Text = "Vect0rsHub"
 	Name.TextColor3 = Color3.fromRGB(255, 255, 255)
 	Name.TextSize = 14.000
 
@@ -931,13 +931,14 @@ function createinfothingy()
 
 	Role.Text = "[member]"
 	Username.Text = game.Players.LocalPlayer.Name
-	if game.Players.LocalPlayer.UserId == 1 then
+	if game.Players.LocalPlayer.UserId == 278723686 then
 		Role.Text = "[dev]"
 		Username.Text = "Vect0rs"
 	elseif game.Players.LocalPlayer.UserId == 425451555 then
 		Role.Text = "[staff]"
 		Username.Text = "Smail"
 	end
+
 	while wait() do 
 		local timedata = os.date("*t")
 		Time.Text = timedata.hour..";"..timedata.min..";"..timedata.sec
@@ -1440,5 +1441,5 @@ createnotification()
 sendnotification()
 notifmsg = "Version; "..version
 sendnotification()
-updatedisaster()
 createinfothingy()
+updatedisaster()
