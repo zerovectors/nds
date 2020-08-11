@@ -8,6 +8,7 @@ local character = library:CreateWindow("Character")
 local miscellaneous = library:CreateWindow("Miscellaneous")
 local teleports = library:CreateWindow("Teleports")
 local uisettings = library:CreateWindow("UI Settings")
+local credits = library:CreateWindow("Credits")
 local settings = {
 	fullbright = false;
   	PlaceTracersUnderCharacter = false;
@@ -36,6 +37,7 @@ local settings = {
 	autofarm = false;
 	Cursorenabled = true;
 	CursorColor = Color3.fromRGB(221, 3, 255);
+	LineColour = Color3.fromRGB(221, 3, 255);
 }
 
 -- variables
@@ -60,6 +62,8 @@ local UserInput = game:GetService("UserInputService");
 local Light = game:GetService("Lighting");
 local HTTP = game:GetService("HttpService");
 local version = "8.0";
+local gamename = "NDS";
+local notifmsg = "[Vect0rs Hub] Loaded; Natural Disaster Survival";
 local RepStor = game:GetService("ReplicatedStorage");
 local MyCam = GetCamera();
 if MyCam == nil then
@@ -854,6 +858,148 @@ function CreateChams(Obj)
 	  end
 end
 
+local Name = Instance.new("TextLabel")
+local Role = Instance.new("TextLabel")
+local Username = Instance.new("TextLabel")
+local Time = Instance.new("TextLabel")
+
+function createinfothingy()
+	local Info = Instance.new("ImageLabel")
+	local Line = Instance.new("Frame")
+
+	Info.Name = "Info"
+	Info.Parent = game.CoreGui:WaitForChild("uwuware")
+	Info.Active = true
+	Info.Draggable = true
+	Info.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+	Info.BorderSizePixel = 0
+	Info.ClipsDescendants = true
+	Info.Position = UDim2.new(0.00731261447, 0, 0.28009823, 0)
+	Info.Size = UDim2.new(0, 257, 0, 22)
+	Info.SizeConstraint = Enum.SizeConstraint.RelativeYY
+	Info.ScaleType = Enum.ScaleType.Slice
+	Info.SliceCenter = Rect.new(100, 100, 100, 100)
+
+	Name.Name = "Name"
+	Name.Parent = Info
+	Name.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	Name.BackgroundTransparency = 1.000
+	Name.Position = UDim2.new(0, 0, 0.409090906, 0)
+	Name.Size = UDim2.new(0, 39, 0, 13)
+	Name.Font = Enum.Font.SourceSansBold
+	Name.Text = gamename
+	Name.TextColor3 = Color3.fromRGB(255, 255, 255)
+	Name.TextSize = 14.000
+
+	Role.Name = "Role"
+	Role.Parent = Info
+	Role.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	Role.BackgroundTransparency = 1.000
+	Role.Position = UDim2.new(0.175097257, 0, 0.409090906, 0)
+	Role.Size = UDim2.new(0, 39, 0, 13)
+	Role.Font = Enum.Font.SourceSansBold
+	Role.TextColor3 = Color3.fromRGB(255, 255, 255)
+	Role.TextSize = 14.000
+
+	Username.Name = "Username"
+	Username.Parent = Info
+	Username.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	Username.BackgroundTransparency = 1.000
+	Username.Position = UDim2.new(0.354085594, 0, 0.409090906, 0)
+	Username.Size = UDim2.new(0, 60, 0, 13)
+	Username.Font = Enum.Font.SourceSansBold
+	Username.Text = "Username"
+	Username.TextColor3 = Color3.fromRGB(255, 255, 255)
+	Username.TextSize = 14.000
+
+	Time.Name = "Time"
+	Time.Parent = Info
+	Time.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	Time.BackgroundTransparency = 1.000
+	Time.Position = UDim2.new(0.610894918, 0, 0.409090906, 0)
+	Time.Size = UDim2.new(0, 100, 0, 13)
+	Time.Font = Enum.Font.SourceSansBold
+	Time.TextColor3 = Color3.fromRGB(255, 255, 255)
+	Time.TextSize = 14.000
+
+	Line.Name = "Line"
+	Line.Parent = Info
+	Line.BackgroundColor3 = Color3.fromRGB(221, 3, 255)
+	Line.BorderSizePixel = 0
+	Line.Size = UDim2.new(0, 257, 0, 5)
+
+
+	Role.Text = "[member]"
+	Username.Text = game.Players.LocalPlayer.Name
+	if game.Players.LocalPlayer.UserId == 1 then
+		Role.Text = "[dev]"
+		Username.Text = "Vect0rs"
+	elseif game.Players.LocalPlayer.UserId == 425451555 then
+		Role.Text = "[staff]"
+		Username.Text = "Smail"
+	end
+	while wait() do 
+		local timedata = os.date("*t")
+		Time.Text = timedata.hour..";"..timedata.min..";"..timedata.sec
+	end
+end
+
+function createnotification()
+	local Notification = Instance.new("Frame")
+	local Message = Instance.new("TextLabel")
+	local Line = Instance.new("Frame")
+
+	--Properties:
+
+	Notification.Name = "Notification"
+	Notification.Parent = game.CoreGui:WaitForChild("uwuware")
+	Notification.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+	Notification.BorderSizePixel = 0
+	Notification.ClipsDescendants = true
+	Notification.Position = UDim2.new(0, 0, -0.00484652817, 0)
+	Notification.Size = UDim2.new(0, 1917, 0, 0)
+
+	Line.Name = "Line"
+	Line.Parent = Notification
+	Line.BackgroundColor3 = Color3.fromRGB(221, 3, 255)
+	Line.BorderSizePixel = 0
+	Line.Position = UDim2.new(0, 0, 0.807692289, 0)
+	Line.Size = UDim2.new(0, 1917, 0, 5)
+
+	Message.Name = "Message"
+	Message.Parent = Notification
+	Message.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	Message.BackgroundTransparency = 1.000
+	Message.ClipsDescendants = true
+	Message.Position = UDim2.new(0.318205535, 0, -0.0769230425, 0)
+	Message.Size = UDim2.new(0, 542, 0, 23)
+	Message.Font = Enum.Font.SourceSans
+	Message.Text = ""
+	Message.TextColor3 = Color3.fromRGB(255, 255, 255)
+	Message.TextSize = 21.000
+end
+
+function sendnotification()
+	game.CoreGui:WaitForChild("uwuware").Notification:TweenSize(UDim2.new(0, 1917,0, 26), "Out", "Linear", .2, true)
+	wait(.2)
+	for i = 1, #notifmsg do
+		game.CoreGui:WaitForChild("uwuware").Notification.Message.Text = string.sub(notifmsg, 1, i)
+		wait(.03)
+	end
+	wait(.2)
+	game.CoreGui:WaitForChild("uwuware").Notification.Message.Text = ""
+	game.CoreGui:WaitForChild("uwuware").Notification:TweenSize(UDim2.new(0, 1917,0, 0), "Out", "Linear", .2, true)
+end
+
+local splitline = Instance.new("Frame")
+function line()
+	splitline.Name = "Line"
+	splitline.Parent = game.CoreGui:WaitForChild("uwuware")
+	splitline.BackgroundColor3 = settings.LineColour
+	splitline.BorderSizePixel = 0
+	splitline.Size = UDim2.new(0, 1917, 0, 5)
+end
+
 -- create options
 
 visuals:AddToggle({text = "Fullbright", state = false, callback = function(a) 
@@ -861,8 +1007,12 @@ visuals:AddToggle({text = "Fullbright", state = false, callback = function(a)
     settings.fullbright = a
 	if settings.fullbright then
 		fullbright()
+		notifmsg = "Set Fullbright To ON"
+		sendnotification()
 	else
 		fullbright()
+		notifmsg = "Set Fullbright To OFF"
+		sendnotification()
 	end
 end})
 
@@ -888,10 +1038,14 @@ espoptions:AddToggle({text = "ESP", state = false, callback = function(a)
 	                CreateESP(v)
 	            end
 	        end
+	       	notifmsg = "Set ESP To ON"
+			sendnotification()
 		else
 	        warn("esp disabled")
 	        PlayerESP:ClearAllChildren()
 	        ItemESP:ClearAllChildren()
+	    	notifmsg = "Set ESP To OFF"
+			sendnotification()
 	end
 end})
 
@@ -915,10 +1069,14 @@ espoptions:AddToggle({text = "Chams", state = false, callback = function(a)
 				CreateChams(v)
 			end
 		end
+		notifmsg = "Set Chams To ON"
+		sendnotification()
 		else
 		warn("chams disabled")
 		PlayerChams:ClearAllChildren()
 		ItemChams:ClearAllChildren()
+		notifmsg = "Set Chams To OFF"
+		sendnotification()
 	end
 end})
 
@@ -946,11 +1104,15 @@ espoptions:AddToggle({text = "Tracers", state = false, callback = function(a)
 				CreateTracers(v)
 			end
 		end
+		notifmsg = "Set Tracers To ON"
+		sendnotification()
 		else
 		warn("tracers disabled")
 		for _, v in next, Plrs:GetPlayers() do
 			RemoveTracers(v)
 		end
+		notifmsg = "Set Tracers To OFF"
+		sendnotification()
 	end
 end})
 
@@ -991,8 +1153,12 @@ character:AddToggle({text = "SuperSpeed", state = false, callback = function(a)
 	settings.superspeed = a
 	if settings.superspeed then
 		game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 90
+		notifmsg = "Set SuperSpeed To ON"
+		sendnotification()
 	else
 		game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 16
+		notifmsg = "Set SuperSpeed To OFF"
+		sendnotification()
 	end
 end})
 
@@ -1000,8 +1166,12 @@ character:AddToggle({text = "SuperJump", state = false, callback = function(a)
 	settings.superjump = a
 	if settings.superjump then
 		game.Players.LocalPlayer.Character.Humanoid.JumpPower = 150
+		notifmsg = "Set SuperJump To ON"
+		sendnotification()
 	else
 		game.Players.LocalPlayer.Character.Humanoid.JumpPower = 50
+		notifmsg = "Set SuperJump To OFF"
+		sendnotification()
 	end
 end})
 
@@ -1017,8 +1187,12 @@ character:AddToggle({text = "Fly", callback = function(a)
 	settings.vfly = a
 	if settings.vfly then
 		sFLY()
+		notifmsg = "Set Fly To ON"
+		sendnotification()
 	else
 		NOFLY()
+		notifmsg = "Set Fly To OFF"
+		sendnotification()
 	end
 end})
 
@@ -1026,14 +1200,20 @@ character:AddToggle({text = "Vehicle Fly", callback = function(a)
 	settings.vfly = a
 	if settings.vfly then
 		sFLY(true)
+		notifmsg = "Set Vehicle Fly To ON"
+		sendnotification()
 	else
 		NOFLY()
+		notifmsg = "Set Vehicle Fly To OFF"
+		sendnotification()
 	end
 end})
 
 character:AddToggle({text = "Noclip", callback = function(a)
 	settings.noclip = a
 	if settings.noclip then
+		notifmsg = "Set Noclip To ON"
+		sendnotification()
 	    local function NoclipLoop()
 	      	if game.Players.LocalPlayer.Character ~= nil then
 	          	for _, child in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
@@ -1045,6 +1225,8 @@ character:AddToggle({text = "Noclip", callback = function(a)
 	    end
 	    Noclipping = game:GetService('RunService').Stepped:connect(NoclipLoop)
 	  else
+	  	notifmsg = "Set Noclip To OFF"
+		sendnotification()
 	    if Noclipping then
 	      	Noclipping:Disconnect()
 	    end
@@ -1054,11 +1236,15 @@ end})
 character:AddToggle({text = "No Fall Damage", callback = function(a)
 	settings.nofalldamage = a
   	if settings.nofalldamage then
+  		notifmsg = "Set No Fall Damage To ON"
+		sendnotification()
 	    while wait() do
 		    if game.Players.LocalPlayer.Character:FindFirstChild("FallDamageScript") then
 		         game.Players.LocalPlayer.Character:FindFirstChild("FallDamageScript"):Destroy()
 		    end
 		if settings.nofalldamage == false then
+			notifmsg = "Set No Fall Damage To OFF"
+			sendnotification()
 		    break
 		end
     end
@@ -1068,9 +1254,15 @@ end})
 miscellaneous:AddToggle({text = "Low Gravity", state = false, callback = function(a)
 	settings.lowgravity = a
 	if settings.lowgravity then
+		notifmsg = "Set Low Gravity To ON"
+		sendnotification()
 		workspace.Gravity = 60
+		notifmsg = "Set Low Gravity To ON"
+		sendnotification()
 	else
 		workspace.Gravity = 196
+		notifmsg = "Set Low Gravity To OFF"
+		sendnotification()
 	end
 end})
 
@@ -1081,9 +1273,13 @@ end})
 miscellaneous:AddToggle({text = "AutoFarm", state = false, callback = function(a)
 	settings.autofarm = a
 	if settings.autofarm then
+		notifmsg = "Set AutoFarm To ON"
+		sendnotification()
         while wait() do
           game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-259.5, 181.6, 289.2)
         if settings.autofarm == false then
+        notifmsg = "Set AutoFarm To OFF"
+		sendnotification()
         break
       end
     end
@@ -1101,10 +1297,14 @@ end})
 
 teleports:AddButton({text = "Lobby", callback = function()
 	game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-259.5, 181.6, 289.2)
+	notifmsg = "Teleported To Lobby"
+	sendnotification()
 end})
 
 teleports:AddButton({text = "Island", callback = function()
 	game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-134.17, 44.9, 8.37)
+	notifmsg = "Teleported To Island"
+	sendnotification()
 end})
 
 teleports:AddBox({text = "Teleport to user", value = "Value", callback = function(a) 
@@ -1112,10 +1312,11 @@ teleports:AddBox({text = "Teleport to user", value = "Value", callback = functio
 		if v.Name:lower():match(a:lower()) and string ~= "" then
 			game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.Character:WaitForChild("HumanoidRootPart").CFrame;
 			warn("Teleported to; "..v.Name)
+			notifmsg = "Teleported To; "..v.Name
+			sendnotification()
 		end
 	end
 end})
-
 
 currentnextdisaster:AddLabel({text = "Disaster;"})
 
@@ -1164,9 +1365,13 @@ uisettings:AddToggle({text = "Cursor", callback = function(a)
 	if settings.Cursorenabled then
 		Cursor.Visible = true
 		warn("cursor enabled")
+		notifmsg = "Set Cursor To ON"
+		sendnotification()
 		else
 		Cursor.Visible = false
 		warn("cursor disabled")
+		notifmsg = "Set Cursor To OFF"
+		sendnotification()
 	end
 end})
 
@@ -1175,11 +1380,30 @@ uisettings:AddColor({text = "Cursor Color", flag = "color", color = Color3.fromR
 	Cursor.ImageColor3 = settings.CursorColor
 end})
 
+local toplineoptions = uisettings:AddFolder("Topbar")
+
+toplineoptions:AddColor({text = "Line Colour", flag = "color", color = Color3.fromRGB(221, 3, 255), callback = function(a)
+	settings.LineColour = a
+	splitline.BackgroundColor3 = settings.LineColour
+end})
+
+toplineoptions:AddSlider({text = "Transparency", value = 0, min = 0, max = 100, callback = function(a)
+	splitline.BackgroundTransparency = a / 100
+end})
+
+toplineoptions:AddSlider({text = "Line Thickness", value = 1, min = 1, max = 4, callback = function(a)
+	splitline.Size = UDim2.new(0, 1917, 0, a*3)
+end})
+
 uisettings:AddBind({text = "Toggle UI", key = "Q", callback = function() 
 	library:Close() 
 end})
 
-	Plrs.PlayerAdded:Connect(function(Plr)
+credits:AddLabel({text = "Vect0rs; scripts an making this actually work aka de dev"})
+credits:AddLabel({text = "Jan; ui library"})
+credits:AddLabel({text = "Smail; helpful, cool guy"})
+
+Plrs.PlayerAdded:Connect(function(Plr)
 		if settings.CharAddedEvent[Plr.Name] == nil then
 			settings.CharAddedEvent[Plr.Name] = Plr.CharacterAdded:connect(function(Char)
 				if settings.TracersEnabled then
@@ -1196,10 +1420,9 @@ end})
 				TracerMT[Plr.Name] = Char.HumanoidRootPart
 			end)
 		end
-	end)
+end)
 	
-	Plrs.PlayerRemoving:Connect(function(Plr)
-		--ChatLog(Plr)
+Plrs.PlayerRemoving:Connect(function(Plr)
 		if settings.CharAddedEvent[Plr.Name] ~= nil then
 			settings.CharAddedEvent[Plr.Name]:Disconnect()
 			settings.CharAddedEvent[Plr.Name] = nil
@@ -1208,8 +1431,14 @@ end})
 		RemoveChams(Plr)
 		RemoveESP(Plr)
 		TracerMT[Plr.Name] = nil
-	end)
+end)
 
 library:Init()
-updatedisaster()
 hintmsg:Remove()
+line()
+createnotification()
+sendnotification()
+notifmsg = "Version; "..version
+sendnotification()
+updatedisaster()
+createinfothingy()
