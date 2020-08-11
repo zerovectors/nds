@@ -2,7 +2,6 @@
 local hintmsg = Instance.new("Hint", Workspace)
 hintmsg.Text = "Initializing UI This can take up to 30 seconds"
 local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/zerovectors/framework/master/uwuware%20framework", true))()
-local currentnextdisaster = library:CreateWindow("Next/Current Disaster")
 local visuals = library:CreateWindow("Visuals")
 local character = library:CreateWindow("Character")
 local miscellaneous = library:CreateWindow("Miscellaneous")
@@ -35,6 +34,7 @@ local settings = {
 	nofalldamage = false;
 	lowgravity = false;
 	autofarm = false;
+	autofarmuser = false;
 	Cursorenabled = true;
 	CursorColor = Color3.fromRGB(221, 3, 255);
 	LineColour = Color3.fromRGB(221, 3, 255);
@@ -1287,6 +1287,52 @@ miscellaneous:AddToggle({text = "AutoFarm", state = false, callback = function(a
   end
 end})
 
+miscellaneous:AddBox({text = "AutoFarm Username", flag = "box", value = "Autofarmusername", callback = function(a) 
+	while wait() do
+		pcall(function()
+			if settings.autofarmuser then
+				while wait() do
+					for i, v in pairs(game.Players:GetChildren()) do
+						if v.Name:lower():match(a:lower()) and string ~= "" then
+						    if settings.autofarmuser then
+						        while wait(.3) do
+									for i, v in pairs(game.Players:GetChildren()) do
+										if v.Name:lower():match(a:lower()) and string ~= "" then
+						            		game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.Character:WaitForChild("HumanoidRootPart").CFrame;
+										end
+									end
+									player = game.Players.LocalPlayer;
+						          	if player.Character then
+							            if player.Character:FindFirstChild("Humanoid") then
+							            	player.Character.Humanoid.Name = "1";
+						          		end;
+							          	local l = player.Character["1"]:Clone();
+							            l.Parent = player.Character;
+							            l.Name = "Humanoid"; wait(0.1);
+							          	player.Character["1"]:Destroy();
+							        	workspace.CurrentCamera.CameraSubject = player.Character.Humanoid;
+							         	player.Character.Animate.Disabled = true; wait(0.1);
+							        	player.Character.Animate.Disabled = false;
+						      		end;
+						      	game.Players.LocalPlayer.Character.Humanoid:EquipTool(game.Players.LocalPlayer.Backpack:FindFirstChildOfClass("Tool"));
+							        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-259.5, 181.6, 289.2);
+							      	if settings.autofarmuser == false then
+							      		break
+							        end
+						      	end
+						    end
+					  	end
+					end
+				end
+			end
+		end)
+	end
+end})
+
+miscellaneous:AddToggle({text = "AutoFarm User", state = false, callback = function(a)
+	settings.autofarmuser = a
+end})
+
 miscellaneous:AddButton({text = "BH0P", callback = function()
 	loadstring(game:HttpGet('https://raw.githubusercontent.com/zerovectors/bhop/master/bhop%20test',true))()
 	warn("BHopping")
@@ -1319,7 +1365,6 @@ teleports:AddBox({text = "Teleport to user", value = "Value", callback = functio
 	end
 end})
 
-currentnextdisaster:AddLabel({text = "Disaster;"})
 
 function updatedisaster()
 	if game.Players.LocalPlayer.Character:FindFirstChild("SurvivalTag") ~= nil then
