@@ -1561,7 +1561,7 @@ end})
 
 credits:AddLabel({text = "Vect0rs; scripts"})
 credits:AddLabel({text = "Jan; ui library"})
-credits:AddLabel({text = "Smail; helpful, cool guy, best friend 😎"})
+credits:AddLabel({text = "Smail; helpful, cool guy"})
 
 Plrs.PlayerAdded:Connect(function(Plr)
 		if settings.CharAddedEvent[Plr.Name] == nil then
