@@ -1,6 +1,15 @@
 -- ui library creation
 local hintmsg = Instance.new("Hint", Workspace)
 hintmsg.Text = "Initializing UI This can take up to 30 seconds"
+game:GetService("ScriptContext").Error:Connect(function(message)
+	print("Reason: "..message)
+	hintmsg.Text = "Initializing Failed, Error; "..message
+	if message == "HttpError: ConnectFail" then
+		hintmsg.Text = "Initializing Failed!| Error; "..message.." | Fix; Re-Execute or ReJoin"
+	end
+	wait(6)
+	hintmsg:Remove()
+end)
 local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/zerovectors/framework/master/uwuware%20framework", true))()
 local visuals = library:CreateWindow("Visuals")
 local character = library:CreateWindow("Character")
@@ -1552,7 +1561,7 @@ end})
 
 credits:AddLabel({text = "Vect0rs; scripts"})
 credits:AddLabel({text = "Jan; ui library"})
-credits:AddLabel({text = "Smail; helpful, cool guy"})
+credits:AddLabel({text = "Smail; helpful, cool guy, best friend 😎"})
 
 Plrs.PlayerAdded:Connect(function(Plr)
 		if settings.CharAddedEvent[Plr.Name] == nil then
