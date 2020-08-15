@@ -71,7 +71,7 @@ local UserInput = game:GetService("UserInputService");
 local Light = game:GetService("Lighting");
 local HTTP = game:GetService("HttpService");
 local version = "8.2";
-local gamename = "NDS";
+local gamename = "Vect0rs Hub";
 local notifmsg = "[Vect0rs Hub] Loaded; Natural Disaster Survival";
 local RepStor = game:GetService("ReplicatedStorage");
 local MyCam = GetCamera();
@@ -517,7 +517,7 @@ function GetTeamColor(Plr)
 
 	  return PickedColor
 end
-	  
+
 function CreateCursor()
 	local ui = Instance.new("ScreenGui", game.CoreGui)
 	ui.Name = "Cursor"
@@ -612,7 +612,7 @@ function CreateESP(Obj)
 			  until Head ~= nil or (tick() - t) >= 10
 		  end
 		  if Head == nil then return end
-		  
+
 		  local bb = Instance.new("BillboardGui")
 		  bb.Adornee = Head
 		  bb.ExtentsOffset = Vector3.new(0, 1, 0)
@@ -621,12 +621,12 @@ function CreateESP(Obj)
 		  bb.StudsOffset = Vector3.new(0, 3, 0)
 		  bb.Name = "ESP Crap_" .. Obj.Name
 		  bb.Parent = UseFolder
-		  
+
 		  local frame = Instance.new("Frame", bb)
 		  frame.ZIndex = 10
 		  frame.BackgroundTransparency = 1
 		  frame.Size = UDim2.new(1, 0, 1, 0)
-		  
+
 		  local TxtName = Instance.new("TextLabel", frame)
 		  TxtName.Name = "Names"
 		  TxtName.ZIndex = 10
@@ -666,7 +666,7 @@ function CreateESP(Obj)
 			  local ObjVal = Instance.new("ObjectValue", bb)
 			  ObjVal.Value = Obj
 		  end
-		  
+
 		  local PickColor = GetTeamColor(Obj) or settings.Colors.Neutral
 		  TxtName.TextColor3 = PickColor
 
@@ -676,7 +676,7 @@ function CreateESP(Obj)
 		  end
 	  end
 end
-	  
+
 function UpdateTracer(Plr)
 	  if settings.TracersEnabled then
 		  if MyChar then
@@ -760,7 +760,7 @@ function FindCham(Obj)
 
 	  return nil
 end
-	  
+
 function FindESP(Obj)
 	  for i, v in next, ItemESP:GetChildren() do
 		  if v.className == "ObjectValue" then
@@ -771,8 +771,8 @@ function FindESP(Obj)
 	  end
 
 	  return nil
-end	
-	  
+end
+
 function UpdateChams(Obj)
 	  if Obj == nil then return end
 
@@ -948,7 +948,7 @@ function createinfothingy()
 		Username.Text = "Smail"
 	end
 
-	while wait() do 
+	while wait() do
 		local timedata = os.date("*t")
 		Time.Text = timedata.hour..";"..timedata.min..";"..timedata.sec
 	end
@@ -1101,7 +1101,7 @@ end
 
 -- create options
 
-visuals:AddToggle({text = "Fullbright", state = false, callback = function(a) 
+visuals:AddToggle({text = "Fullbright", state = false, callback = function(a)
     warn(a)
     settings.fullbright = a
 	if settings.fullbright then
@@ -1117,7 +1117,7 @@ end})
 
 local espoptions = visuals:AddFolder("ESP Options")
 
-espoptions:AddToggle({text = "ESP", state = false, callback = function(a) 
+espoptions:AddToggle({text = "ESP", state = false, callback = function(a)
 	settings.ESPEnabled = a
 	if settings.ESPEnabled then
 	    warn("esp enabled")
@@ -1216,7 +1216,7 @@ espoptions:AddToggle({text = "Tracers", state = false, callback = function(a)
 end})
 
 local espsettings = espoptions:AddFolder("ESP Settings")
-espsettings:AddColor({text = "Ally Color", flag = "color", color = Color3.fromRGB(221, 3, 255), callback = function(a) 
+espsettings:AddColor({text = "Ally Color", flag = "color", color = Color3.fromRGB(221, 3, 255), callback = function(a)
 	settings.Colors.Ally = a
 	if settings.ESPEnabled then
 		for _, v in next, Plrs:GetPlayers() do
@@ -1274,11 +1274,11 @@ character:AddToggle({text = "SuperJump", state = false, callback = function(a)
 	end
 end})
 
-character:AddSlider({text = "WalkSpeed", value = 16, min = 0, max = 150, callback = function(a) 
+character:AddSlider({text = "WalkSpeed", value = 16, min = 0, max = 150, callback = function(a)
 	game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = a
 end})
 
-character:AddSlider({text = "JumpPower", value = 50, min = 0, max = 500, callback = function(a) 
+character:AddSlider({text = "JumpPower", value = 50, min = 0, max = 500, callback = function(a)
 	game.Players.LocalPlayer.Character.Humanoid.JumpPower = a
 end})
 
@@ -1365,7 +1365,7 @@ miscellaneous:AddToggle({text = "Low Gravity", state = false, callback = functio
 	end
 end})
 
-miscellaneous:AddSlider({text = "Gravity", value = 196, min = 0, max = 196, callback = function(a) 
+miscellaneous:AddSlider({text = "Gravity", value = 196, min = 0, max = 196, callback = function(a)
 	workspace.Gravity = a
 end})
 
@@ -1385,7 +1385,7 @@ miscellaneous:AddToggle({text = "AutoFarm", state = false, callback = function(a
   end
 end})
 
-miscellaneous:AddBox({text = "AutoFarm Username", flag = "box", value = "Autofarmusername", callback = function(a) 
+miscellaneous:AddBox({text = "AutoFarm Username", flag = "box", value = "Autofarmusername", callback = function(a)
 	while wait() do
 		pcall(function()
 			if settings.autofarmuser then
@@ -1452,7 +1452,7 @@ teleports:AddButton({text = "Island", callback = function()
 	sendnotification()
 end})
 
-teleports:AddBox({text = "Teleport to user", value = "Value", callback = function(a) 
+teleports:AddBox({text = "Teleport to user", value = "Value", callback = function(a)
 	for i, v in pairs(game.Players:GetChildren()) do
 		if v.Name:lower():match(a:lower()) and string ~= "" then
 			game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.Character:WaitForChild("HumanoidRootPart").CFrame;
@@ -1555,8 +1555,8 @@ toplineoptions:AddSlider({text = "Line Thickness", value = 1, min = 1, max = 4, 
 	splitline.Size = UDim2.new(0, 1917, 0, a*3)
 end})
 
-uisettings:AddBind({text = "Toggle UI", key = "Q", callback = function() 
-	library:Close() 
+uisettings:AddBind({text = "Toggle UI", key = "Q", callback = function()
+	library:Close()
 end})
 
 credits:AddLabel({text = "Vect0rs; scripts"})
@@ -1581,7 +1581,7 @@ Plrs.PlayerAdded:Connect(function(Plr)
 			end)
 		end
 end)
-	
+
 Plrs.PlayerRemoving:Connect(function(Plr)
 		if settings.CharAddedEvent[Plr.Name] ~= nil then
 			settings.CharAddedEvent[Plr.Name]:Disconnect()
