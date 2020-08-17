@@ -44,7 +44,6 @@ local settings = {
 	lowgravity = false;
 	autofarm = false;
 	autofarmuser = false;
-	Cursorenabled = true;
 	CursorColor = Color3.fromRGB(221, 3, 255);
 	LineColour = Color3.fromRGB(221, 3, 255);
 }
@@ -70,7 +69,7 @@ local Teams = game:GetService("Teams");
 local UserInput = game:GetService("UserInputService");
 local Light = game:GetService("Lighting");
 local HTTP = game:GetService("HttpService");
-local version = "8.2";
+local version = "8.3";
 local gamename = "Vect0rs Hub";
 local notifmsg = "[Vect0rs Hub] Loaded; Natural Disaster Survival";
 local RepStor = game:GetService("ReplicatedStorage");
@@ -517,25 +516,6 @@ function GetTeamColor(Plr)
 
 	  return PickedColor
 end
-
-function CreateCursor()
-	local ui = Instance.new("ScreenGui", game.CoreGui)
-	ui.Name = "Cursor"
-	local cursor = Instance.new("ImageLabel", ui);
-	cursor.Image = "http://www.roblox.com/asset/?id=282305376";
-	cursor.Name = "Cursor";
-	cursor.BackgroundTransparency = 1;
-	cursor.BorderSizePixel = 1;
-	cursor.ImageColor3 = settings.CursorColor;
-	cursor.Position = UDim2.new(0.189, 0,0.229, 0);
-	cursor.Size = UDim2.new(0, 13,0, 14);
-	cursor.Visible = false;
-end
-CreateCursor()
-local Cursor = game.CoreGui:WaitForChild("Cursor").Cursor
-game:GetService("RunService").RenderStepped:Connect(function()
-	Cursor.Position = UDim2.new(-0.004, mouse.X, -0.01, mouse.Y)
-end)
 
 function UpdateESP(Plr)
 	  if Plr ~= nil then
@@ -1509,21 +1489,6 @@ function updatedisaster()
 		end
 	end)
 end
-
-uisettings:AddToggle({text = "Cursor", callback = function(a)
-	settings.Cursorenabled = a
-	if settings.Cursorenabled then
-		Cursor.Visible = true
-		warn("cursor enabled")
-		notifmsg = "Set Cursor To ON"
-		sendnotification()
-		else
-		Cursor.Visible = false
-		warn("cursor disabled")
-		notifmsg = "Set Cursor To OFF"
-		sendnotification()
-	end
-end})
 
 uisettings:AddColor({text = "Cursor Color", flag = "color", color = Color3.fromRGB(221, 3, 255), callback = function(a)
 	settings.CursorColor = a
