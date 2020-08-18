@@ -1577,4 +1577,5 @@ notifmsg = "[Vect0rs Hub] Loaded; Natural Disasters UI";
 sendnotification()
 notifmsg = "Version; "..version
 sendnotification()
+createchangelog()
 createinfothingy()
