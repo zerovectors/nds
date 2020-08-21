@@ -847,6 +847,52 @@ function CreateChams(Obj)
 	  end
 end
 
+function updatedisaster()
+	if game.Players.LocalPlayer.Character:FindFirstChild("SurvivalTag") ~= nil then
+		warn("the current fucking disaster is; "..game.Players.LocalPlayer.Character.SurvivalTag.Value)
+		print("woo works im smart :sunglasses:")
+		notifmsg = "Incoming Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value
+		sendnotification()
+	else
+		game.Players.LocalPlayer.Character:WaitForChild("SurvivalTag", 5)
+		if game.Players.LocalPlayer.Character:FindFirstChild("SurvivalTag") ~= nil then
+			notifmsg = "Incoming Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value
+			sendnotification()
+		end
+	end
+
+	game.Players.LocalPlayer.Character.ChildAdded:Connect(function(object)
+		if object:IsA("StringValue") then
+			if game.Players.LocalPlayer.Character ~= nil then
+				if game.Players.LocalPlayer.Character:FindFirstChild("SurvivalTag") ~= nil then
+					warn("the current fucking disaster is; "..game.Players.LocalPlayer.Character.SurvivalTag.Value)
+					print("woo works im smart :sunglasses:")
+					notifmsg = "Incoming Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value
+					sendnotification()
+				else
+					game.Players.LocalPlayer.Character:WaitForChild("SurvivalTag", 5)
+					if game.Players.LocalPlayer.Character:FindFirstChild("SurvivalTag") ~= nil then
+						notifmsg = "Incoming Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value
+						sendnotification()
+					end
+				end
+			end
+		end
+	end)
+	game.Players.LocalPlayer.CharacterAdded:connect(function()
+		if game.Players.LocalPlayer.Character:FindFirstChild("SurvivalTag") ~= nil then
+			notifmsg = "Incoming Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value
+			sendnotification()
+		else
+			game.Players.LocalPlayer.Character:WaitForChild("SurvivalTag")
+			if game.Players.LocalPlayer.Character:FindFirstChild("SurvivalTag") ~= nil then
+				notifmsg = "Incoming Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value
+				sendnotification()
+			end
+		end
+	end)
+end
+
 local Name = Instance.new("TextLabel")
 local Role = Instance.new("TextLabel")
 local Username = Instance.new("TextLabel")
@@ -1103,7 +1149,6 @@ visuals:AddToggle({text = "Fullbright", state = false, callback = function(a)
 end})
 
 local espoptions = visuals:AddFolder("ESP Options")
-
 espoptions:AddToggle({text = "ESP", state = false, callback = function(a)
 	settings.ESPEnabled = a
 	if settings.ESPEnabled then
@@ -1450,53 +1495,6 @@ teleports:AddBox({text = "Teleport to user", value = "Value", callback = functio
 	end
 end})
 
-
-function updatedisaster()
-	if game.Players.LocalPlayer.Character:FindFirstChild("SurvivalTag") ~= nil then
-		warn("the current fucking disaster is; "..game.Players.LocalPlayer.Character.SurvivalTag.Value)
-		print("woo works im smart :sunglasses:")
-		notifmsg = "Incoming Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value
-		sendnotification()
-	else
-		game.Players.LocalPlayer.Character:WaitForChild("SurvivalTag", 5)
-		if game.Players.LocalPlayer.Character:FindFirstChild("SurvivalTag") ~= nil then
-			notifmsg = "Incoming Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value
-			sendnotification()
-		end
-	end
-
-	game.Players.LocalPlayer.Character.ChildAdded:Connect(function(object)
-		if object:IsA("StringValue") then
-			if game.Players.LocalPlayer.Character ~= nil then
-				if game.Players.LocalPlayer.Character:FindFirstChild("SurvivalTag") ~= nil then
-					warn("the current fucking disaster is; "..game.Players.LocalPlayer.Character.SurvivalTag.Value)
-					print("woo works im smart :sunglasses:")
-					notifmsg = "Incoming Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value
-					sendnotification()
-				else
-					game.Players.LocalPlayer.Character:WaitForChild("SurvivalTag", 5)
-					if game.Players.LocalPlayer.Character:FindFirstChild("SurvivalTag") ~= nil then
-						notifmsg = "Incoming Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value
-						sendnotification()
-					end
-				end
-			end
-		end
-	end)
-	game.Players.LocalPlayer.CharacterAdded:connect(function()
-		if game.Players.LocalPlayer.Character:FindFirstChild("SurvivalTag") ~= nil then
-			notifmsg = "Incoming Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value
-			sendnotification()
-		else
-			game.Players.LocalPlayer.Character:WaitForChild("SurvivalTag")
-			if game.Players.LocalPlayer.Character:FindFirstChild("SurvivalTag") ~= nil then
-				notifmsg = "Incoming Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value
-				sendnotification()
-			end
-		end
-	end)
-end
-
 uisettings:AddColor({text = "Cursor Color", flag = "color", color = Color3.fromRGB(221, 3, 255), callback = function(a)
 	settings.CursorColor = a
 	game.CoreGui.uwuware.Cursor.ImageColor3 = settings.CursorColor
@@ -1510,6 +1508,21 @@ if game.Players.LocalPlayer.UserId == 278723686 then
 		_G.cursorenabled = a
 		game.CoreGui.uwuware.Cursor.Visible = a
 	end})
+	local devmenu = library:CreateWindow("Developer Shit")
+	devmenu:AddButton({text = "Copy Char Vector3 Position", callback = function()
+		setclipboard(tostring(game.Players.LocalPlayer.Character.HumanoidRootPart.Position))
+		notifmsg = "Copied Character Vector3 To Clipboard"
+		sendnotification()
+	end})
+	devmenu:AddButton({text = "Copy Char CFrame Position", callback = function()
+		setclipboard(tostring(game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame))
+		notifmsg = "Copied Character CFrame To Clipboard"
+		sendnotification()
+	end})
+	devmenu:AddButton({text = "Custom Remote Spy", callback = function()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/zerovectors/remote-spys/master/sentinel_spy", true))()
+	end})
+
 elseif game.Players.LocalPlayer.UserId == 425451555 then
 	uisettings:AddToggle({text = "UI Watermark", state = true, callback = function(a)
 		game.CoreGui:WaitForChild("uwuware").watermark.Visible = a
