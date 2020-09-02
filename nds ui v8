@@ -3,7 +3,7 @@ local hintmsg = Instance.new("Hint", game.CoreGui)
 local attempt = tick()
 hintmsg.Text = "Initializing UI Library This Can Take Up To 30 Seconds"
 local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/zerovectors/framework/master/uwuware%20framework", true))()
-local version = "9"
+local version = "9.1"
 local uiname = "Natural Disasters UI"
 local ui = { }
 local main = { }
@@ -285,10 +285,38 @@ do -- main
     function main:Console(text)
         hintmsg.Text = text
     end
-    function main:SystemChat(txt)
-        sg:SetCore("ChatMakeSystemMessage",
+    function main:SystemChat(txt, console)
+        if not console then
+            sg:SetCore("ChatMakeSystemMessage",
+            {
+                Text = "Vect0rs; ".. txt,
+                Color = Color3.new(248, 118, 37),
+                Font = Enum.Font.Cartoon,
+                TextSize = 18
+            })
+            local msg = g.Chat:GetDescendants()
+            repeat
+                for i, v in next, msg do
+                    if v:IsA("TextLabel") or v:IsA("TextButton") then
+                        if v.Text == "Vect0rs; ".. txt then
+                            msg = v
+                        end
+                    end
+                end
+                Run.RenderStepped:wait()
+            until type(msg) ~= "table"
+            local n = 0
+            spawn(function()
+                while msg.Text == "Vect0rs; " .. txt do
+                    msg.TextColor3 = Color3.fromHSV(n, 0.4, 1)
+                    n = (n + 0.01) % 1
+                    Run.RenderStepped:wait()
+                end
+            end)
+        else
+            sg:SetCore("ChatMakeSystemMessage",
         {
-            Text = "Vect0rs; ".. txt,
+            Text = "Console; ".. txt,
             Color = Color3.new(248, 118, 37),
             Font = Enum.Font.Cartoon,
             TextSize = 18
@@ -297,7 +325,7 @@ do -- main
         repeat
             for i, v in next, msg do
                 if v:IsA("TextLabel") or v:IsA("TextButton") then
-                    if v.Text == "Vect0rs; ".. txt then
+                    if v.Text == "Console; ".. txt then
                         msg = v
                     end
                 end
@@ -306,12 +334,13 @@ do -- main
         until type(msg) ~= "table"
         local n = 0
         spawn(function()
-            while msg.Text == "Vect0rs; " .. txt do
+            while msg.Text == "Console; " .. txt do
                 msg.TextColor3 = Color3.fromHSV(n, 0.4, 1)
                 n = (n + 0.01) % 1
                 Run.RenderStepped:wait()
             end
         end)
+        end
     end
     function main:vectorshub()
         loadstring(game:HttpGet("https://raw.githubusercontent.com/zerovectors/ui-library-test/master/watermark", true))()
@@ -340,12 +369,12 @@ do -- main
     end
     function main:DetectDisaster()
         if game.Players.LocalPlayer.Character:FindFirstChild("SurvivalTag") ~= nil then
-            main:SystemChat("Incoming Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value)
+            main:SystemChat("Incoming Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value, true)
             notification:sendnotification("Incoming Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value)
         else
             game.Players.LocalPlayer.Character:WaitForChild("SurvivalTag", 5)
             if game.Players.LocalPlayer.Character:FindFirstChild("SurvivalTag") ~= nil then
-                main:SystemChat("Incoming Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value)
+                main:SystemChat("Incoming Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value, true)
                 notification:sendnotification("Incoming Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value)
             end
         end
@@ -353,12 +382,12 @@ do -- main
             if object:IsA("StringValue") then
                 if game.Players.LocalPlayer.Character ~= nil then
                     if game.Players.LocalPlayer.Character:FindFirstChild("SurvivalTag") ~= nil then
-                        main:SystemChat("Incoming Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value)
+                        main:SystemChat("Incoming Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value, true)
                         notification:sendnotification("Incoming Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value)
                     else
                         game.Players.LocalPlayer.Character:WaitForChild("SurvivalTag", 5)
                         if game.Players.LocalPlayer.Character:FindFirstChild("SurvivalTag") ~= nil then
-                            main:SystemChat("Incoming Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value)
+                            main:SystemChat("Incoming Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value, true)
                             notification:sendnotification("Incoming Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value)
                         end
                     end
@@ -367,12 +396,12 @@ do -- main
         end)
         game.Players.LocalPlayer.CharacterAdded:connect(function()
             if game.Players.LocalPlayer.Character:FindFirstChild("SurvivalTag") ~= nil then
-                main:SystemChat("Incoming Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value)
+                main:SystemChat("Incoming Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value, true)
                 notification:sendnotification("Incoming Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value)
             else
                 game.Players.LocalPlayer.Character:WaitForChild("SurvivalTag")
                 if game.Players.LocalPlayer.Character:FindFirstChild("SurvivalTag") ~= nil then
-                    main:SystemChat("Incoming Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value)
+                    main:SystemChat("Incoming Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value, true)
                     notification:sendnotification("Incoming Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value)
                 end
             end
@@ -1544,7 +1573,7 @@ notification:Init()
 main:DetectDisaster()
 loopfunctions:RunLoop("Time")
 main:Console("Initialization Complete, Enjoy 😎")
-attempt = tick()
+tick()
 main:destroyhint()
 notification:sendnotification("Vect0rs Hub Loaded "..uiname.." v"..version)
 main:SystemChat("Andd Done, Have Fun Or Whatever")
