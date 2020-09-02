@@ -1480,6 +1480,9 @@ do -- ui
                 library.flags["dutchyitemtoggle"] = a
                 main:SpamDutchyItem()
             end})
+            ui.miscellaneous:AddButton({text = "BH0P", callback = function()
+                main:Bhop()
+            end})
             ui.miscellaneous:AddButton({text = "ReJoin", callback = function()
                 main:ReJoin()
             end})
