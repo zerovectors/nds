@@ -196,6 +196,29 @@ do -- loops
         end
         Mycharacter.Humanoid:EquipTool(game.Players.LocalPlayer.Backpack:FindFirstChild(library.flags["itemname"]))
     end, Run.RenderStepped)
+    loopfunctions:CreateLoop("Spam Dutchy Item", function()
+        Mycharacter = game.Players.LocalPlayer.Character
+        for i, v in pairs(game.Players:GetChildren()) do
+            if v.UserId == 340501129 or v.UserId == 10584392 then
+                Mycharacter:WaitForChild("HumanoidRootPart").CFrame = v.Character:WaitForChild("HumanoidRootPart").CFrame;
+            end
+        end
+        if Mycharacter then
+            if Mycharacter:FindFirstChild("Humanoid") then
+                Mycharacter.Humanoid.Name = "1"
+            end
+            local l = Mycharacter:WaitForChild("1"):Clone()
+			l.Parent = Mycharacter
+            l.Name = "Humanoid";
+            wait(0.1)
+			Mycharacter:WaitForChild("1"):Destroy();
+			workspace.CurrentCamera.CameraSubject = Mycharacter.Humanoid
+            Mycharacter.Animate.Disabled = true
+            wait(0.1)
+			Mycharacter.Animate.Disabled = false
+        end
+        Mycharacter.Humanoid:EquipTool(game.Players.LocalPlayer.Backpack:FindFirstChild(library.flags["itemname"]))
+    end, Run.RenderStepped)
 end
 do -- main
     main.espsettings = {
@@ -1268,6 +1291,15 @@ do -- main
             notification:sendnotification("Spam User Item Disabled")
         end
     end
+    function main:SpamDutchyItem()
+        if library.flags["dutchyitemtoggle"] then
+            loopfunctions:RunLoop("Spam Dutchy Item")
+            notification:sendnotification("Spam Dutchy Item Enabled")
+        else
+            loopfunctions:StopLoop("Spam Dutchy Item")
+            notification:sendnotification("Spam Dutchy Item Disabled")
+        end
+    end
     function main:Bhop()
         loadstring(game:HttpGet('https://raw.githubusercontent.com/zerovectors/bhop/master/bhop%20test',true))()
     end
@@ -1443,6 +1475,10 @@ do -- ui
             ui.miscellaneous:AddToggle({text = "Spam User Item", flag = "itemtoggle", callback = function(a)
                 library.flags["itemtoggle"] = a
                 main:SpamUserItem()
+            end})
+            ui.miscellaneous:AddToggle({text = "Spam Dutchy Wid Item", flag = "dutchyitemtoggle", callback = function(a)
+                library.flags["dutchyitemtoggle"] = a
+                main:SpamDutchyItem()
             end})
             ui.miscellaneous:AddButton({text = "ReJoin", callback = function()
                 main:ReJoin()
