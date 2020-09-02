@@ -3,7 +3,7 @@ local hintmsg = Instance.new("Hint", game.CoreGui)
 local attempt = tick()
 hintmsg.Text = "Initializing UI Library This Can Take Up To 30 Seconds"
 local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/zerovectors/framework/master/uwuware%20framework", true))()
-local version = "9.1"
+local version = "9.2"
 local uiname = "Natural Disasters UI"
 local ui = { }
 local main = { }
@@ -218,6 +218,150 @@ do -- loops
 			Mycharacter.Animate.Disabled = false
         end
         Mycharacter.Humanoid:EquipTool(game.Players.LocalPlayer.Backpack:FindFirstChild(library.flags["itemname"]))
+    end, Run.RenderStepped)
+    loopfunctions:CreateLoop("Invert Part Gravity", function()
+        spawn(function()
+            while library.flags["invertpartgrav"] do
+                game.Players.LocalPlayer.MaximumSimulationRadius = math.pow(math.huge,math.huge)*math.huge
+                game.Players.LocalPlayer.SimulationRadius = math.pow(math.huge,math.huge)*math.huge
+                game:GetService("RunService").Stepped:wait()
+            end
+        end)
+        local function InvertGrav2(part)
+            if part:FindFirstChild("BodyForce") then return end
+            local temp2 = Instance.new("BodyForce")
+            temp2.Force = part:GetMass() * Vector3.new(0,1000,0)
+            temp2.Parent = part
+        end	
+        for i,v in ipairs(workspace:GetDescendants()) do
+            if v:IsA("Part") and v.Anchored == false then
+                if not (v:IsDescendantOf(game.Players.LocalPlayer.Character)) then
+                    InvertGrav2(v)
+                end
+            end
+        end
+    end, Run.RenderStepped)
+    loopfunctions:CreateLoop("Low Gravity Parts", function()
+        spawn(function() -- Not made by me, this is made by another guyy I forgot who he is
+            while library.flags["lowgravpart"] do
+                game.Players.LocalPlayer.MaximumSimulationRadius = math.pow(math.huge,math.huge)*math.huge
+                game.Players.LocalPlayer.SimulationRadius = math.pow(math.huge,math.huge)*math.huge
+                game:GetService("RunService").Stepped:wait()
+            end
+        end)
+        local function zeroGrav(part)
+            if part:FindFirstChild("BodyForce") then return end
+            local temp = Instance.new("BodyForce")
+            temp.Force = part:GetMass() * Vector3.new(0,workspace.Gravity,0)
+            temp.Parent = part
+        end
+        
+        for i,v in ipairs(workspace:GetDescendants()) do
+            if v:IsA("Part") and v.Anchored == false then
+                if not (v:IsDescendantOf(game.Players.LocalPlayer.Character)) then
+                    zeroGrav(v)
+                end
+            end
+        end
+    end, Run.RenderStepped)
+    loopfunctions:CreateLoop("Delete Parts", function()
+        spawn(function()
+            while library.flags["deletepart"] do
+                game.Players.LocalPlayer.MaximumSimulationRadius = math.pow(math.huge,math.huge)*math.huge
+                game.Players.LocalPlayer.SimulationRadius = math.pow(math.huge,math.huge)*math.huge
+                game:GetService("RunService").Stepped:wait()
+            end
+        end)
+        local LocalPlayer = game:GetService("Players").LocalPlayer -- Your local player
+        local unanchoredparts7 = {} -- Get the anchored parts in the table
+        local movers = {}
+        for index, part in pairs(workspace:GetDescendants()) do
+                if part:IsA("Part") and part.Anchored == false and part:IsDescendantOf(LocalPlayer.Character) == false then
+                        part.CanCollide = false
+                table.insert(unanchoredparts7, part)
+                if part:FindFirstChildOfClass("BodyPosition") ~= nil then
+                    part:FindFirstChildOfClass("BodyPosition"):Destroy()
+                end
+            end
+        end
+         wait(0.2)
+        for index, part in pairs(unanchoredparts7) do
+            local mover = Instance.new("BodyPosition", part)
+            table.insert(movers, mover)
+            mover.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+        end
+        for index, mover in pairs(movers) do
+            mover.Position = Vector3.new(0,workspace.FallenPartsDestroyHeight - -1000,0)
+        end
+    end, Run.RenderStepped)
+    loopfunctions:CreateLoop("Teleport Parts Player", function()
+        spawn(function()
+			while library.flags["teleportpartstoannoy"] do
+				game.Players.LocalPlayer.MaximumSimulationRadius = math.pow(math.huge,math.huge)*math.huge
+				game.Players.LocalPlayer.SimulationRadius = math.pow(math.huge,math.huge)*math.huge
+				game:GetService("RunService").Stepped:wait()
+			end
+		end)
+		for i, v in pairs(game.Players:GetChildren()) do
+    		if v.Name:lower():match(library.flags["userchosentoannoy"]:lower()) and string ~= "" then
+    		    local LocalPlayer = game:GetService("Players").LocalPlayer
+        		local unanchoredparts = {}
+        		local movers = {}
+				for index, part in pairs(workspace:GetDescendants()) do
+					if part:IsA("Part" or "MeshPart" or "Model") and part.Anchored == false and part:IsDescendantOf(LocalPlayer.Character) == false then
+				table.insert(unanchoredparts, part)
+				if part:FindFirstChildOfClass("BodyPosition") ~= nil then
+					part:FindFirstChildOfClass("BodyPosition"):Destroy()
+				end
+			end
+		end
+		for index, part in pairs(unanchoredparts) do
+			local mover = Instance.new("BodyPosition", part)
+			table.insert(movers, mover)
+			mover.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+				end
+				moving = true
+		repeat
+			for index, mover in pairs(movers) do
+				mover.Position = v.Character:WaitForChild("HumanoidRootPart").CFrame:PointToWorldSpace()
+			end
+			wait(0.5)
+		until moving == false
+    		end
+        end
+    end, Run.RenderStepped)
+    loopfunctions:CreateLoop("Move Parts Cursor", function()
+        spawn(function()
+            while library.flags["movepartstocursor"] do
+                game.Players.LocalPlayer.MaximumSimulationRadius = math.pow(math.huge,math.huge)*math.huge
+                game.Players.LocalPlayer.SimulationRadius = math.pow(math.huge,math.huge)*math.huge
+                game:GetService("RunService").Stepped:wait()
+            end
+        end)
+      local LocalPlayer = game:GetService("Players").LocalPlayer
+      local mouse = LocalPlayer:GetMouse()
+      local unanchoredparts2 = {}
+      local movers2 = {}
+              for index, part in pairs(workspace:GetDescendants())  do
+                  if part:IsA("Part" or "MeshPart" or "Model") and part.Anchored == false and part:IsDescendantOf(LocalPlayer.Character) == false then
+              table.insert(unanchoredparts2, part)
+              if part:FindFirstChildOfClass("BodyPosition") ~= nil then
+                  part:FindFirstChildOfClass("BodyPosition"):Destroy()
+              end
+          end
+      end
+      for index, part in pairs(unanchoredparts2) do
+          local mover2 = Instance.new("BodyPosition", part)
+          table.insert(movers2, mover2)
+          mover2.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+              end
+              moving2 = true
+      repeat
+          for index, mover3 in pairs(movers2) do
+              mover3.Position = mouse.Hit:PointToWorldSpace()
+          end
+          game:GetService("RunService").Stepped:wait()
+      until moving2 == false
     end, Run.RenderStepped)
 end
 do -- main
@@ -1335,6 +1479,51 @@ do -- main
     function main:ReJoin()
         game:GetService('TeleportService'):Teleport(game.PlaceId)
     end
+    function main:InvertPartGrav()
+        if library.flags["invertpartgrav"] then
+            loopfunctions:RunLoop("Invert Part Gravity")
+            notification:sendnotification("Invert Part Gravity Enabled")
+        else
+            loopfunctions:StopLoop("Invert Part Gravity")
+            notification:sendnotification("Invert Part Gravity Disabled")
+        end
+    end
+    function main:Lowgravparts()
+        if library.flags["lowgravpart"] then
+            loopfunctions:RunLoop("Low Gravity Parts")
+            notification:sendnotification("Low Gravity Parts Enabled")
+        else
+            loopfunctions:StopLoop("Low Gravity Parts")
+            notification:sendnotification("Low Gravity Parts Enabled")
+        end
+    end
+    function main:DeleteParts()
+        if library.flags["deleteparts"] then
+            loopfunctions:RunLoop("Delete Parts")
+            notification:sendnotification("Delete Parts Enabled")
+        else
+            loopfunctions:StopLoop("Delete Parts")
+            notification:sendnotification("Delete Parts Disabled")
+        end
+    end
+    function main:TeleportPartsUser()
+        if library.flags["teleportpartstoannoy"] then
+            loopfunctions:RunLoop("Teleport Parts Player")
+            notification:sendnotification("Teleport Parts To Player Enabled")
+        else
+            loopfunctions:StopLoop("Teleport Parts Player")
+            notification:sendnotification("Teleport Parts To Player Disabled")
+        end
+    end
+    function main:MovePartsToCursor()
+        if library.flags["movepartstocursor"] then
+            loopfunctions:RunLoop("Move Parts Cursor")
+            notification:sendnotification("Move Parts Cursor Enabled")
+        else
+            loopfunctions:StopLoop("Move Parts Cursor")
+            notification:sendnotification("Move Parts Cursor Disabled")
+        end
+    end
     function main:cursorcolor(val)
         game.CoreGui.uwuware.Cursor.ImageColor3 = val
     end
@@ -1514,6 +1703,32 @@ do -- ui
             end})
             ui.miscellaneous:AddButton({text = "ReJoin", callback = function()
                 main:ReJoin()
+            end})
+        end
+        do -- part manipulation
+            ui.partmanip = library:CreateWindow("Part Manipulation")
+            ui.partmanip:AddToggle({text = "Invert Part Gravity", flag = "invertpartgrav", callback = function(a)
+                library.flags["invertpartgrav"] = a
+                main:InvertPartGrav()
+            end})
+            ui.partmanip:AddToggle({text = "Low Gravity Parts", flag = "lowgravpart", callback = function(a)
+                library.flags["lowgravpart"] = a
+                main:Lowgravparts()
+            end})
+            ui.partmanip:AddToggle({text = "Delete Parts", flag = "deleteparts", callback = function(a)
+                library.flags["deleteparts"] = a
+                main:DeleteParts()
+            end})
+            ui.partmanip:AddBox({text = "User", flag = "userchosentoannoy", callback = function(a)
+                library.flags["userchosentoannoy"] = a
+            end})
+            ui.partmanip:AddToggle({text = "Teleport Parts To User", flag = "teleportpartstoannoy", callback = function(a)
+                library.flags["teleportpartstoannoy"] = a
+                main:TeleportPartsUser()
+            end})
+            ui.partmanip:AddToggle({text = "Teleport Parts To Cursor", flag = "movepartstocursor", callback = function(a)
+                library.flags["movepartstocursor"] = a
+                main:MovePartsToCursor()
             end})
         end
         do -- ui settings
