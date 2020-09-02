@@ -1407,6 +1407,15 @@ do -- main
             notification:sendnotification("Fly Disabled")
         end
     end
+    function main:vflytoggle()
+        if library.flags["vflytog"] then
+            main:flyenable(true)
+            notification:sendnotification("Vehicle Fly Enabled")
+        else
+            main:flydisable()
+            notification:sendnotification("Vehicle Fly Disabled")
+        end
+    end
     function main:vehicleflytoggle()
         if library.flags["vflytog"] then
             main:flyenable(true)
@@ -1661,6 +1670,10 @@ do -- ui
             ui.character:AddToggle({text = "Fly", flag = "flytog", callback = function(a)
                 library.flags["flytog"] = a
                 main:flytoggle()
+            end})
+            ui.character:AddToggle({text = "Vehicle Fly", flag = "vflytog", callback = function(a)
+                library.flags["vflytog"] = a
+                main:vflytoggle()
             end})
         end
         do -- miscellaneous
