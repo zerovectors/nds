@@ -1631,7 +1631,7 @@ do -- main
         end
     end
     function main:DeleteSettings()
-        delfile("Vect0rs Hub/Vect0rshub.evelynn")
+        delfile("Vect0rs Hub/Natural Disasters.evelynn")
     end
     function main:splitlinecolor(val)
         splitline.BackgroundColor3 = val
