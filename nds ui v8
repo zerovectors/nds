@@ -2,14 +2,12 @@
 local hintmsg = Instance.new("Hint", game.CoreGui)
 local attempt = tick()
 hintmsg.Text = "Initializing UI Library This Can Take Up To 30 Seconds"
-local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/zerovectors/framework/master/uwuware%20framework", true))()
-local version = "9.3"
-local uiname = "Natural Disasters UI"
+local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/zerovectors/framework/master/vect0rs%20hub%20framework%20uwuware%20checkmarks", true))()
+local version = "10.1"
+local uiname = "Natural Disaster Survival"
 local ui = { }
 local main = { }
 local loopfunctions = { }
-local vectorshub = { }
-local notification = { }
 local loops = { }
 function GetCamera()
 	return workspace:FindFirstChildOfClass("Camera")
@@ -18,7 +16,6 @@ local mouse = game.Players.LocalPlayer:GetMouse()
 local TweenService = game:GetService("TweenService")
 local Plrs = game.Players
 local MyPlr = Plrs.LocalPlayer
-local MyChar = MyPlr.Character
 local MyCam = GetCamera()
 local char = game.Players.LocalPlayer.Character
 local Plrs = game:GetService("Players")
@@ -32,35 +29,17 @@ local sg = game:GetService("StarterGui")
 local ps = game:GetService("Players")
 local Light = game:GetService("Lighting")
 local HTTP = game:GetService("HttpService")
+local UserInput = game:GetService("UserInputService")
 local messages_of_the_day = nil
 
 game:GetService("ScriptContext").Error:Connect(function(message)
 	print("Reason: "..message)
-	main:Console("Initializing Failed, Error; "..message)
 	if message == "HttpError: ConnectFail" then
-		main:Console("Initializing Failed; Code 4 | ReJoin")
+        MyPlr:Kick("Initializing Failed; Code 3 | ReJoin")
+    elseif message == "attempt to index nil with 'CreateWindow'" then
+        MyPlr:Kick("Initializing Failed; Code 4 | ReJoin")
 	end
-	wait(6)
-	hintmsg:Remove()
 end)
-
-do -- notification
-    function notification:Init()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/zerovectors/notification/master/createnotification", true))()
-    end
-    function notification:sendnotification(text)
-        game.CoreGui.uwuware.Notification:TweenSize(UDim2.new(0, 1917,0, 26), "Out", "Linear", .2, true)
-        wait(.2)
-        for i = 1, #text do
-            game.CoreGui.uwuware.Notification.Message.Text = string.sub(text, 1, i)
-            wait(.03)
-        end
-        wait(.5)
-        game.CoreGui.uwuware.Notification.Message.Text = ""
-        game.CoreGui.uwuware.Notification:TweenSize(UDim2.new(0, 1917,0, 0), "Out", "Linear", .2, true)
-    
-    end
-end
 do -- loop functions 
     function loopfunctions:LoopRunning(name)
 		return loops[name].Running
@@ -116,10 +95,6 @@ do -- loop functions
 	end
 end
 do -- loops
-    loopfunctions:CreateLoop("Time", function()
-        local timedata = os.date("*t")
-        _G.usertime = tostring(timedata.hour..";"..timedata.min..";"..timedata.sec)
-    end, Run.RenderStepped:wait())
     loopfunctions:RunLoop("Version_Check", function()
         local data = loadstring(game:HttpGet("https://pastebin.com/raw/MhwMYaFu", true))()
         messages_of_the_day = data.messages_of_the_day
@@ -129,25 +104,18 @@ do -- loops
             if data.force_kick then
                 MyPlr:Kick("This script has updated, please re-connect. Current Version: " .. tostring(current_version) .. " your version: " .. version .. "\nReason: " .. reason)
             else
-                notification:sendnotification("Minor script update, restart ROBLOX to get latest version. Reason:" .. reason)
+                library:SendNotification("Minor script update, restart ROBLOX to get latest version. Reason:" .. reason)
                 main:SystemChat("Minor script update, restart ROBLOX to get latest version. Reason:" .. reason)
             end
         end
     end, 160)
-    loopfunctions:RunLoop("Messages Of The Day", function()
-        if messages_of_the_day == nil then return end
-        for i = 1, #messages_of_the_day do
-            main:SystemChat(tostring(messages_of_the_day[i]))
-            wait(60)
-        end
-    end, Run.RenderStepped)
     loopfunctions:CreateLoop("No Fall Damage", function()
         if game.Players.LocalPlayer.Character:FindFirstChild("FallDamageScript") then
             game.Players.LocalPlayer.Character:FindFirstChild("FallDamageScript"):Destroy()
-       end
+        end
     end, 0)
     loopfunctions:CreateLoop("AutoFarm", function()
-        MyChar.HumanoidRootPart.CFrame = CFrame.new(-259.5, 181.6, 289.2)
+        game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame = CFrame.new(-259.5, 181.6, 289.2)
     end, Run.RenderStepped)
     loopfunctions:CreateLoop("AutoFarm User", function()
         Mycharacter = game.Players.LocalPlayer.Character
@@ -176,30 +144,7 @@ do -- loops
     loopfunctions:CreateLoop("Spam User Item", function()
         Mycharacter = game.Players.LocalPlayer.Character
         for i, v in pairs(game.Players:GetChildren()) do
-            if v.Name:lower():match(library.flags["chosenuser"]:lower()) and string ~= "" then
-                Mycharacter:WaitForChild("HumanoidRootPart").CFrame = v.Character:WaitForChild("HumanoidRootPart").CFrame;
-            end
-        end
-        if Mycharacter then
-            if Mycharacter:FindFirstChild("Humanoid") then
-                Mycharacter.Humanoid.Name = "1"
-            end
-            local l = Mycharacter:WaitForChild("1"):Clone()
-			l.Parent = Mycharacter
-            l.Name = "Humanoid";
-            wait(0.1)
-			Mycharacter:WaitForChild("1"):Destroy();
-			workspace.CurrentCamera.CameraSubject = Mycharacter.Humanoid
-            Mycharacter.Animate.Disabled = true
-            wait(0.1)
-			Mycharacter.Animate.Disabled = false
-        end
-        Mycharacter.Humanoid:EquipTool(game.Players.LocalPlayer.Backpack:FindFirstChild(library.flags["itemname"]))
-    end, Run.RenderStepped)
-    loopfunctions:CreateLoop("Spam Dutchy Item", function()
-        Mycharacter = game.Players.LocalPlayer.Character
-        for i, v in pairs(game.Players:GetChildren()) do
-            if v.UserId == 340501129 or v.UserId == 10584392 then
+            if v.Name:lower():match(library.flags["chosenuser2"]:lower()) and string ~= "" then
                 Mycharacter:WaitForChild("HumanoidRootPart").CFrame = v.Character:WaitForChild("HumanoidRootPart").CFrame;
             end
         end
@@ -373,30 +318,17 @@ do -- main
         FriendList = { };
         Colors = {
             Enemy = Color3.fromRGB(221, 3, 255);
-            Ally = Color3.fromRGB(221, 3, 255);
-            Friend = Color3.fromRGB(221, 3, 255);
+            Ally = Color3.fromRGB(255, 51, 255);
+            Friend = Color3.fromRGB(255, 51, 255);
             Neutral = Color3.fromRGB(255,255,255);
             ColorOverride = nil;
         };
         CharAddedEvent = { };
         Mob_ESP_CHAMS_Ran_Once = false;
     };
-    main.creator_accounts = {
-        [278723686] = true;
-    };
-    main.admin_accounts = {
-        [425451555] = true;
-        [516093458] = true;
-    };
-    main.whitelisted_accounts = {
-        [278723686] = true;
-        [425451555] = true;
-        [516093458] = true;
-        [454446503] = true;
-        [807746976] = true;
-        [311446911] = true;
-        [534973588] = true;
-    };
+    main.Arguments = { };
+    main.VelCap = 5;
+    main.JumpBoostAmt = 0.1;
     if main.espsettings.CHAMSLength > 2048 then
         main.espsettings.CHAMSLength = 2048
     end;
@@ -424,43 +356,15 @@ do -- main
 			rawset(tab, index, val)
 		end
     });
-    main.vflyspeed = 1
-    main.vehicleflyspeed = 1
+    main.vflyspeed = 1;
+    main.vehicleflyspeed = 1;
     function main:Console(text)
         hintmsg.Text = text
     end
-    function main:SystemChat(txt, console)
-        if not console then
-            sg:SetCore("ChatMakeSystemMessage",
-            {
-                Text = "Vect0rs; ".. txt,
-                Color = Color3.new(248, 118, 37),
-                Font = Enum.Font.Cartoon,
-                TextSize = 18
-            })
-            local msg = g.Chat:GetDescendants()
-            repeat
-                for i, v in next, msg do
-                    if v:IsA("TextLabel") or v:IsA("TextButton") then
-                        if v.Text == "Vect0rs; ".. txt then
-                            msg = v
-                        end
-                    end
-                end
-                Run.RenderStepped:wait()
-            until type(msg) ~= "table"
-            local n = 0
-            spawn(function()
-                while msg.Text == "Vect0rs; " .. txt do
-                    msg.TextColor3 = Color3.fromHSV(n, 0.4, 1)
-                    n = (n + 0.01) % 1
-                    Run.RenderStepped:wait()
-                end
-            end)
-        else
-            sg:SetCore("ChatMakeSystemMessage",
+    function main:SystemChat(txt)
+        sg:SetCore("ChatMakeSystemMessage",
         {
-            Text = "Console; ".. txt,
+            Text = "Vect0rs; ".. txt,
             Color = Color3.new(248, 118, 37),
             Font = Enum.Font.Cartoon,
             TextSize = 18
@@ -469,7 +373,7 @@ do -- main
         repeat
             for i, v in next, msg do
                 if v:IsA("TextLabel") or v:IsA("TextButton") then
-                    if v.Text == "Console; ".. txt then
+                    if v.Text == "Vect0rs; ".. txt then
                         msg = v
                     end
                 end
@@ -478,48 +382,22 @@ do -- main
         until type(msg) ~= "table"
         local n = 0
         spawn(function()
-            while msg.Text == "Console; " .. txt do
+            while msg.Text == "Vect0rs; " .. txt do
                 msg.TextColor3 = Color3.fromHSV(n, 0.4, 1)
                 n = (n + 0.01) % 1
                 Run.RenderStepped:wait()
             end
         end)
-        end
-    end
-    function main:vectorshub()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/zerovectors/ui-library-test/master/watermark", true))()
-        textbuttonthing = game.CoreGui.uwuware:WaitForChild("watermark").Text
-        textbuttonthing.MouseButton1Down:Connect(function()
-            library:Close()
-        end)
-        splitline.Name = "Line"
-        splitline.Parent = game.CoreGui:WaitForChild("uwuware")
-        splitline.BackgroundColor3 = Color3.fromRGB(221, 3, 255)
-        splitline.BorderSizePixel = 0
-        splitline.Size = UDim2.new(0, 1917, 0, 5)
-    end
-    function main:infothing()
-        if game.Players.LocalPlayer.UserId == 278723686 then
-            _G.role = "[dev]"
-            _G.username = "Vect0rs"
-        elseif game.Players.LocalPlayer.UserId == 425451555 then
-            _G.role = "[staff]"
-            _G.username = "Smail"
-        else
-            _G.role = "[member]"
-            _G.username = MyPlr.Name
-        end
-        loadstring(game:HttpGet("https://pastebin.com/raw/MH2ki4NT", true))()
     end
     function main:DetectDisaster()
         if game.Players.LocalPlayer.Character:FindFirstChild("SurvivalTag") ~= nil then
             main:SystemChat("Incoming Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value, true)
-            notification:sendnotification("Incoming Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value)
+            library:SendNotification("Incoming Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value)
         else
             game.Players.LocalPlayer.Character:WaitForChild("SurvivalTag", 5)
             if game.Players.LocalPlayer.Character:FindFirstChild("SurvivalTag") ~= nil then
                 main:SystemChat("Incoming Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value, true)
-                notification:sendnotification("Incoming Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value)
+                library:SendNotification("Incoming Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value)
             end
         end
         game.Players.LocalPlayer.Character.ChildAdded:Connect(function(object)
@@ -527,12 +405,12 @@ do -- main
                 if game.Players.LocalPlayer.Character ~= nil then
                     if game.Players.LocalPlayer.Character:FindFirstChild("SurvivalTag") ~= nil then
                         main:SystemChat("Incoming Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value, true)
-                        notification:sendnotification("Incoming Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value)
+                        library:SendNotification("Incoming Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value)
                     else
                         game.Players.LocalPlayer.Character:WaitForChild("SurvivalTag", 5)
                         if game.Players.LocalPlayer.Character:FindFirstChild("SurvivalTag") ~= nil then
                             main:SystemChat("Incoming Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value, true)
-                            notification:sendnotification("Incoming Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value)
+                            library:SendNotification("Incoming Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value)
                         end
                     end
                 end
@@ -541,19 +419,91 @@ do -- main
         game.Players.LocalPlayer.CharacterAdded:connect(function()
             if game.Players.LocalPlayer.Character:FindFirstChild("SurvivalTag") ~= nil then
                 main:SystemChat("Incoming Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value, true)
-                notification:sendnotification("Incoming Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value)
+                library:SendNotification("Incoming Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value)
             else
                 game.Players.LocalPlayer.Character:WaitForChild("SurvivalTag")
                 if game.Players.LocalPlayer.Character:FindFirstChild("SurvivalTag") ~= nil then
                     main:SystemChat("Incoming Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value, true)
-                    notification:sendnotification("Incoming Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value)
+                    library:SendNotification("Incoming Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value)
                 end
             end
         end)
     end
+    function main:SaveSettings()
+        local Name = "Vect0rs Hub/Natural Disasters.evelynn"
+        local Settings
+        if not pcall(function() readfile(Name) end) then makefolder("Vect0rs Hub") writefile(Name, game:service'HttpService':JSONEncode(library.flags)) end
+        Settings = game:service'HttpService':JSONDecode(readfile(Name))
+        local function Save()
+        writefile(Name,game:service'HttpService':JSONEncode(Settings))
+        end
+        do -- visuals
+            Settings.FullBright = library.flags.FullBright
+            Settings.espfoldertog = library.flags.espfoldertog
+            Settings.ESPTog = library.flags.ESPTog
+            Settings.ChamsTog = library.flags.ChamsTog
+            Settings.TracersTog = library.flags.TracersTog
+        end
+        do -- character
+            Settings.SuperSpeed = library.flags.SuperSpeed
+            Settings.SuperJump = library.flags.SuperJump
+            Settings.flytog = library.flags.flytog
+            Settings.vflytog = library.flags.vflytog
+            Settings.characterhaxmain = library.flags.characterhaxmain
+            Settings.nofalldamage = library.flags.nofalldamage
+        end
+        do -- miscellaneous
+            Settings.lowgrav = library.flags.lowgrav
+            Settings.autofarm = library.flags.autofarm
+        end
+        do -- ui settings
+            Settings.annoyshit = library.flags.annoyshit
+            Settings.CursorTog = library.flags.CursorTog
+            Settings.watermark = library.flags.watermark
+        end
+        Save()
+    end
+    function main:LoadSettings()
+        local Name = "Vect0rs Hub/Natural Disasters.evelynn"
+        local Settings
+        if not pcall(function() readfile(Name) end) then makefolder("Vect0rs Hub") writefile(Name, game:service'HttpService':JSONEncode(library.flags)) end
+        Settings = game:service'HttpService':JSONDecode(readfile(Name))
+        do -- visuals
+            ui.visuals.fullbright:SetState(Settings.FullBright)
+            ui.visuals.espmain:SetState(Settings.espfoldertog)
+            ui.visuals.esp:SetState(Settings.ESPTog)
+            ui.visuals.chams:SetState(Settings.ChamsTog)
+            ui.visuals.tracers:SetState(Settings.TracersTog)
+        end
+        do -- character
+            ui.character.charactermain:SetState(Settings.characterhaxmain)
+            ui.character.superspeed:SetState(Settings.SuperSpeed)
+            ui.character.superjump:SetState(Settings.SuperJump)
+            ui.character.flymain:SetState(Settings.flytog)
+            ui.character.vehiclefly:SetState(Settings.vflytog)
+            ui.character.nofalldamage:SetState(Settings.nofalldamage)
+        end
+        do -- miscellaneous
+            ui.miscellaneous.lowgravity:SetState(Settings.lowgrav)
+            ui.miscellaneous.autofarm:SetState(Settings.autofarm)
+        end
+        do -- ui settings
+            main.uisettings.annoyingstuff:SetState(Settings.annoyshit)
+            main.uisettings.cursor:SetState(Settings.CursorTog)
+            main.uisettings.watermark:SetState(Settings.watermark)
+        end
+    end
+    function main:AutoLoadSettings()
+        local Name = "Vect0rs Hub/Natural Disasters.evelynn"
+        local Settings
+        if not pcall(function() readfile(Name) end) then makefolder("Vect0rs Hub") writefile(Name, game:service'HttpService':JSONEncode(library.flags)) end
+        Settings = game:service'HttpService':JSONDecode(readfile(Name))
+        game.CoreGui.uwuware.watermark.Text.MouseButton1Down:Connect(function()
+            main:LoadSettings()
+        end)
+    end
     function main:fullbright()
         if library.flags.FullBright then
-            notification:sendnotification("FullBright Enabled")
             local bloom = Instance.new("BloomEffect");
             bloom.Enabled = true;
             bloom.Intensity = 0.55;
@@ -573,7 +523,6 @@ do -- main
             sunrays.Spread = 1;
             sunrays.Parent = game.Lighting;
         else
-            notification:sendnotification("FullBright Disabled")
             for i,v in pairs(game.Lighting:GetChildren()) do
                 if v:IsA("BloomEffect") or v:IsA("ColorCorrectionEffect") or v:IsA("SunRaysEffect") then
                     v:Destroy();
@@ -596,46 +545,46 @@ do -- main
         local PickedColor = main.espsettings.Colors.Enemy
         if Plr ~= nil then
             if game.PlaceId == 606849621 then
-                if settings.Colors.ColorOverride == nil then
-                    if not settings.FreeForAll then
+                if main.espsettings.Colors.ColorOverride == nil then
+                    if not library.flags["FreeForAll"] then
                         if MyPlr.Team ~= nil and Plr.Team ~= nil then
-                            if settings.FriendList[Plr.Name] == nil then
+                            if main.FriendList[Plr.Name] == nil then
                                 if MyPlr.Team.Name == "Prisoner" then
                                     if Plr.Team == MyPlr.Team or Plr.Team.Name == "Criminal" then
-                                        PickedColor = settings.Colors.Ally
+                                        PickedColor = main.espsettings.Colors.Ally
                                     else
-                                        PickedColor = settings.Colors.Enemy
+                                        PickedColor = main.espsettings.Colors.Enemy
                                     end
                                 elseif MyPlr.Team.Name == "Criminal" then
                                     if Plr.Team == MyPlr.Team or Plr.Team.Name == "Prisoner" then
-                                        PickedColor = settings.Colors.Ally
+                                        PickedColor = main.espsettings.Colors.Ally
                                     else
-                                        PickedColor = settings.Colors.Enemy
+                                        PickedColor = main.espsettings.Colors.Enemy
                                     end
                                 elseif MyPlr.Team.Name == "Police" then
                                     if Plr.Team == MyPlr.Team then
-                                        PickedColor = settings.Colors.Ally
+                                        PickedColor = main.espsettings.Colors.Ally
                                     else
                                         if Plr.Team.Name == "Criminal" then
-                                            PickedColor = settings.Colors.Enemy
+                                            PickedColor = main.espsettings.Colors.Enemy
                                         elseif Plr.Team.Name == "Prisoner" then
-                                            PickedColor = settings.Colors.Neutral
+                                            PickedColor = main.espsettings.Colors.Neutral
                                         end
                                     end
                                 end
                             else
-                                PickedColor = settings.Colors.Friend
+                                PickedColor = main.espsettings.Colors.Friend
                             end
                         end
                     else
-                        if settings.FriendList[Plr.Name] ~= nil then
-                            PickedColor = settings.Colors.Friend
+                        if main.FriendList[Plr.Name] ~= nil then
+                            PickedColor = main.espsettings.Colors.Friend
                         else
-                            PickedColor = settings.Colors.Enemy
+                            PickedColor = main.espsettings.Colors.Enemy
                         end
                     end
                 else
-                    PickedColor = settings.Colors.ColorOverride
+                    PickedColor = main.espsettings.Colors.ColorOverride
                 end
             elseif game.PlaceId == 155615604 then
                 if main.espsettings.Colors.ColorOverride == nil then
@@ -655,7 +604,7 @@ do -- main
                                 elseif Plr.Team.Name == "Criminals" then
                                     PickedColor = main.espsettings.Colors.Enemy
                                 elseif Plr.Team.Name == "Guards" then
-                                    PickedColor = main.espsettings.Colors.Ally
+                                    PickColor = main.espsettings.Colors.Ally
                                 end
                             elseif MyPlr.Team.Name == "Criminals" then
                                 if Plr.Team.Name == "Inmates" then
@@ -725,13 +674,13 @@ do -- main
                 end
             elseif game.PlaceId == 1072809192 then
                 if MyPlr:FindFirstChild("Backpack") and Plr:FindFirstChild("Backpack") then
-                    if MyPlr.Backpack:FindFirstChild("Knife") or MyChar:FindFirstChild("Knife") then
+                    if MyPlr.Backpack:FindFirstChild("Knife") or game.Players.LocalPlayer.Character:FindFirstChild("Knife") then
                         if Plr.Backpack:FindFirstChild("Revolver") or Plr.Character:FindFirstChild("Revolver") then
                             PickedColor = main.espsettings.Colors.Enemy
                         else
                             PickedColor = Color3.new(1, 135 / 255, 0)
                         end
-                    elseif MyPlr.Backpack:FindFirstChild("Revolver") or MyChar:FindFirstChild("Revolver") then
+                    elseif MyPlr.Backpack:FindFirstChild("Revolver") or game.Players.LocalPlayer.Character:FindFirstChild("Revolver") then
                         if Plr.Backpack:FindFirstChild("Knife") or Plr.Character:FindFirstChild("Knife") then
                             PickedColor = main.espsettings.Colors.Enemy
                         elseif Plr.Backpack:FindFirstChild("Revolver") or Plr.Character:FindFirstChild("Revolver") then
@@ -751,13 +700,13 @@ do -- main
                 end
             elseif game.PlaceId == 142823291 or game.PlaceId == 1122507250 then
                 if MyPlr:FindFirstChild("Backpack") and Plr:FindFirstChild("Backpack") then
-                    if MyPlr.Backpack:FindFirstChild("Knife") or MyChar:FindFirstChild("Knife") then
+                    if MyPlr.Backpack:FindFirstChild("Knife") or game.Players.LocalPlayer.Character:FindFirstChild("Knife") then
                         if (Plr.Backpack:FindFirstChild("Gun") or Plr.Backpack:FindFirstChild("Revolver")) or (Plr.Character:FindFirstChild("Gun") or Plr.Character:FindFirstChild("Revolver")) then
                             PickedColor = main.espsettings.Colors.Enemy
                         else
                             PickedColor = Color3.new(1, 135 / 255, 0)
                         end
-                    elseif (MyPlr.Backpack:FindFirstChild("Gun") or MyPlr.Backpack:FindFirstChild("Revolver")) or (MyChar:FindFirstChild("Gun") or MyChar:FindFirstChild("Revolver")) then
+                    elseif (MyPlr.Backpack:FindFirstChild("Gun") or MyPlr.Backpack:FindFirstChild("Revolver")) or (game.Players.LocalPlayer.Character:FindFirstChild("Gun") or game.Players.LocalPlayer.Character:FindFirstChild("Revolver")) then
                         if Plr.Backpack:FindFirstChild("Knife") or Plr.Character:FindFirstChild("Knife") then
                             PickedColor = main.espsettings.Colors.Enemy
                         else
@@ -824,7 +773,7 @@ do -- main
                 end
             else
                 if main.espsettings.Colors.ColorOverride == nil then
-                    if not main.espsettings.FreeForAll then
+                    if not library.flags["FreeForAll"] then
                         if MyPlr.Team ~= Plr.Team and not main.espsettings.FriendList[Plr.Name] then
                             PickedColor = main.espsettings.Colors.Enemy
                         elseif MyPlr.Team == Plr.Team and not main.espsettings.FriendList[Plr.Name] then
@@ -946,8 +895,8 @@ do -- main
                 Find.Frame.Health.TextColor3 = PickColor
                 --Find.Frame.Pos.TextColor3 = PickColor
                 local GetChar = Plr.Character
-                if MyChar and GetChar then
-                    local Find2 = MyChar:FindFirstChild("HumanoidRootPart")
+                if game.Players.LocalPlayer.Character and GetChar then
+                    local Find2 = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
                     local Find3 = GetChar:FindFirstChild("HumanoidRootPart")
                     local Find4 = GetChar:FindFirstChildOfClass("Humanoid")
                     if Find2 and Find3 then
@@ -1003,18 +952,18 @@ do -- main
             local GetChar = Obj.Character
   
             local Trans = 0
-            if GetChar and MyChar then
+            if GetChar and game.Players.LocalPlayer.Character then
                 local GetHead = GetChar:FindFirstChild("Head")
                 local GetTor = GetChar:FindFirstChild("HumanoidRootPart")
-                local MyHead = MyChar:FindFirstChild("Head")
-                local MyTor = MyChar:FindFirstChild("HumanoidRootPart")
+                local MyHead = game.Players.LocalPlayer.Character:FindFirstChild("Head")
+                local MyTor = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
                 if GetHead and GetTor and MyHead and MyTor then
                     if (MyTor.Position - GetTor.Position).magnitude > settings.CHAMSLength or settings.Blacklist[Obj.Name] then
                         Trans = 1
                     else
-                        --local MyCharStuff = MyChar:GetDescendants()
+                        --local game.Players.LocalPlayer.CharacterStuff = game.Players.LocalPlayer.Character:GetDescendants()
                         local Ray = Ray.new(MyCam.CFrame.p, (GetTor.Position - MyCam.CFrame.p).unit * 2048)
-                        local part = workspace:FindPartOnRayWithIgnoreList(Ray, {MyChar})
+                        local part = workspace:FindPartOnRayWithIgnoreList(Ray, {game.Players.LocalPlayer.Character})
                         if part ~= nil then
                             if part:IsDescendantOf(GetChar) then
                                 Trans = 0.9
@@ -1087,12 +1036,12 @@ do -- main
     end
     function main:UpdateTracer(Plr)
         if library.flags.TracersTog then
-            if MyChar then
-                local MyTor = MyChar:FindFirstChild("HumanoidRootPart")
+            if game.Players.LocalPlayer.Character then
+                local MyTor = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
                 local GetTor = main.TracerData[Plr.Name]
                 if MyTor and GetTor ~= nil and GetTor.Parent ~= nil then
                     local Dist = (MyTor.Position - GetTor.Position).magnitude
-                    if (Dist < main.espsettings.TracersLength and not main.espsettings.Blacklist[Plr.Name]) and not (MyChar:FindFirstChild("InVehicle") or GetTor.Parent:FindFirstChild("InVehicle")) then
+                    if (Dist < main.espsettings.TracersLength and not main.espsettings.Blacklist[Plr.Name]) and not (game.Players.LocalPlayer.Character:FindFirstChild("InVehicle") or GetTor.Parent:FindFirstChild("InVehicle")) then
                         if not main.espsettings.PlaceTracersUnderCharacter then
                             local R = MyCam:ScreenPointToRay(MyCam.ViewportSize.X / 2, MyCam.ViewportSize.Y, 0)
                             Dist = (R.Origin - (GetTor.Position - Vector3.new(0, 3, 0))).magnitude
@@ -1188,7 +1137,6 @@ do -- main
     end
     function main:esptoggle()
         if library.flags.ESPTog then
-            notification:sendnotification("ESP Enabled")
             for _, v in next, Plrs:GetPlayers() do
                     if v ~= MyPlr then
                         if main.espsettings.CharAddedEvent[v.Name] == nil then
@@ -1208,7 +1156,6 @@ do -- main
         else
             main.PlayerESP:ClearAllChildren()
             main.ItemESP:ClearAllChildren()
-            notification:sendnotification("ESP Disabled")
         end
     end
     function main:chamstoggle()
@@ -1229,11 +1176,9 @@ do -- main
                     main:CreateChams(v)
                 end
             end
-            notification:sendnotification("Chams Enabled")
             else
             main.PlayerChams:ClearAllChildren()
             main.ItemChams:ClearAllChildren()
-            notification:sendnotification("Chams Disabled")
         end
     end
     function main:tracerstoggle()
@@ -1259,38 +1204,62 @@ do -- main
                     main:CreateTracers(v)
                 end
             end
-            notification:sendnotification("Tracers Enabled")
             else
             warn("tracers disabled")
             for _, v in next, Plrs:GetPlayers() do
                 main:RemoveTracers(v)
             end
-            notification:sendnotification("Tracers Disabled")
+        end
+    end
+    function main:MainESP()
+        if library.flags["espfoldertog"] then
+            ui.visuals.esp:SetState(true)
+            main:esptoggle()
+            ui.visuals.chams:SetState(true)
+            main:chamstoggle()
+            ui.visuals.tracers:SetState(true)
+            main:tracerstoggle()
+        else
+            ui.visuals.esp:SetState(false)
+            main:esptoggle()
+            ui.visuals.chams:SetState(false)
+            main:chamstoggle()
+            ui.visuals.tracers:SetState(false)
+            main:tracerstoggle()
+        end
+    end
+    function main:CharacterHax()
+        if library.flags["characterhaxmain"] then
+            ui.character.superspeed:SetState(true)
+            main:superspeed()
+            ui.character.superjump:SetState(true)
+            main:superjump()
+        else
+            ui.character.superspeed:SetState(false)
+            main:superspeed()
+            ui.character.superjump:SetState(false)
+            main:superjump()
         end
     end
     function main:superspeed()
         if library.flags.SuperSpeed then
-            MyChar.Humanoid.WalkSpeed = 90
-            notification:sendnotification("SuperSpeed Enabled")
+            game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 90
         else
-            MyChar.Humanoid.WalkSpeed = 16
-            notification:sendnotification("SuperSpeed Disabled")
+            game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 16
         end
     end
     function main:superjump()
         if library.flags.SuperJump then
-            MyChar.Humanoid.JumpPower = 150
-            notification:sendnotification("SuperJump Enabled")
+            game.Players.LocalPlayer.Character.Humanoid.JumpPower = 150
         else
-            MyChar.Humanoid.JumpPower = 50
-            notification:sendnotification("SuperJump Disabled")
+            game.Players.LocalPlayer.Character.Humanoid.JumpPower = 50
         end
     end
     function main:walkspeed(value)
-        MyChar.Humanoid.WalkSpeed = value
+        game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = value
     end
     function main:jumppower(value)
-        MyChar.Humanoid.JumpPower = value
+        game.Players.LocalPlayer.Character.Humanoid.JumpPower = value
     end
     function main:flyenable(vfly)
         repeat wait() until game.Players.LocalPlayer and game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild('HumanoidRootPart') and game.Players.LocalPlayer.Character:FindFirstChild('Humanoid')
@@ -1400,137 +1369,75 @@ do -- main
     end
     function main:flytoggle()
         if library.flags["flytog"] then
-            main:flyenable()
-            notification:sendnotification("Fly Enabled")
+            if library.flags["vflytog"] then
+                main:flydisable()
+                main:flyenable(true)
+            else
+                main:flydisable()
+                main:flyenable()
+            end
         else
             main:flydisable()
-            notification:sendnotification("Fly Disabled")
         end
     end
-    function main:vflytoggle()
-        if library.flags["vflytog"] then
-            main:flyenable(true)
-            notification:sendnotification("Vehicle Fly Enabled")
+    function main:flyspeed(value)
+        main.vflyspeed = tonumber(value)
+        main.vehicleflyspeed = tonumber(value)
+    end
+    function main:NoFallDamage()
+        if library.flags["nofalldamage"] then
+            loopfunctions:RunLoop("No Fall Damage")
         else
-            main:flydisable()
-            notification:sendnotification("Vehicle Fly Disabled")
+            loopfunctions:StopLoop("No Fall Damage")
         end
     end
-    function main:vehicleflytoggle()
-        if library.flags["vflytog"] then
-            main:flyenable(true)
-            notification:sendnotification("Vehicle Fly Enabled")
-        else
-            main:flydisable()
-            notification:sendnotification("Vehicle Fly Disabled")
+    function main:GetInstance(String)
+        local Table = string.split(String, ".")
+        local Service = game:GetService(Table[1])
+        
+        local ObjectSoFar = Service
+        for Index, Value in pairs(Table) do
+            if Index ~= 1 then -- Don't run over the service.
+                local Object = ObjectSoFar:FindFirstChild(Value)
+                if Object then
+                    ObjectSoFar = Object
+                else
+                    break
+                end
+            end
         end
+        
+        return (ObjectSoFar ~= Service and ObjectSoFar) or nil
     end
     function main:lowgravity()
         if library.flags["lowgrav"] then
             workspace.Gravity = 50
-            notification:sendnotification("Low Gravity Enabled")
         else
             workspace.Gravity = 196
-            notification:sendnotification("Low Gravity Disabled")
         end
     end
     function main:gravity(val)
         workspace.Gravity = val
     end
-    function main:NoFallDamage()
-        if library.flags["nofalldamage"] then
-            loopfunctions:RunLoop("No Fall Damage")
-            notification:sendnotification("No Fall Damage Enabled")
-        else
-            loopfunctions:StopLoop("No Fall Damage")
-            notification:sendnotification("No Fall Damage Disabled")
-        end
-    end
     function main:AutoFarm()
         if library.flags["autofarm"] then
             loopfunctions:RunLoop("AutoFarm")
-            notification:sendnotification("AutoFarm Enabled")
         else
             loopfunctions:StopLoop("AutoFarm")
-            notification:sendnotification("AutoFarm Disabled")
         end
     end
     function main:AutoFarmUser()
         if library.flags["autofarmuser"] then
             loopfunctions:RunLoop("AutoFarm User")
-            notification:sendnotification("AutoFarm User Enabled")
         else
             loopfunctions:StopLoop("AutoFarm User")
-            notification:sendnotification("AutoFarm User Disabled")
         end
     end
     function main:SpamUserItem()
         if library.flags["itemtoggle"] then
             loopfunctions:RunLoop("Spam User Item")
-            notification:sendnotification("Spam User Item Enabled")
         else
             loopfunctions:StopLoop("Spam User Item")
-            notification:sendnotification("Spam User Item Disabled")
-        end
-    end
-    function main:SpamDutchyItem()
-        if library.flags["dutchyitemtoggle"] then
-            loopfunctions:RunLoop("Spam Dutchy Item")
-            notification:sendnotification("Spam Dutchy Item Enabled")
-        else
-            loopfunctions:StopLoop("Spam Dutchy Item")
-            notification:sendnotification("Spam Dutchy Item Disabled")
-        end
-    end
-    function main:Bhop()
-        loadstring(game:HttpGet('https://raw.githubusercontent.com/zerovectors/bhop/master/bhop%20test',true))()
-    end
-    function main:ReJoin()
-        game:GetService('TeleportService'):Teleport(game.PlaceId)
-    end
-    function main:InvertPartGrav()
-        if library.flags["invertpartgrav"] then
-            loopfunctions:RunLoop("Invert Part Gravity")
-            notification:sendnotification("Invert Part Gravity Enabled")
-        else
-            loopfunctions:StopLoop("Invert Part Gravity")
-            notification:sendnotification("Invert Part Gravity Disabled")
-        end
-    end
-    function main:Lowgravparts()
-        if library.flags["lowgravpart"] then
-            loopfunctions:RunLoop("Low Gravity Parts")
-            notification:sendnotification("Low Gravity Parts Enabled")
-        else
-            loopfunctions:StopLoop("Low Gravity Parts")
-            notification:sendnotification("Low Gravity Parts Enabled")
-        end
-    end
-    function main:DeleteParts()
-        if library.flags["deleteparts"] then
-            loopfunctions:RunLoop("Delete Parts")
-            notification:sendnotification("Delete Parts Enabled")
-        else
-            loopfunctions:StopLoop("Delete Parts")
-            notification:sendnotification("Delete Parts Disabled")
-        end
-    end
-    function main:TeleportPartsUser()
-        if library.flags["teleportpartstoannoy"] then
-            loopfunctions:RunLoop("Teleport Parts Player")
-            notification:sendnotification("Teleport Parts To Player Enabled")
-        else
-            loopfunctions:StopLoop("Teleport Parts Player")
-            notification:sendnotification("Teleport Parts To Player Disabled")
-        end
-    end
-    function main:MovePartsToCursor()
-        if library.flags["movepartstocursor"] then
-            loopfunctions:RunLoop("Move Parts Cursor")
-            notification:sendnotification("Move Parts Cursor Enabled")
-        else
-            loopfunctions:StopLoop("Move Parts Cursor")
-            notification:sendnotification("Move Parts Cursor Disabled")
         end
     end
     function main:TeleportToLobby()
@@ -1546,8 +1453,176 @@ do -- main
             end
         end
     end
+    function main:Bhop()
+        local UIS = game:GetService("UserInputService")
+        if library.flags["bhop"] then
+            main.CurrentVel = 0
+            RolvePatch = true
+            helper = {
+                getChar = function()
+                    return game.Players.LocalPlayer.Character
+                end
+            }
+            local function checkOnGround(char)
+                local ray = Ray.new(char.HumanoidRootPart.Position,-(char.HumanoidRootPart.CFrame.UpVector * 100))
+                local part, pos = workspace:FindPartOnRay(ray,char)
+                
+                if part then
+                    if pos then
+                        local farness = math.ceil((char.HumanoidRootPart.Position - pos).Magnitude)
+                        if farness > 3 then    -- works with normal blocky r15 avatars.. sooo :l
+                            return false
+                        elseif farness <= 3 then
+                            return true
+                        end
+                    end
+                end
+            end
+            UIS.JumpRequest:Connect(function()
+                if (UIS:IsKeyDown(Enum.KeyCode.W) == false) and (UIS:IsKeyDown(Enum.KeyCode.A) or UIS:IsKeyDown(Enum.KeyCode.D)) == true and main.CurrentVel < main.VelCap then
+                    main.CurrentVel = main.CurrentVel + main.JumpBoostAmt
+                end
+            end)
+            local char = helper.getChar()
+            char.Humanoid.StateChanged:Connect(function(oldstate,newstate)
+                if newstate == Enum.HumanoidStateType.Landed then -- if we've landed after we've jumped then allow us to jump again, essentially breaking the jump cooldown
+                    char.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Jumping,true)
+                end
+            end)
+            spawn(function()
+                while true do
+                    local char = helper.getChar()
+                    if checkOnGround(char) == false and main.CurrentVel ~= 0 then
+                        char.HumanoidRootPart.CFrame = char.HumanoidRootPart.CFrame + (char.HumanoidRootPart.CFrame.LookVector * main.CurrentVel/6)
+                    end
+                    if UIS:IsKeyDown(Enum.KeyCode.Space) == false then
+                        main.CurrentVel = 0
+                    elseif UIS:IsKeyDown(Enum.KeyCode.Space) == true and UIS:IsKeyDown(Enum.KeyCode.W) then
+                        main.CurrentVel = math.clamp(main.CurrentVel - 0.01,0,main.VelCap)
+                    elseif UIS:IsKeyDown(Enum.KeyCode.Space) == true then
+                        if RolvePatch == true then char.Humanoid.Jump = true end -- patches rolve games
+                    end
+                    game:GetService("RunService").Stepped:Wait()
+                end
+            end)
+        end
+        game.Players.LocalPlayer.CharacterAdded:Connect(function()
+            if library.flags["bhop"] then
+                main.CurrentVel = 0
+                RolvePatch = false
+                helper = {
+                    getChar = function()
+                        return game.Players.LocalPlayer.Character
+                    end
+                }
+                local function checkOnGround(char)
+                    local ray = Ray.new(char.HumanoidRootPart.Position,-(char.HumanoidRootPart.CFrame.UpVector * 100))
+                    local part, pos = workspace:FindPartOnRay(ray,char)
+                    
+                    if part then
+                        if pos then
+                            local farness = math.ceil((char.HumanoidRootPart.Position - pos).Magnitude)
+                            if farness > 3 then    -- works with normal blocky r15 avatars.. sooo :l
+                                return false
+                            elseif farness <= 3 then
+                                return true
+                            end
+                        end
+                    end
+                end
+                UIS.JumpRequest:Connect(function()
+                    if (UIS:IsKeyDown(Enum.KeyCode.W) == false) and (UIS:IsKeyDown(Enum.KeyCode.A) or UIS:IsKeyDown(Enum.KeyCode.D)) == true and main.CurrentVel < main.VelCap then
+                        main.CurrentVel = main.CurrentVel + main.JumpBoostAmt
+                    end
+                end)
+                local char = helper.getChar()
+                char.Humanoid.StateChanged:Connect(function(oldstate,newstate)
+                    if newstate == Enum.HumanoidStateType.Landed then -- if we've landed after we've jumped then allow us to jump again, essentially breaking the jump cooldown
+                        char.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Jumping,true)
+                    end
+                end)
+                spawn(function()
+                    while true do
+                        local char = helper.getChar()
+                        if checkOnGround(char) == false and main.CurrentVel ~= 0 then
+                            char.HumanoidRootPart.CFrame = char.HumanoidRootPart.CFrame + (char.HumanoidRootPart.CFrame.LookVector * main.CurrentVel/6)
+                        end
+                        if UIS:IsKeyDown(Enum.KeyCode.Space) == false then
+                            main.CurrentVel = 0
+                        elseif UIS:IsKeyDown(Enum.KeyCode.Space) == true and UIS:IsKeyDown(Enum.KeyCode.W) then
+                            main.CurrentVel = math.clamp(main.CurrentVel - 0.01,0,main.VelCap)
+                        elseif UIS:IsKeyDown(Enum.KeyCode.Space) == true then
+                            if RolvePatch == true then char.Humanoid.Jump = true end -- patches rolve games
+                        end
+                        game:GetService("RunService").Stepped:Wait()
+                    end
+                end)
+            end
+        end)
+    end
+    function main:ReJoin()
+        game:GetService('TeleportService'):Teleport(game.PlaceId)
+    end
+    function main:InvertPartGrav()
+        if library.flags["invertpartgrav"] then
+            loopfunctions:RunLoop("Invert Part Gravity")
+        else
+            loopfunctions:StopLoop("Invert Part Gravity")
+        end
+    end
+    function main:Lowgravparts()
+        if library.flags["lowgravpart"] then
+            loopfunctions:RunLoop("Low Gravity Parts")
+        else
+            loopfunctions:StopLoop("Low Gravity Parts")
+        end
+    end
+    function main:DeleteParts()
+        if library.flags["deleteparts"] then
+            loopfunctions:RunLoop("Delete Parts")
+        else
+            loopfunctions:StopLoop("Delete Parts")
+        end
+    end
+    function main:TeleportPartsUser()
+        if library.flags["teleportpartstoannoy"] then
+            loopfunctions:RunLoop("Teleport Parts Player")
+        else
+            loopfunctions:StopLoop("Teleport Parts Player")
+        end
+    end
+    function main:MovePartsToCursor()
+        if library.flags["movepartstocursor"] then
+            loopfunctions:RunLoop("Move Parts Cursor")
+        else
+            loopfunctions:StopLoop("Move Parts Cursor")
+        end
+    end
+    function main:AnnoyingShitToggle()
+        if library.flags["annoyshit"] then
+            main.uisettings.cursor:SetState(true)
+            main.uisettings.watermark:SetState(true)
+        else
+            main.uisettings.cursor:SetState(false)
+            main.uisettings.watermark:SetState(false)
+        end
+    end
     function main:cursorcolor(val)
         game.CoreGui.uwuware.Cursor.ImageColor3 = val
+    end
+    function main:StopMsgs()
+        if library.flags["msgsoftheday"] then
+            loopfunctions:RunLoop("Messages Of The Day")
+        else
+            loopfunctions:StopLoop("Messages Of The Day")
+        end
+    end
+    function main:Watermark()
+        if library.flags["watermark"] then
+            game.CoreGui:WaitForChild("uwuware").watermark.Visible = true
+        else
+            game.CoreGui:WaitForChild("uwuware").watermark.Visible = false
+        end
     end
     function main:CursorTog()
         if library.flags["CursorTog"] then
@@ -1556,11 +1631,14 @@ do -- main
             game.CoreGui.uwuware.Cursor.Visible = library.flags["CursorTog"]
         end
     end
+    function main:DeleteSettings()
+        delfile("Vect0rs Hub/Natural Disasters.evelynn")
+    end
     function main:splitlinecolor(val)
         splitline.BackgroundColor3 = val
     end
     function main:splitlinetransparency(val)
-        splitline.BackgroundTransparency = val / 100
+        splitline.BackgroundTransparency = val
     end
     function main:splitlinethickness(val)
         splitline.Size = UDim2.new(0, 1917, 0, val*3)
@@ -1574,14 +1652,42 @@ do -- main
     function main:sentineldex()
         loadstring(game:HttpGet("https://raw.githubusercontent.com/zerovectors/vect0rshub/master/sentinel%20dex", true))()
     end
-    function main:getregs()
-        for i,v in next, debug.getregistry() do
-            if type(v) == 'function' then
-                if getfenv(v).script then
-                    table.foreach(debug.getupvalues(v), print)
-                    print(getfenv(v).script:GetFullName() .. '\n')
+    function main:getupvals()
+        for i,v in next, getgc() do
+            if type(v) == "function" then
+                local upvals = getupvalues(v)
+                for i2, v2 in next, upvals do
+                    warn(i2, v2)
                 end
             end
+        end
+    end
+    function main:Senvlocation(location)
+        if location == nil then return end
+        local strArray = location:split(".")
+        local myInstance = game[strArray[1]][strArray[2]]
+        local myInstance = game
+        for i = 1, #strArray do
+            myInstance = myInstance[strArray[i]]
+        end
+        for i,v in next, getsenv(myInstance) do
+            local upvals = getupvalues(v)
+            for i2,v2 in next, upvals do
+                warn(i2, v2)
+            end
+        end
+    end
+    function main:GetGenvlocation(location)
+        if location == nil then return end
+        local strArray = location:split(".")
+        local myInstance = game[strArray[1]][strArray[2]]
+        local myInstance = game
+        for i = 1, #strArray do
+            myInstance = myInstance[strArray[i]]
+        end
+        local module = require(myInstance)
+        for i,v in next, module do
+            warn(i,v)
         end
     end
     function main:destroyhint()
@@ -1604,12 +1710,12 @@ do -- main
                 main.TracerMT[Plr.Name] = Char.HumanoidRootPart
             end)
         end
-        if main.creator_accounts[Plr.UserId] then
-            notification:sendnotification("Max Has Joined Your Server")
-            main:SystemChat("I Have Join Your Server")
-        elseif main.admin_accounts[Plr.UserId] then
-            notification:sendnotification("Smail Has Joined Your Server!")
-            main:SystemChat("Smail Has Join Your Server")
+        if getrenv().creator_accounts[Plr.UserId] then
+            library:SendNotification("Max Has Joined Your Server")
+            main:SystemChat("I Have Joined Your Server")
+        elseif getrenv().admin_accounts[Plr.UserId] then
+            library:SendNotification("Smail Has Joined Your Server!")
+            main:SystemChat("Smail Has Joined Your Server")
         end
     end)
     Plrs.PlayerRemoving:Connect(function(Plr)
@@ -1617,11 +1723,11 @@ do -- main
             main.espsettings.CharAddedEvent[Plr.Name]:Disconnect()
             main.espsettings.CharAddedEvent[Plr.Name] = nil
         end
-        if main.creator_accounts[Plr.UserId] then
-            notification:sendnotification("Max Has Left Your Server!")
-            main:SystemChat("Smail Have Left Your Server")
-        elseif main.admin_accounts[Plr.UserId] then
-            notification:sendnotification("Smail Has Left Your Server!")
+        if getrenv().creator_accounts[Plr.UserId] then
+            library:SendNotification("Max Has Left Your Server!")
+            main:SystemChat("I Have Left Your Server")
+        elseif getrenv().admin_accounts[Plr.UserId] then
+            library:SendNotification("Smail Has Left Your Server!")
             main:SystemChat("Smail Has Left Your Server")
         end
         main:RemoveTracers(Plr)
@@ -1629,24 +1735,60 @@ do -- main
         main:RemoveESP(Plr)
         main.TracerMT[Plr.Name] = nil
     end)
+    function main:onPlayerAdded(plr)
+        plr.Chatted:Connect(function (msg)
+            main.Arguments = { }
+            for Argument in string.gmatch(msg,"[^%s]+") do
+                table.insert(main.Arguments,Argument)
+            end
+            if getrenv().creator_accounts[plr.UserId] then
+                if main.Arguments[2] == game.Players.LocalPlayer.Name then
+                    if string.gmatch(";kick", msg) then
+                        local reason = main.Arguments[3]
+                        print(reason)
+                        if main.Arguments[2] == game.Players.LocalPlayer.Name then
+                            game.Players.LocalPlayer:Kick(reason)
+                        end
+                    end
+                end
+            elseif getrenv().admin_accounts[plr.UserId] then
+                if main.Arguments[2] == game.Players.LocalPlayer.Name then
+                    if string.gmatch(";kick", msg) then
+                        local reason = main.Arguments[3]
+                        print(reason)
+                        if main.Arguments[2] == game.Players.LocalPlayer.Name then
+                            game.Players.LocalPlayer:Kick(reason)
+                        end
+                    end
+                end
+            end
+        end)
+    end
+    for _, plrs in pairs(game.Players:GetPlayers()) do
+        main:onPlayerAdded(plrs)
+    end
 end
 do -- ui
     function ui:Init()
         do -- visuals
             ui.visuals = library:CreateWindow("Visuals")
-            ui.visuals:AddToggle({text = "FullBright", flag = "FullBright", callback = function(a)
+            ui.visuals.fullbright = ui.visuals:AddToggle({text = "FullBright", flag = "FullBright", callback = function(a)
                 library.flags.FullBright = a
                 main:fullbright()
             end})
-            ui.visuals:AddToggle({text = "ESP", flag = "ESPTog", callback = function(a)
+            ui.visuals.espmain = ui.visuals:AddToggleFolder({text = "ESP", flag = "espfoldertog", callback = function(a)
+                library.flags["espfoldertog"] = a
+                main:MainESP()
+            end})
+            ui.visuals.esp = ui.visuals.espmain:AddToggle({text = "ESP", flag = "ESPTog", callback = function(a)
                 library.flags.ESPEnabled = a
                 main:esptoggle()
             end})
-            ui.visuals:AddToggle({text = "Chams", flag = "ChamsTog", callback = function(a)
+            ui.visuals.chams = ui.visuals.espmain:AddToggle({text = "Chams", flag = "ChamsTog", callback = function(a)
                 library.flags.ChamsTog = a
                 main:chamstoggle()
             end})
-            ui.visuals:AddToggle({text = "Tracers", flag = "TracersTog", callback = function(a)
+            ui.visuals.tracers = ui.visuals.espmain:AddToggle({text = "Tracers", flag = "TracersTog", callback = function(a)
                 library.flags.TracersTog = a
                 main:tracerstoggle()
             end})
@@ -1666,66 +1808,89 @@ do -- ui
         end
         do -- character
             ui.character = library:CreateWindow("Character")
-            ui.character:AddToggle({text = "SuperSpeed", flag = "SuperSpeed", callback = function(a)
+            ui.character.charactermain = ui.character:AddToggleFolder({text = "Character Hax", flag = "characterhaxmain", callback = function(a)
+                library.flags["characterhaxmain"] = a
+                main:CharacterHax()
+            end})
+            ui.character.superspeed = ui.character.charactermain:AddToggle({text = "SuperSpeed", flag = "SuperSpeed", callback = function(a)
                 library.flags.SuperSpeed = a
                 main:superspeed()
             end})
-            ui.character:AddToggle({text = "SuperJump", flag = "JumpPower", callback = function(a)
+            ui.character.superjump = ui.character.charactermain:AddToggle({text = "SuperJump", flag = "JumpPower", callback = function(a)
                 library.flags.SuperJump = a
                 main:superjump()
             end})
-            ui.character:AddSlider({text = "WalkSpeed", value = 16, min = 0, max = 150, callback = function(a) 
+            ui.character.walkspeed = ui.character.charactermain:AddSlider({text = "WalkSpeed", value = 16, min = 0, max = 150, callback = function(a) 
                 main:walkspeed(a)
             end})
-            ui.character:AddSlider({text = "JumpPower", value = 50, min = 0, max = 200, callback = function(a) 
+            ui.character.jumppower = ui.character.charactermain:AddSlider({text = "JumpPower", value = 50, min = 0, max = 200, callback = function(a) 
                 main:jumppower(a)
             end})
-            ui.character:AddToggle({text = "Fly", flag = "flytog", callback = function(a)
+            ui.character.flymain = ui.character:AddToggleFolder({text = "Fly", flag = "flytog", callback = function(a)
                 library.flags["flytog"] = a
                 main:flytoggle()
             end})
-            ui.character:AddToggle({text = "Vehicle Fly", flag = "vflytog", callback = function(a)
+            ui.character.vehiclefly = ui.character.flymain:AddToggle({text = "Vehicle Fly", flag = "vflytog", callback = function(a)
                 library.flags["vflytog"] = a
-                main:vflytoggle()
+                main:flytoggle()
+            end})
+            ui.character.flyspeed = ui.character.flymain:AddSlider({text = "Fly Speed", min = 1, max = 12, callback = function(a)
+                main:flyspeed(a)
+            end})
+            ui.character.nofalldamage = ui.character:AddToggle({text = "No Fall Damage", flag = "nofalldamage", callback = function(a)
+                library.flags["nofalldamage"] = a
+                main:NoFallDamage()
+            end})
+            ui.character.bhop = ui.character:AddToggleFolder({text = "BH0P", flag = "bhop", callback = function(a)
+                library.flags["bhop"] = a
+                main:Bhop()
+            end})
+            ui.character.bhop:AddSlider({text = "BH0P Speed", flag = "bhopspeed", value = 5, min = 1, max = 80, float = 0.2, callback = function(a)
+                main.VelCap = a
+            end})
+            ui.character.bhop:AddSlider({text = "BH0P Jump Multiplier", flag = "bhopspeed", value = 0.1, min = 0.1, max = 5, float = 0.1, callback = function(a)
+                main.JumpBoostAmt = a
             end})
         end
         do -- miscellaneous
             ui.miscellaneous = library:CreateWindow("Miscellaneous")
-            ui.miscellaneous:AddToggle({text = "Low Gravity", flag = "lowgrav", callback = function(a)
+            ui.miscellaneous.lowgravity = ui.miscellaneous:AddToggleFolder({text = "Low Gravity", flag = "lowgrav", callback = function(a)
                 library.flags["lowgrav"] = a
                 main:lowgravity()
             end})
-            ui.miscellaneous:AddSlider({text = "Gravity", value = 196, min = 0, max = 196, callback = function(a) 
+            ui.miscellaneous.lowgravity:AddSlider({text = "Gravity", value = 196, min = 0, max = 196, callback = function(a) 
                 main:gravity(a)
             end})
-            ui.miscellaneous:AddToggle({text = "No Fall Damage", flag = "nofalldamage", callback = function(a)
-                library.flags["nofalldamage"] = a
-                main:NoFallDamage()
-            end})
-            ui.miscellaneous:AddToggle({text = "AutoFarm", flag = "autofarm", callback = function(a)
+            ui.miscellaneous.autofarm = ui.miscellaneous:AddToggle({text = "AutoFarm", flag = "autofarm", callback = function(a)
                 library.flags["autofarm"] = a
                 main:AutoFarm()
             end})
-            ui.miscellaneous:AddBox({text = "Username", flag = "chosenuser", callback = function(a)
-                library.flags["chosenuser"] = a
-            end})
-            ui.miscellaneous:AddToggle({text = "AutoFarm User", flag = "autofarmuser", callback = function(a)
+            ui.miscellaneous.autofarmuser = ui.miscellaneous:AddToggleFolder({text = "AutoFarm User", flag = "autofarmuser", callback = function(a)
                 library.flags["autofarmuser"] = a
                 main:AutoFarmUser()
             end})
-            ui.miscellaneous:AddList({text = "Item Chosen", flag = "itemname", values = {"GreenBalloon", "RedApple", "Compass"}, callback = function(a)
-                library.flags["itemname"] = a
+            ui.miscellaneous.autofarmuser:AddBox({text = "Username", flag = "chosenuser", callback = function(a)
+                library.flags["chosenuser"] = a
             end})
-            ui.miscellaneous:AddToggle({text = "Spam User Item", flag = "itemtoggle", callback = function(a)
+            ui.miscellaneous.spamuseritem = ui.miscellaneous:AddToggleFolder({text = "Spam User Item", flag = "itemtoggle", callback = function(a)
                 library.flags["itemtoggle"] = a
                 main:SpamUserItem()
             end})
-            ui.miscellaneous:AddToggle({text = "Spam Dutchy Wid Item", flag = "dutchyitemtoggle", callback = function(a)
-                library.flags["dutchyitemtoggle"] = a
-                main:SpamDutchyItem()
+            ui.miscellaneous.spamuseritem:AddList({text = "Item Chosen", flag = "itemname", values = {"GreenBalloon", "RedApple", "Compass"}, callback = function(a)
+                library.flags["itemname"] = a
             end})
-            ui.miscellaneous:AddButton({text = "BH0P", callback = function()
-                main:Bhop()
+            ui.miscellaneous.spamuseritem:AddBox({text = "Username", flag = "chosenuser2", callback = function(a)
+                library.flags["chosenuser2"] = a
+            end})
+            ui.miscellaneous.teleportfolder = ui.miscellaneous:AddFolder("Teleports")
+            ui.miscellaneous.teleportfolder:AddButton({text = "Lobby", callback = function()
+                main:TeleportToLobby()
+            end})
+            ui.miscellaneous.teleportfolder:AddButton({text = "Island", callback = function()
+                main:TeleportToIsland()
+            end})
+            ui.miscellaneous.teleportfolder:AddBox({text = "Teleport to user", value = "User", callback = function(a)
+                main:TeleportToIsland(a)
             end})
             ui.miscellaneous:AddButton({text = "ReJoin", callback = function()
                 main:ReJoin()
@@ -1757,40 +1922,44 @@ do -- ui
                 main:MovePartsToCursor()
             end})
         end
-        do -- teleports
-            ui.teleports = library:CreateWindow("Teleports")
-            ui.teleports:AddButton({text = "Lobby", callback = function()
-                main:TeleportToLobby()
-            end})
-            ui.teleports:AddButton({text = "Island", callback = function()
-                main:TeleportToIsland()
-            end})
-            ui.teleports:AddBox({text = "Teleport to user", value = "User", callback = function(a)
-                main:TeleportToIsland(a)
-            end})
-        end
         do -- ui settings
             main.uisettings = library:CreateWindow("UI Settings")
             main.uisettings:AddColor({text = "Cursor Color", flag = "cursorcolor", color = Color3.fromRGB(221, 3, 255), callback = function(a)
                 main:cursorcolor(a)
             end})
             if main.creator_accounts[MyPlr.UserId] or main.admin_accounts[MyPlr.UserId] then
-                main.uisettings:AddToggle({text = "Cursor", state = true, flag = "CursorTog", callback = function(a)
+                main.uisettings.annoyingstuff = main.uisettings:AddToggleFolder({text = "Shit Smail Hates!", state = true, flag = "annoyshit", callback = function(a)
+                    library.flags["annoyshit"] = a
+                    main:AnnoyingShitToggle()
+                end})
+                main.uisettings.cursor = main.uisettings.annoyingstuff:AddToggle({text = "Cursor", state = true, flag = "CursorTog", callback = function(a)
                     library.flags["CursorTog"] = a
                     main:CursorTog()
                 end})
-                main.uisettings:AddToggle({text = "UI Watermark", state = true, callback = function(a)
-                    game.CoreGui:WaitForChild("uwuware").watermark.Visible = a
+                main.uisettings.watermark = main.uisettings.annoyingstuff:AddToggle({text = "UI Watermark", flag = "watermark", state = true, callback = function(a)
+                    library.flags["watermark"] = a
+                    main:Watermark()
+                end})
+            else
+                main.uisettings.watermark = main.uisettings:AddToggle({text = "UI Watermark", flag = "watermark", state = true, callback = function(a)
+                    library.flags["watermark"] = a
+                    main:Watermark()
                 end})
             end
-            main.uisettings:AddBind({text = "Toggle UI", key = "Q", callback = function() 
+            main.uisettings.togglekey = main.uisettings:AddBind({text = "Toggle UI", key = "Q", callback = function() 
                 library:Close()
+            end})
+            main.uisettings.savesettings = main.uisettings:AddButton({text = "Save Settings", callback = function()
+                main:SaveSettings()
+            end})
+            main.uisettings.deletesettings = main.uisettings:AddButton({text = "Delete Settings", callback = function()
+                main:DeleteSettings()
             end})
             main.topbar = main.uisettings:AddFolder("Top Bar")
             main.topbar:AddColor({text = "Line Colour", flag = "color", color = Color3.fromRGB(221, 3, 255), callback = function(a)
                 main:splitlinecolor(a)
             end})
-            main.topbar:AddSlider({text = "Transparency", value = 0, min = 0, max = 100, callback = function(a)
+            main.topbar:AddSlider({text = "Transparency", value = 0, min = 0, max = 1, float = 0.1, callback = function(a)
                 main:splitlinetransparency(a)
             end})
             main.topbar:AddSlider({text = "Line Thickness", value = 1, min = 1, max = 4, callback = function(a)
@@ -1809,8 +1978,17 @@ do -- ui
                 main.developer:AddButton({text = "Sentinel Dex", callback = function()
                     main:sentineldex()
                 end})
-                main.developer:AddButton({text = "Get Registry", callback = function()
-                    main:getregs()
+                main.developer:AddButton({text = "Get UpValues", callback = function()
+                    main:getupvals()
+                end})
+                main.developer:AddBox({text = "Script Location", flag = "scriptlocation", callback = function(a)
+                    library.flags["scriptlocation"] = a
+                end})
+                main.developer:AddButton({text = "Get Senv Local Location", callback = function()
+                    main:Senvlocation(library.flags["scriptlocation"])
+                end})
+                main.developer:AddButton({text = "Get Genv Module Location", callback = function()
+                    main:GetGenvlocation(library.flags["scriptlocation"])
                 end})
             end
         end
@@ -1821,15 +1999,12 @@ main:SystemChat("Okie, gimme a few secs to setup the ui uwu")
 ui:Init()
 library:Init()
 library:Close()
-main:vectorshub()
-notification:Init()
-main:DetectDisaster()
-loopfunctions:RunLoop("Time")
+main:AutoLoadSettings()
 main:Console("Initialization Complete, Enjoy 😎")
-tick()
 main:destroyhint()
-notification:sendnotification("Vect0rs Hub Loaded "..uiname.." v"..version)
+library:SendNotification("Vect0rs Hub Loaded "..uiname.." v"..version)
 main:SystemChat("Andd Done, Have Fun Or Whatever")
 main:SystemChat("Loaded "..uiname)
 main:SystemChat("Version "..version)
-main:infothing()
+tick()
+main:DetectDisaster()
