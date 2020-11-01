@@ -3,7 +3,7 @@ local hintmsg = Instance.new("Hint", game.CoreGui)
 local attempt = tick()
 hintmsg.Text = "Initializing UI Library This Can Take Up To 30 Seconds"
 local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/zerovectors/framework/master/vect0rs%20hub%20framework%20uwuware%20checkmarks", true))()
-local version = "10.2"
+local version = "10.3"
 local uiname = "Natural Disaster Survival"
 local ui = { }
 local main = { }
@@ -1703,6 +1703,37 @@ do -- main
         ui.main_colour:SetColor(Color3.fromRGB(255, 128, 0))
         ui.topbarcolor:SetColor(Color3.fromRGB(255, 128, 0))
     end
+    function main:GodMode()
+        repeat wait() until MyPlr.Character
+        local Character = MyPlr.Character
+        local MHumanoid = Character.Humanoid
+        local CF = CFrame.new()
+        function CB(Humanoid)
+            local PlayerCharacter = Humanoid.Parent
+            Humanoid.BreakJointsOnDeath = false
+            Humanoid.Died:Connect(function()
+                CF = MyPlr.Character.HumanoidRootPart.CFrame
+                local MH = Humanoid
+                MH.Parent = nil
+                MH.MaxHealth = Humanoid.MaxHealth
+                MH.Health = MH.MaxHealth
+                MH.Parent = PlayerCharacter
+            end)
+        end
+        CB(MHumanoid)
+        workspace.ChildRemoved:Connect(function(m)
+            if m.Name == MyPlr.Name then
+                CF = m.HumanoidRootPart.CFrame
+            end
+        end)
+        workspace.ChildAdded:Connect(function(m)
+            if m.Name == MyPlr.Name then
+                CB(m:WaitForChild("Humanoid"))
+                m.HumanoidRootPart.CFrame = CF
+            end
+        end)
+        game.Players.LocalPlayer.Character.Humanoid.Health = 0
+    end
     Plrs.PlayerAdded:Connect(function(Plr)
         if main.espsettings.CharAddedEvent[Plr.Name] == nil then
             main.espsettings.CharAddedEvent[Plr.Name] = Plr.CharacterAdded:connect(function(Char)
@@ -1861,6 +1892,9 @@ do -- ui
             ui.character.bhop:AddSlider({text = "BH0P Jump Multiplier", flag = "bhopspeed", value = 0.1, min = 0.1, max = 5, float = 0.1, callback = function(a)
                 main.JumpBoostAmt = a
             end})
+            ui.character:AddButton({text = "God Mode", callback = function(a)
+                main:GodMode()
+            end})
         end
         do -- miscellaneous
             ui.miscellaneous = library:CreateWindow("Miscellaneous")
@@ -2018,7 +2052,6 @@ main:SystemChat("Okie, gimme a few secs to setup the ui uwu")
 ui:Init()
 main:AntiAfk()
 library:Init()
-main:Spooks()
 library:Close()
 main:AutoLoadSettings()
 main:Console("Initialization Complete, Enjoy 😎")
@@ -2027,5 +2060,6 @@ library:SendNotification("Vect0rs Hub Loaded "..uiname.." v"..version)
 main:SystemChat("Andd Done, Have Fun Or Whatever")
 main:SystemChat("Loaded "..uiname)
 main:SystemChat("Version "..version)
+main:SystemChat("No toggle for godmode cuz fuck you! haha jk love u smail")
 tick()
 main:DetectDisaster()
