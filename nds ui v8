@@ -1101,6 +1101,46 @@ do -- main
 
         return (ObjectSoFar ~= Service and ObjectSoFar) or nil
     end
+		function main:DetectDisaster()
+        if game.Players.LocalPlayer.Character:FindFirstChild("SurvivalTag") ~= nil then
+            main:SystemChat("Incoming Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value, true)
+            library:SendNotification("Incoming Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value)
+        else
+            game.Players.LocalPlayer.Character:WaitForChild("SurvivalTag", 5)
+            if game.Players.LocalPlayer.Character:FindFirstChild("SurvivalTag") ~= nil then
+                main:SystemChat("Incoming Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value, true)
+                library:SendNotification("Incoming Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value)
+            end
+        end
+        game.Players.LocalPlayer.Character.ChildAdded:Connect(function(object)
+            if object:IsA("StringValue") then
+                if game.Players.LocalPlayer.Character ~= nil then
+                    if game.Players.LocalPlayer.Character:FindFirstChild("SurvivalTag") ~= nil then
+                        main:SystemChat("Incoming Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value, true)
+                        library:SendNotification("Incoming Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value)
+                    else
+                        game.Players.LocalPlayer.Character:WaitForChild("SurvivalTag", 5)
+                        if game.Players.LocalPlayer.Character:FindFirstChild("SurvivalTag") ~= nil then
+                            main:SystemChat("Incoming Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value, true)
+                            library:SendNotification("Incoming Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value)
+                        end
+                    end
+                end
+            end
+        end)
+        game.Players.LocalPlayer.CharacterAdded:connect(function()
+            if game.Players.LocalPlayer.Character:FindFirstChild("SurvivalTag") ~= nil then
+                main:SystemChat("Incoming Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value, true)
+                library:SendNotification("Incoming Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value)
+            else
+                game.Players.LocalPlayer.Character:WaitForChild("SurvivalTag")
+                if game.Players.LocalPlayer.Character:FindFirstChild("SurvivalTag") ~= nil then
+                    main:SystemChat("Incoming Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value, true)
+                    library:SendNotification("Incoming Disaster; "..game.Players.LocalPlayer.Character.SurvivalTag.Value)
+                end
+            end
+        end)
+    end
 		function main:Bhop()
         local UIS = game:GetService("UserInputService")
         if library.flags["bhop"] then
@@ -1469,3 +1509,4 @@ library:SendNotification("Vect0rs Hub Loaded "..uiname.." v"..version)
 main:SystemChat("Andd Done, Have Fun Or Whatever")
 main:SystemChat("Loaded "..uiname)
 main:SystemChat("Version "..version)
+main:DetectDisaster()
