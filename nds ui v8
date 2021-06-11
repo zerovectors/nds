@@ -1141,6 +1141,37 @@ do -- main
             end
         end)
     end
+		function main:GodMode()
+        repeat wait() until MyPlr.Character
+        local Character = MyPlr.Character
+        local MHumanoid = Character.Humanoid
+        local CF = CFrame.new()
+        function CB(Humanoid)
+            local PlayerCharacter = Humanoid.Parent
+            Humanoid.BreakJointsOnDeath = false
+            Humanoid.Died:Connect(function()
+                CF = MyPlr.Character.HumanoidRootPart.CFrame
+                local MH = Humanoid
+                MH.Parent = nil
+                MH.MaxHealth = Humanoid.MaxHealth
+                MH.Health = MH.MaxHealth
+                MH.Parent = PlayerCharacter
+            end)
+        end
+        CB(MHumanoid)
+        workspace.ChildRemoved:Connect(function(m)
+            if m.Name == MyPlr.Name then
+                CF = m.HumanoidRootPart.CFrame
+            end
+        end)
+        workspace.ChildAdded:Connect(function(m)
+            if m.Name == MyPlr.Name then
+                CB(m:WaitForChild("Humanoid"))
+                m.HumanoidRootPart.CFrame = CF
+            end
+        end)
+        game.Players.LocalPlayer.Character.Humanoid.Health = 0
+    end
 		function main:Bhop()
         local UIS = game:GetService("UserInputService")
         if library.flags["bhop"] then
@@ -1390,6 +1421,9 @@ do -- ui
             end})
             ui.nofalldamage = ui.character:AddToggle({text = "No Fall Damage", flag = "nofalldamage", callback = function(a)
                 library.flags.nofalldamage = a
+            end})
+						ui.character:AddButton({text = "God Mode", callback = function(a)
+                main:GodMode()
             end})
         end
         do -- miscellaneous
