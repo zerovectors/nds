@@ -1498,6 +1498,10 @@ do -- ui
 	                    library.flags["CursorTog"] = a
 	                    game.CoreGui.uwuware.Cursor.Visible = a
 	                end})
+									ui.Watermark = ui.uisettings:AddToggle({text = "Watermark", state = true, flag = "Watermark", callback = function(a)
+	                    library.flags["Watermark"] = a
+	                    library.base.ImageLabel.Visible = a
+	                end})
 								end
 						end)
             ui.togglekey = ui.uisettings:AddBind({text = "Toggle UI", key = "Q", callback = function()
@@ -1538,9 +1542,9 @@ main:SystemChat("Okie, gimme a few secs to setup the ui uwu")
 ui:Init()
 library:Init()
 library:Close()
-library:LoadSettings()
 library:SendNotification("Vect0rs Hub Loaded "..uiname.." v"..version)
 main:SystemChat("Andd Done, Have Fun Or Whatever")
 main:SystemChat("Loaded "..uiname)
 main:SystemChat("Version "..version)
+library:LoadSettings()
 main:DetectDisaster()
